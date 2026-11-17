@@ -1,5 +1,9 @@
 # pydaltoolbox
 
+[![PyPI version](https://img.shields.io/pypi/v/pydaltoolbox.svg)](https://pypi.org/project/pydaltoolbox/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pydaltoolbox.svg)](https://pypi.org/project/pydaltoolbox/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Python port of the R [DAL Toolbox](https://github.com/cefet-rj-dal/daltoolbox) —
 *leveraging Experiment Lines for Data Analytics*.
 
@@ -18,13 +22,14 @@ It is the foundation of the DAL Python family that will also include `pytspredit
 
 ## Installation
 
-> The package is in early development. A stable PyPI release is planned.
-
-Once published, the stable version will be available on PyPI:
+Install the latest release from PyPI:
 
 ```bash
 pip install pydaltoolbox
 ```
+
+> **Beta:** the current release (`0.1.0`) is in a testing phase this month, on the way
+> to the `1.0.0` launch. Feedback and issues are very welcome.
 
 The development version is available on GitHub:
 
@@ -82,7 +87,7 @@ python tools/build_examples.py
 
 ## Status
 
-Alpha — the v1 foundation is complete. Implemented:
+Beta (`0.1.0`) — the v1 foundation is complete and in testing toward `1.0.0`. Implemented:
 
 - **Core Experiment Line:** `DalBase`, `DalTransform`, `DalLearner`, `Predictor`,
   `set_params`, and the `adjust_*` helpers.
