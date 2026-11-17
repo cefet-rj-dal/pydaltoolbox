@@ -39,6 +39,11 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [12 - Feature Selection (forward stepwise)](transf/12-fs-stepwise.md)
 - [13 - Class Balancing](transf/13-balancing.md)
 
+## Clustering
+
+- [01 - k-means](clustering/01-kmeans.md) — partitional clustering with internal and
+  external evaluation metrics.
+
 ## Classification
 
 One didactic example per learner (objective + reference + fit/predict/evaluate):

@@ -191,10 +191,10 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - [x] **6e** Balanceamento: `SampleBalance`, `BalSubsampling`, `BalOversampling` (random + SMOTE local)
 - Exemplos: `examples/transf/` (13 exemplos, um por transform).
 
-#### ⬜ Fase 7 — Clustering (sklearn)
-- [ ] `Clusterer` base + `cluutils` (métricas via `sklearn.metrics`)
-- [ ] `ClusterKmeans`, `ClusterDbscan`, `ClusterGmm`, `ClusterHclust`
-- [ ] `CluTune`
+#### ⬜ Fase 7 — Clustering (sklearn) *(em sub-blocos)*
+- [x] **7a** `Clusterer` base + métricas (`sklearn.metrics`) + `ClusterKmeans`
+- [ ] **7b** `ClusterDbscan`, `ClusterGmm`, `ClusterHclust`
+- [ ] **7c** `CluTune`
 - Exemplos: `examples/clustering/`.
 
 #### ⬜ Fase 8 — Tuning + bases de autoencoder
