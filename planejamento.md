@@ -191,6 +191,12 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 versão futura
 - **Por quê:** os preditores de série do tspredit **estendem `regression`** e envelopam
   regressores do sklearn. É a dependência mais usada pelos dois pacotes.
 
+> 🚀 **Marco de publicação:** o **primeiro deploy real no PyPI** (`0.1.0`) acontece
+> **ao concluir esta fase** (decisão de 2026-11-17). O pipeline de release já foi
+> validado (build + `twine check` + instalação em venv limpo). Eduardo faz o upload
+> (`twine`, token próprio); publicação é instantânea e sem prazo no PyPI. Releases
+> seguintes (`0.2.0`...) acompanham as fases posteriores.
+
 #### ⬜ Fase 6 — Tuning
 - [ ] `DalTune` base + `select_hyper` ← `dal_tune.R`
 - [ ] `ClaTune` ← `cla_tune.R` · `RegTune` ← `reg_tune.R`
@@ -204,7 +210,7 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 versão futura
 - [ ] Classificadores que harbinger `hanc_ml` precise (provável: 1–2 além do dtree)
 - [ ] Revisão da API pública, docstrings, `__all__`
 - [ ] Suíte de testes unit + integrados consolidada (`ruff`/`pytest` verdes)
-- [ ] **Publicar `pydaltoolbox` 0.1.0 no PyPI** (via `deploy.md`)
+- [ ] **Release de consolidação da v1** no PyPI (ex.: `0.2.0`), via `deploy.md`
 
 > 🎯 **Marco:** concluído o Bloco A, `pytspredit` e `pyharbinger` já têm fundação para começar.
 

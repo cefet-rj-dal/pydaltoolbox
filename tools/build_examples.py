@@ -22,12 +22,31 @@ from pathlib import Path
 import jupytext
 from nbconvert import MarkdownExporter
 from nbconvert.preprocessors import ExecutePreprocessor
+from nbformat.v4 import new_code_cell
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "notebooks"
 OUT_DIR = ROOT / "examples"
 KERNEL = "python3"
 TIMEOUT = 300
+
+# Injected (and then removed) before execution so pandas renders tables as plain
+# text without truncation -- keeping the processed output clean, like the R "##"
+# style, instead of the verbose HTML tables nbconvert would otherwise emit.
+SETUP_CODE = (
+    "import pandas as pd\n"
+    "pd.set_option('display.max_columns', None)\n"
+    "pd.set_option('display.width', 1000)"
+)
+
+
+def _strip_html_outputs(nb) -> None:
+    """Drop the text/html representation so Markdown uses the plain-text table."""
+    for cell in nb.cells:
+        for output in cell.get("outputs", []):
+            data = output.get("data")
+            if data and "text/html" in data:
+                del data["text/html"]
 
 
 def build_one(src: Path) -> Path:
@@ -37,8 +56,11 @@ def build_one(src: Path) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
 
     nb = jupytext.read(src)
+    nb.cells.insert(0, new_code_cell(SETUP_CODE))  # hidden setup cell
     ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL)
     ep.preprocess(nb, {"metadata": {"path": str(src.parent)}})
+    nb.cells.pop(0)  # remove setup cell so it never appears in the output
+    _strip_html_outputs(nb)
 
     body, _ = MarkdownExporter().from_notebook_node(nb)
     out.write_text(body, encoding="utf-8")

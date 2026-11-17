@@ -30,75 +30,12 @@ iris.head()
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>sepal_length</th>
-      <th>sepal_width</th>
-      <th>petal_length</th>
-      <th>petal_width</th>
-      <th>Species</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>5.1</td>
-      <td>3.5</td>
-      <td>1.4</td>
-      <td>0.2</td>
-      <td>setosa</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>4.9</td>
-      <td>3.0</td>
-      <td>1.4</td>
-      <td>0.2</td>
-      <td>setosa</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>4.7</td>
-      <td>3.2</td>
-      <td>1.3</td>
-      <td>0.2</td>
-      <td>setosa</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>4.6</td>
-      <td>3.1</td>
-      <td>1.5</td>
-      <td>0.2</td>
-      <td>setosa</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5.0</td>
-      <td>3.6</td>
-      <td>1.4</td>
-      <td>0.2</td>
-      <td>setosa</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+       sepal_length  sepal_width  petal_length  petal_width Species
+    0           5.1          3.5           1.4          0.2  setosa
+    1           4.9          3.0           1.4          0.2  setosa
+    2           4.7          3.2           1.3          0.2  setosa
+    3           4.6          3.1           1.5          0.2  setosa
+    4           5.0          3.6           1.4          0.2  setosa
 
 
 
@@ -155,53 +92,8 @@ train_eval["metrics"]
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>accuracy</th>
-      <th>TP</th>
-      <th>TN</th>
-      <th>FP</th>
-      <th>FN</th>
-      <th>precision</th>
-      <th>recall</th>
-      <th>sensitivity</th>
-      <th>specificity</th>
-      <th>f1</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1.0</td>
-      <td>37</td>
-      <td>83</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+       accuracy  TP  TN  FP  FN  precision  recall  sensitivity  specificity   f1
+    0       1.0  37  83   0   0        1.0     1.0          1.0          1.0  1.0
 
 
 
@@ -215,53 +107,8 @@ test_eval["metrics"]
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>accuracy</th>
-      <th>TP</th>
-      <th>TN</th>
-      <th>FP</th>
-      <th>FN</th>
-      <th>precision</th>
-      <th>recall</th>
-      <th>sensitivity</th>
-      <th>specificity</th>
-      <th>f1</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.966667</td>
-      <td>13</td>
-      <td>17</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+       accuracy  TP  TN  FP  FN  precision  recall  sensitivity  specificity   f1
+    0  0.966667  13  17   0   0        1.0     1.0          1.0          1.0  1.0
 
 
 
