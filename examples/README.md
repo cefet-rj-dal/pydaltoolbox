@@ -92,4 +92,4 @@ One didactic example per regressor (objective + reference + fit/predict/evaluate
   ranked by R2 under one uniform API.
 
 More tutorials are added as each phase of the port lands (see
-[planejamento.md](../planejamento.md)).
+[planejamento.md](../develop/planejamento.md)).

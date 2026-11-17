@@ -67,8 +67,8 @@ print(ev["metrics"])
 
 - [Processed examples](examples/) — notebooks executed end to end, with real output
   embedded (the "processed documentation", analogous to the R package's `examples/`).
-- [planejamento.md](planejamento.md) — the migration roadmap (phases, scope, status).
-- [deploy.md](deploy.md) — how to publish the package to PyPI.
+- [develop/planejamento.md](develop/planejamento.md) — the migration roadmap (phases, scope, status).
+- [develop/deploy.md](develop/deploy.md) — step-by-step guide to publish the package to PyPI.
 
 The example sources live under [notebooks/](notebooks/) (jupytext Markdown) and are
 rendered into [examples/](examples/) by:
@@ -105,7 +105,7 @@ Alpha — the v1 foundation is complete. Implemented:
 
 Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
 backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
-like `tree`/`rpart`). See [planejamento.md](planejamento.md) for the roadmap and what is
+like `tree`/`rpart`). See [develop/planejamento.md](develop/planejamento.md) for the roadmap and what is
 deferred to later versions (xgboost, k-medoids, fuzzy c-means, pattern mining, graphics).
 
 ---

@@ -38,6 +38,13 @@ Repository = "https://github.com/cefet-rj-dal/pydaltoolbox"
 [tool.hatch.build.targets.wheel]
 packages = ["src/pydaltoolbox"]
 
+# The published source distribution ships only the package and essential metadata.
+# Development-only material (develop/, notebooks/, examples/, tests/, tools/) is kept
+# out of what users install.
+[tool.hatch.build.targets.sdist]
+include = ["src/pydaltoolbox", "README.md", "LICENSE"]
+exclude = ["develop", "notebooks", "examples", "tests", "tools"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
