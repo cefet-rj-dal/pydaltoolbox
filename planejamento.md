@@ -182,8 +182,8 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - [x] `datasets.diabetes()` (offline) como dataset de regressão
 - [x] Exemplos: `examples/regression/` (um por classe + comparação).
 
-#### ⬜ Fase 6 — Transformações essenciais
-- [ ] Normalização: `MinMax`, `ZScore`
+#### ⬜ Fase 6 — Transformações essenciais *(em sub-blocos)*
+- [x] **6a** Normalização: `MinMax`, `ZScore` (fit/transform/inverse_transform)
 - [ ] `DtPca`, `CategMapping` (one-hot), `NaRemoval`, `ImputationSimple`
 - [ ] Outliers: `OutliersBoxplot`, `OutliersGaussian`
 - [ ] Seleção: `FeatureSelectionCorr`, `FeatureSelectionLasso`,

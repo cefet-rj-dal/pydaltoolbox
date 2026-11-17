@@ -21,6 +21,13 @@ over the public API.
 - [02 - Sampling Strategy](tutorial/02-sampling-strategy.md) — random vs.
   stratified sampling, k-fold, and building splits from folds.
 
+## Transformations
+
+One didactic example per transform (objective + reference + fit/transform/inverse):
+
+- [01 - Min-Max Normalization](transf/01-minmax.md)
+- [02 - Z-Score Normalization](transf/02-zscore.md)
+
 ## Classification
 
 One didactic example per learner (objective + reference + fit/predict/evaluate):

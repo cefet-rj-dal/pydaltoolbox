@@ -42,6 +42,7 @@ from .regression import (
     SklearnRegression,
 )
 from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
+from .transform import MinMax, ZScore
 
 __version__ = "0.1.0"
 
@@ -64,6 +65,7 @@ __all__ = [
     "DalLearner",
     "DalTransform",
     "DataSample",
+    "MinMax",
     "Predictor",
     "RegDtree",
     "RegKnn",
@@ -76,6 +78,7 @@ __all__ = [
     "SampleStratified",
     "SklearnClassification",
     "SklearnRegression",
+    "ZScore",
     "adjust_class_label",
     "adjust_dataframe",
     "adjust_factor",
