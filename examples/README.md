@@ -31,6 +31,8 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [04 - Simple Imputation](transf/04-imputation.md)
 - [05 - Outlier Removal (Boxplot/IQR)](transf/05-outliers-boxplot.md)
 - [06 - Outlier Removal (Gaussian/3-sigma)](transf/06-outliers-gaussian.md)
+- [07 - Categorical Mapping (one-hot)](transf/07-categ-mapping.md)
+- [08 - PCA](transf/08-pca.md)
 
 ## Classification
 

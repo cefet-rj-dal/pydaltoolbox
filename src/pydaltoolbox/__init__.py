@@ -43,6 +43,10 @@ from .regression import (
 )
 from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
 from .transform import (
+    CategMapping,
+    DtPca,
+    FitCurvatureMax,
+    FitCurvatureMin,
     ImputationSimple,
     MinMax,
     NaRemoval,
@@ -54,6 +58,7 @@ from .transform import (
 __version__ = "0.1.0"
 
 __all__ = [
+    "CategMapping",
     "ClaBagging",
     "ClaBoosting",
     "ClaDtree",
@@ -72,6 +77,9 @@ __all__ = [
     "DalLearner",
     "DalTransform",
     "DataSample",
+    "DtPca",
+    "FitCurvatureMax",
+    "FitCurvatureMin",
     "ImputationSimple",
     "MinMax",
     "NaRemoval",
