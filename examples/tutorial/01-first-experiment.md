@@ -93,7 +93,7 @@ train_eval["metrics"]
 
 
        accuracy  TP  TN  FP  FN  precision  recall  sensitivity  specificity   f1
-    0       1.0  37  83   0   0        1.0     1.0          1.0          1.0  1.0
+    0  0.983333  37  83   0   0        1.0     1.0          1.0          1.0  1.0
 
 
 

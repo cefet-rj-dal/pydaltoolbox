@@ -14,8 +14,10 @@ jupyter:
 
 An SVM finds the decision boundary that maximizes the margin between classes. With
 the kernel trick (e.g. the RBF kernel) it models non-linear boundaries while keeping
-a convex optimization problem. SVMs are strong on small-to-medium, well-scaled
-datasets. `cost` controls the margin/error trade-off and `gamma` the kernel reach.
+a convex optimization problem. SVMs are strong on small-to-medium datasets. `cost`
+controls the margin/error trade-off and `gamma` the kernel reach. Features are
+standardized inside the model (as R's `e1071::svm` does by default), so no separate
+scaling step is needed.
 
 **Reference:** Cortes, C., Vapnik, V. (1995). *Support-Vector Networks.* Machine
 Learning.
@@ -34,7 +36,7 @@ train, test = split["train"], split["test"]
 ```
 
 ```python
-model = dal.ClaSvm("Species", slevels, kernel="rbf", cost=1.0, random_state=1).fit(train)
+model = dal.ClaSvm("Species", slevels, kernel="rbf", random_state=1).fit(train)
 ```
 
 ```python

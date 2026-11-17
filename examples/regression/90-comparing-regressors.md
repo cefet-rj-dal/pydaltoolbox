@@ -51,11 +51,11 @@ results
 
                model      R2      mse
     0         linear  0.5927  2594.63
-    1  random forest  0.5454  2896.09
-    2            knn  0.3869  3905.77
-    3            svm  0.1551  5382.18
-    4  decision tree  0.0947  5766.72
-    5            mlp -0.0771  6861.64
+    1            mlp  0.5508  2861.25
+    2  random forest  0.5454  2896.09
+    3            knn  0.3869  3905.77
+    4  decision tree  0.3693  4017.47
+    5            svm  0.3188  4339.27
 
 
 

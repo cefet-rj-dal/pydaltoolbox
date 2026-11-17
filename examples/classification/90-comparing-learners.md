@@ -76,13 +76,13 @@ results
                      model  accuracy
     0                  knn    1.0000
     1          naive bayes    0.9667
-    2        random forest    0.9667
-    3        decision tree    0.9667
-    4       logistic (glm)    0.9667
-    5                  svm    0.9667
-    6              bagging    0.9667
-    7             boosting    0.9333
-    8                  mlp    0.8333
+    2              bagging    0.9667
+    3       logistic (glm)    0.9667
+    4                  svm    0.9667
+    5        random forest    0.9667
+    6             boosting    0.9333
+    7        decision tree    0.9333
+    8                  mlp    0.8667
     9  majority (baseline)    0.3333
 
 

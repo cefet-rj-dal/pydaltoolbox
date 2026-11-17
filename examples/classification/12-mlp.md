@@ -37,6 +37,6 @@ model.evaluate(test["Species"], model.predict(test.drop(columns="Species")))["me
 
 
        accuracy  TP  TN  FP  FN  precision  recall  sensitivity  specificity   f1
-    0  0.833333  10  20   0   0        1.0     1.0          1.0          1.0  1.0
+    0  0.966667  10  20   0   0        1.0     1.0          1.0          1.0  1.0
 
 

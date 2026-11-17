@@ -1,8 +1,9 @@
 """Decision tree classifiers.
 
 Thin adapters over scikit-learn trees. ``ClaDtree`` mirrors ``cla_dtree.R`` and
-``ClaRpart`` mirrors ``cla_rpart.R`` (scikit-learn's DecisionTree is a CART, which
-is exactly what ``rpart`` builds).
+``ClaRpart`` mirrors ``cla_rpart.R``. scikit-learn trees grow to full depth by
+default (which overfits), whereas R's ``tree`` and ``rpart`` pre-prune; we set
+pre-pruning defaults that approximate those packages so quality matches.
 """
 from __future__ import annotations
 
@@ -16,7 +17,11 @@ __all__ = ["ClaDtree", "ClaRpart"]
 
 
 class ClaDtree(SklearnClassification):
-    """Decision tree for classification (wraps scikit-learn)."""
+    """Decision tree for classification (wraps scikit-learn).
+
+    Pre-pruning defaults (``min_samples_split=10``, ``min_samples_leaf=5``)
+    approximate R ``tree::tree`` (``minsize=10``, ``mincut=5``).
+    """
 
     def __init__(
         self,
@@ -28,11 +33,19 @@ class ClaDtree(SklearnClassification):
         self.random_state = random_state
 
     def _make_model(self) -> DecisionTreeClassifier:
-        return DecisionTreeClassifier(random_state=self.random_state)
+        return DecisionTreeClassifier(
+            min_samples_split=10,
+            min_samples_leaf=5,
+            random_state=self.random_state,
+        )
 
 
 class ClaRpart(SklearnClassification):
-    """CART decision tree (the ``rpart`` analog; scikit-learn trees are CART)."""
+    """CART decision tree (the ``rpart`` analog, wraps scikit-learn).
+
+    Pre-pruning defaults (``min_samples_split=20``, ``min_samples_leaf=7``)
+    approximate R ``rpart`` (``minsplit=20``, ``minbucket=7``).
+    """
 
     def __init__(
         self,
@@ -44,4 +57,9 @@ class ClaRpart(SklearnClassification):
         self.random_state = random_state
 
     def _make_model(self) -> DecisionTreeClassifier:
-        return DecisionTreeClassifier(criterion="gini", random_state=self.random_state)
+        return DecisionTreeClassifier(
+            criterion="gini",
+            min_samples_split=20,
+            min_samples_leaf=7,
+            random_state=self.random_state,
+        )

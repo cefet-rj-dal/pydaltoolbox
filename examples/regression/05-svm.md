@@ -2,9 +2,10 @@
 
 Support vector regression fits a function that stays within an `epsilon` tube around
 the data while penalizing points outside it, and uses the kernel trick (e.g. RBF) to
-model non-linear relationships. It is effective on small-to-medium, well-scaled
-datasets. `cost` trades off flatness against tolerated error and `epsilon` sets the
-tube width.
+model non-linear relationships. It is effective on small-to-medium datasets. `cost`
+trades off flatness against tolerated error and `epsilon` sets the tube width.
+Features and target are standardized inside the model (as R's `e1071::svm` does by
+default), which is essential for SVR on targets with large magnitude.
 
 **Reference:** Drucker, H., Burges, C., Kaufman, L., Smola, A., Vapnik, V. (1997).
 *Support Vector Regression Machines.* NeurIPS.
@@ -24,7 +25,7 @@ train, test = split["train"], split["test"]
 
 
 ```python
-model = dal.RegSvm("target", kernel="rbf", cost=1.0).fit(train)
+model = dal.RegSvm("target", kernel="rbf").fit(train)
 ```
 
 
@@ -37,6 +38,6 @@ model.evaluate(test["target"], model.predict(test.drop(columns="target")))["metr
 
 
                mse     smape        R2
-    0  5382.182502  0.393804  0.155106
+    0  4339.272252  0.349317  0.318822
 
 

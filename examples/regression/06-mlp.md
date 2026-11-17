@@ -36,6 +36,6 @@ model.evaluate(test["target"], model.predict(test.drop(columns="target")))["metr
 
 
                mse     smape        R2
-    0  6861.638563  0.399946 -0.077139
+    0  2861.250733  0.321637  0.550841
 
 
