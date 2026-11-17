@@ -37,6 +37,7 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [10 - Feature Selection (lasso)](transf/10-fs-lasso.md)
 - [11 - Feature Selection (information gain)](transf/11-fs-info-gain.md)
 - [12 - Feature Selection (forward stepwise)](transf/12-fs-stepwise.md)
+- [13 - Class Balancing](transf/13-balancing.md)
 
 ## Classification
 

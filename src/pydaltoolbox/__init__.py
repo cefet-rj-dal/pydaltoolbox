@@ -43,6 +43,8 @@ from .regression import (
 )
 from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
 from .transform import (
+    BalOversampling,
+    BalSubsampling,
     CategMapping,
     DtPca,
     FeatureSelectionCorr,
@@ -56,12 +58,15 @@ from .transform import (
     NaRemoval,
     OutliersBoxplot,
     OutliersGaussian,
+    SampleBalance,
     ZScore,
 )
 
 __version__ = "0.1.0"
 
 __all__ = [
+    "BalOversampling",
+    "BalSubsampling",
     "CategMapping",
     "ClaBagging",
     "ClaBoosting",
@@ -101,6 +106,7 @@ __all__ = [
     "RegRf",
     "RegSvm",
     "Regression",
+    "SampleBalance",
     "SampleRandom",
     "SampleStratified",
     "SklearnClassification",

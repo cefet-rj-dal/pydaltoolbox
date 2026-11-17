@@ -182,14 +182,14 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - [x] `datasets.diabetes()` (offline) como dataset de regressão
 - [x] Exemplos: `examples/regression/` (um por classe + comparação).
 
-#### ⬜ Fase 6 — Transformações essenciais *(em sub-blocos)*
+#### ✅ Fase 6 — Transformações essenciais *(em sub-blocos)*
 - [x] **6a** Normalização: `MinMax`, `ZScore` (fit/transform/inverse_transform)
 - [x] **6b** Limpeza: `NaRemoval`, `ImputationSimple`, `OutliersBoxplot`, `OutliersGaussian`
 - [x] **6c** Codificação/projeção: `CategMapping` (one-hot), `DtPca` (+ `FitCurvatureMin/Max`, trazidos do Bloco B pois o PCA depende deles)
 - [x] **6d** Seleção: `FeatureSelectionCorr`, `FeatureSelectionLasso`,
       `FeatureSelectionInfoGain`, `FeatureSelectionStepwise`
-- [ ] **6e** Balanceamento simples (`SampleBalance`, over/subsampling via `resample`)
-- Exemplos: `examples/transf/`.
+- [x] **6e** Balanceamento: `SampleBalance`, `BalSubsampling`, `BalOversampling` (random + SMOTE local)
+- Exemplos: `examples/transf/` (13 exemplos, um por transform).
 
 #### ⬜ Fase 7 — Clustering (sklearn)
 - [ ] `Clusterer` base + `cluutils` (métricas via `sklearn.metrics`)

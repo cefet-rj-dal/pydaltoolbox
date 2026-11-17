@@ -1,4 +1,5 @@
 """Transformation family (preprocessing)."""
+from .balance import BalOversampling, BalSubsampling, SampleBalance
 from .clean import ImputationSimple, NaRemoval
 from .curvature import FitCurvatureMax, FitCurvatureMin
 from .encode import CategMapping
@@ -13,6 +14,8 @@ from .outliers import OutliersBoxplot, OutliersGaussian
 from .pca import DtPca
 
 __all__ = [
+    "BalOversampling",
+    "BalSubsampling",
     "CategMapping",
     "DtPca",
     "FeatureSelectionCorr",
@@ -26,5 +29,6 @@ __all__ = [
     "NaRemoval",
     "OutliersBoxplot",
     "OutliersGaussian",
+    "SampleBalance",
     "ZScore",
 ]
