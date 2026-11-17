@@ -82,14 +82,31 @@ python tools/build_examples.py
 
 ## Status
 
-Early alpha. Implemented so far:
+Alpha — the v1 foundation is complete. Implemented:
 
-- Core base classes: `DalBase`, `DalTransform`, `DalLearner`, `Predictor`
-- Sampling: `SampleRandom`, `SampleStratified` (`train_test`, `k_fold`), `train_test_from_folds`
-- Classification: `Classification` base + `ClaDtree`
-- Reference datasets: `datasets.iris()`, `datasets.boston()`
+- **Core Experiment Line:** `DalBase`, `DalTransform`, `DalLearner`, `Predictor`,
+  `set_params`, and the `adjust_*` helpers.
+- **Sampling:** `SampleRandom`, `SampleStratified` (`train_test`, `k_fold`),
+  `train_test_from_folds`.
+- **Classification:** `Classification` base + `ClaDtree`, `ClaRpart`, `ClaKnn`,
+  `ClaNb`, `ClaRf`, `ClaBagging`, `ClaBoosting`, `ClaSvm`, `ClaMlp`, `ClaGlm`,
+  `ClaMultinom`, `ClaGlmnet`, `ClaMajority`.
+- **Regression:** `Regression` base + `RegLm`, `RegDtree`, `RegKnn`, `RegRf`,
+  `RegSvm`, `RegMlp`.
+- **Clustering:** `Clusterer` base + metrics + `ClusterKmeans`, `ClusterDbscan`,
+  `ClusterGmm`, `ClusterHclust`.
+- **Transformations:** `MinMax`, `ZScore`, `NaRemoval`, `ImputationSimple`,
+  `OutliersBoxplot`, `OutliersGaussian`, `CategMapping`, `DtPca`, feature selection
+  (`Corr`, `Lasso`, `InfoGain`, `Stepwise`), balancing (`SampleBalance`,
+  `BalSubsampling`, `BalOversampling`), and curvature helpers.
+- **Tuning:** `DalTune` base + `ClaTune`, `RegTune`, `CluTune`.
+- **Autoencoder bases:** `AutoencBaseE`, `AutoencBaseEd` (identity, for extension).
+- **Reference datasets:** `datasets.iris()`, `datasets.diabetes()`, `datasets.boston()`.
 
-See [planejamento.md](planejamento.md) for what comes next.
+Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
+backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
+like `tree`/`rpart`). See [planejamento.md](planejamento.md) for the roadmap and what is
+deferred to later versions (xgboost, k-medoids, fuzzy c-means, pattern mining, graphics).
 
 ---
 

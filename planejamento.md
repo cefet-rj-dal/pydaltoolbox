@@ -203,9 +203,10 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - Exemplos: tuning workflow.
 
 #### ⬜ Fase 9 — Fechamento da v1  →  🚀 **Publicação (`0.1.0`)**
-- [ ] Revisão de API pública, docstrings, `__all__`; suíte consolidada
-- [ ] **Publicar `pydaltoolbox` 0.1.0 no PyPI** (via `deploy.md`; pipeline já
-      validado: build + `twine check` + install em venv limpo). Eduardo faz o upload.
+- [x] Revisão de API pública (64 símbolos), docstrings, `__all__`; suíte consolidada
+      (84 testes, ruff limpo); README atualizado para a v1 completa.
+- [ ] **Publicar `pydaltoolbox` 0.1.0 no PyPI** (via `deploy.md`; pipeline validado:
+      build + `twine check` + install em venv limpo). **Eduardo faz o upload.**
 
 > 🎯 Concluído o Bloco A, `pytspredit` e `pyharbinger` têm fundação completa.
 
