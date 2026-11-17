@@ -47,6 +47,12 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [03 - Gaussian Mixture](clustering/03-gmm.md) — model-based clustering (BIC selection).
 - [04 - Hierarchical](clustering/04-hclust.md) — agglomerative clustering.
 
+## Tuning
+
+- [01 - Classification Tuning](tuning/01-classification-tuning.md) — k-fold CV, maximize a metric.
+- [02 - Regression Tuning](tuning/02-regression-tuning.md) — k-fold CV, minimize MSE.
+- [03 - Clustering Tuning](tuning/03-clustering-tuning.md) — intrinsic metric + selector.
+
 ## Classification
 
 One didactic example per learner (objective + reference + fit/predict/evaluate):

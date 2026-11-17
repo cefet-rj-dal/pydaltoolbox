@@ -68,6 +68,7 @@ from .transform import (
     SampleBalance,
     ZScore,
 )
+from .tune import ClaTune, CluTune, DalTune, RegTune
 
 __version__ = "0.1.0"
 
@@ -88,7 +89,9 @@ __all__ = [
     "ClaRf",
     "ClaRpart",
     "ClaSvm",
+    "ClaTune",
     "Classification",
+    "CluTune",
     "ClusterDbscan",
     "ClusterGmm",
     "ClusterHclust",
@@ -97,6 +100,7 @@ __all__ = [
     "DalBase",
     "DalLearner",
     "DalTransform",
+    "DalTune",
     "DataSample",
     "DtPca",
     "FeatureSelectionCorr",
@@ -117,6 +121,7 @@ __all__ = [
     "RegMlp",
     "RegRf",
     "RegSvm",
+    "RegTune",
     "Regression",
     "SampleBalance",
     "SampleRandom",
