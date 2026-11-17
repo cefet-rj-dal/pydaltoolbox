@@ -138,6 +138,11 @@ balanceamento simples→`sklearn.utils.resample`.
    (`jupytext` + `nbconvert`). Falha se houver erro → é smoke test. Tabelas saem em
    texto puro (estilo `##` do R).
 
+   **Convenção (como no daltoolbox):** **um exemplo didático por classe** —
+   objetivo do método, quando usar e **referência (artigo)** + o ciclo
+   `fit`/`predict`/`evaluate`. Além deles, um exemplo "guarda-chuva" por família
+   (ex.: comparação de learners) para seleção de modelos.
+
 **Comandos:** `pip install -e ".[docs]"` · `python tools/build_examples.py`.
 
 **Ritual por fase:** implemento + testes → crio o notebook do tema → rodo o build →

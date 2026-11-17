@@ -23,8 +23,23 @@ over the public API.
 
 ## Classification
 
-- [01 - Comparing Learners](classification/01-learners.md) — the full
-  scikit-learn-backed classifier family under one uniform API.
+One didactic example per learner (objective + reference + fit/predict/evaluate):
+
+- [01 - Decision Tree](classification/01-decision-tree.md)
+- [02 - CART Tree (rpart)](classification/02-rpart.md)
+- [03 - k-Nearest Neighbors](classification/03-knn.md)
+- [04 - Naive Bayes](classification/04-naive-bayes.md)
+- [05 - Logistic Regression / GLM](classification/05-logistic-glm.md)
+- [06 - Multinomial Logistic](classification/06-multinomial.md)
+- [07 - Elastic-Net Logistic](classification/07-elastic-net.md)
+- [08 - Support Vector Machine](classification/08-svm.md)
+- [09 - Random Forest](classification/09-random-forest.md)
+- [10 - Bagging](classification/10-bagging.md)
+- [11 - Boosting](classification/11-boosting.md)
+- [12 - Multi-Layer Perceptron](classification/12-mlp.md)
+- [13 - Majority Baseline](classification/13-majority-baseline.md)
+- [90 - Comparing Learners](classification/90-comparing-learners.md) — model
+  selection: the whole family under one uniform API.
 
 More tutorials are added as each phase of the port lands (see
 [planejamento.md](../planejamento.md)).
