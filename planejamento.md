@@ -186,9 +186,9 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - [x] **6a** Normalização: `MinMax`, `ZScore` (fit/transform/inverse_transform)
 - [x] **6b** Limpeza: `NaRemoval`, `ImputationSimple`, `OutliersBoxplot`, `OutliersGaussian`
 - [x] **6c** Codificação/projeção: `CategMapping` (one-hot), `DtPca` (+ `FitCurvatureMin/Max`, trazidos do Bloco B pois o PCA depende deles)
-- [ ] Seleção: `FeatureSelectionCorr`, `FeatureSelectionLasso`,
+- [x] **6d** Seleção: `FeatureSelectionCorr`, `FeatureSelectionLasso`,
       `FeatureSelectionInfoGain`, `FeatureSelectionStepwise`
-- [ ] Balanceamento simples (`SampleBalance`, over/subsampling via `resample`)
+- [ ] **6e** Balanceamento simples (`SampleBalance`, over/subsampling via `resample`)
 - Exemplos: `examples/transf/`.
 
 #### ⬜ Fase 7 — Clustering (sklearn)

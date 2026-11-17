@@ -33,6 +33,10 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [06 - Outlier Removal (Gaussian/3-sigma)](transf/06-outliers-gaussian.md)
 - [07 - Categorical Mapping (one-hot)](transf/07-categ-mapping.md)
 - [08 - PCA](transf/08-pca.md)
+- [09 - Feature Selection (correlation)](transf/09-fs-correlation.md)
+- [10 - Feature Selection (lasso)](transf/10-fs-lasso.md)
+- [11 - Feature Selection (information gain)](transf/11-fs-info-gain.md)
+- [12 - Feature Selection (forward stepwise)](transf/12-fs-stepwise.md)
 
 ## Classification
 
