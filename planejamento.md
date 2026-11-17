@@ -176,10 +176,11 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - [ ] `ClaRpart` (≈ árvore)
 - Exemplos: `examples/classification/` (fundamentos, famílias de learners).
 
-#### ⬜ Fase 5 — Regressão completa
-- [ ] `Regression` base + `evaluate` (mse/smape/R2)
-- [ ] `RegLm`, `RegDtree`, `RegKnn`, `RegRf`, `RegSvm`, `RegMlp`
-- Exemplos: `examples/regression/`.
+#### ✅ Fase 5 — Regressão completa
+- [x] `Regression` base + `evaluate` (mse/smape/R2)
+- [x] `RegLm`, `RegDtree`, `RegKnn`, `RegRf`, `RegSvm`, `RegMlp`
+- [x] `datasets.diabetes()` (offline) como dataset de regressão
+- [x] Exemplos: `examples/regression/` (um por classe + comparação).
 
 #### ⬜ Fase 6 — Transformações essenciais
 - [ ] Normalização: `MinMax`, `ZScore`
@@ -248,6 +249,6 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 
 ## 11. Pendências / decisões em aberto
 
-- [ ] `datasets.boston()` usa `fetch_openml` (baixa da web). Trocar por `diabetes`
-      do sklearn (offline) como dataset de regressão da Fase 5?
+- [x] ~~Dataset de regressão~~ → resolvido: `datasets.diabetes()` (offline) na Fase 5;
+      `boston()` mantido só por compatibilidade (baixa da web, desencorajado).
 - [ ] Backend de mineração de padrões sequenciais (Bloco B).

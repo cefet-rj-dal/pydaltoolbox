@@ -1,14 +1,16 @@
 """Reference datasets used in examples and tutorials.
 
-The R package ships ``iris`` (via datasets) and ``Boston``. Here we expose them as
-tidy :class:`pandas.DataFrame` objects so the Python tutorials mirror the R ones.
+Exposed as tidy :class:`pandas.DataFrame` objects: ``iris`` (classification) and
+``diabetes`` (regression) come bundled with scikit-learn (offline). ``boston`` is
+kept for compatibility but is fetched from OpenML on demand (needs network) and its
+use is discouraged for ethical reasons -- prefer ``diabetes`` for regression.
 """
 from __future__ import annotations
 
 import pandas as pd
-from sklearn.datasets import fetch_openml, load_iris
+from sklearn.datasets import fetch_openml, load_diabetes, load_iris
 
-__all__ = ["boston", "iris"]
+__all__ = ["boston", "diabetes", "iris"]
 
 
 def iris() -> pd.DataFrame:
@@ -26,6 +28,16 @@ def iris() -> pd.DataFrame:
     df = df.drop(columns="target")
     df["Species"] = species
     return df
+
+
+def diabetes() -> pd.DataFrame:
+    """Return the diabetes regression dataset with a numeric ``target`` column.
+
+    Bundled with scikit-learn (no download). Features are already mean-centered and
+    scaled, which is convenient for distance- and gradient-based learners.
+    """
+    data = load_diabetes(as_frame=True)
+    return data.frame.copy()
 
 
 def boston() -> pd.DataFrame:

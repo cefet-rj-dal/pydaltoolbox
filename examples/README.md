@@ -41,5 +41,18 @@ One didactic example per learner (objective + reference + fit/predict/evaluate):
 - [90 - Comparing Learners](classification/90-comparing-learners.md) — model
   selection: the whole family under one uniform API.
 
+## Regression
+
+One didactic example per regressor (objective + reference + fit/predict/evaluate):
+
+- [01 - Linear Regression](regression/01-linear.md)
+- [02 - Decision Tree](regression/02-decision-tree.md)
+- [03 - k-Nearest Neighbors](regression/03-knn.md)
+- [04 - Random Forest](regression/04-random-forest.md)
+- [05 - Support Vector Regression](regression/05-svm.md)
+- [06 - Multi-Layer Perceptron](regression/06-mlp.md)
+- [90 - Comparing Models](regression/90-comparing-regressors.md) — the whole family
+  ranked by R2 under one uniform API.
+
 More tutorials are added as each phase of the port lands (see
 [planejamento.md](../planejamento.md)).

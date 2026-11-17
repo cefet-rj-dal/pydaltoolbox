@@ -31,6 +31,16 @@ from .classification import (
     ClaSvm,
     SklearnClassification,
 )
+from .regression import (
+    RegDtree,
+    RegKnn,
+    RegLm,
+    RegMlp,
+    Regression,
+    RegRf,
+    RegSvm,
+    SklearnRegression,
+)
 from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
 
 __version__ = "0.1.0"
@@ -55,9 +65,17 @@ __all__ = [
     "DalTransform",
     "DataSample",
     "Predictor",
+    "RegDtree",
+    "RegKnn",
+    "RegLm",
+    "RegMlp",
+    "RegRf",
+    "RegSvm",
+    "Regression",
     "SampleRandom",
     "SampleStratified",
     "SklearnClassification",
+    "SklearnRegression",
     "adjust_class_label",
     "adjust_dataframe",
     "adjust_factor",
