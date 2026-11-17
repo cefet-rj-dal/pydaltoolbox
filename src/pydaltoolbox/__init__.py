@@ -14,30 +14,54 @@ from .adjust import (
     adjust_matrix,
 )
 from .base import DalBase, DalLearner, DalTransform, Predictor
-from .classification import ClaDtree, Classification
+from .classification import (
+    ClaBagging,
+    ClaBoosting,
+    ClaDtree,
+    ClaGlm,
+    ClaGlmnet,
+    ClaKnn,
+    ClaMajority,
+    ClaMlp,
+    ClaMultinom,
+    ClaNb,
+    ClaRf,
+    ClaRpart,
+    Classification,
+    ClaSvm,
+    SklearnClassification,
+)
 from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
 
 __version__ = "0.1.0"
 
 __all__ = [
+    "ClaBagging",
+    "ClaBoosting",
     "ClaDtree",
-    # classification
+    "ClaGlm",
+    "ClaGlmnet",
+    "ClaKnn",
+    "ClaMajority",
+    "ClaMlp",
+    "ClaMultinom",
+    "ClaNb",
+    "ClaRf",
+    "ClaRpart",
+    "ClaSvm",
     "Classification",
-    # core
     "DalBase",
     "DalLearner",
     "DalTransform",
-    # sampling
     "DataSample",
     "Predictor",
     "SampleRandom",
     "SampleStratified",
+    "SklearnClassification",
     "adjust_class_label",
-    # adjust helpers
     "adjust_dataframe",
     "adjust_factor",
     "adjust_matrix",
-    # datasets
     "datasets",
     "train_test_from_folds",
 ]

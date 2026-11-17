@@ -14,7 +14,7 @@ import pandas as pd
 from ..adjust import adjust_dataframe, adjust_factor
 from ..base import Predictor
 
-__all__ = ["Classification"]
+__all__ = ["Classification", "SklearnClassification"]
 
 
 def _as_labels(prediction, slevels: Sequence) -> np.ndarray:
@@ -107,3 +107,34 @@ class Classification(Predictor):
             "prediction": pred_f,
             "metrics": pd.DataFrame([metrics]),
         }
+
+
+class SklearnClassification(Classification):
+    """Base for classifiers that wrap a scikit-learn estimator.
+
+    This captures the whole integration contract once: ``fit`` prepares the data,
+    builds the estimator and trains it; ``predict`` returns a class-score table.
+    Concrete learners only implement :meth:`_make_model` (and store their
+    hyperparameters as attributes, so ``set_params`` can tune them). This is the
+    Experiment Line extensibility promise in practice.
+    """
+
+    def _make_model(self):  # pragma: no cover - overridden by subclasses
+        raise NotImplementedError
+
+    def fit(self, data, **kwargs) -> SklearnClassification:
+        data = self._prepare_classification_data(data)
+        self.model = self._make_model()
+        self.model.fit(data[self.x], data[self.attribute].astype(object))
+        return self
+
+    def predict(self, x, **kwargs) -> pd.DataFrame:
+        """Return a class-score table (one column per class level).
+
+        Only the feature columns (``self.x``) are used, so ``x`` may be the feature
+        frame or the full dataset including the target; the target is ignored.
+        """
+        x = adjust_dataframe(x)
+        proba = self.model.predict_proba(x[self.x])
+        result = pd.DataFrame(proba, columns=[str(c) for c in self.model.classes_])
+        return result.reindex(columns=[str(s) for s in self.slevels], fill_value=0.0)

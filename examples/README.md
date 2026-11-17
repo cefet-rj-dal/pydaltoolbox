@@ -21,5 +21,10 @@ over the public API.
 - [02 - Sampling Strategy](tutorial/02-sampling-strategy.md) — random vs.
   stratified sampling, k-fold, and building splits from folds.
 
+## Classification
+
+- [01 - Comparing Learners](classification/01-learners.md) — the full
+  scikit-learn-backed classifier family under one uniform API.
+
 More tutorials are added as each phase of the port lands (see
 [planejamento.md](../planejamento.md)).
