@@ -20,6 +20,8 @@ __all__ = [
     "metric_calinski_harabasz",
     "metric_davies_bouldin",
     "metric_entropy",
+    "metric_loglik",
+    "metric_noise_points",
     "metric_purity",
     "metric_silhouette",
     "metric_wcss",
@@ -73,6 +75,18 @@ def metric_calinski_harabasz(data=None, cluster=None, **_):
     x, labels = _xy(data, cluster)
     value = calinski_harabasz_score(x, labels) if _valid_internal(x, labels) else np.nan
     return _result("calinski_harabasz", value, "maximize", "internal")
+
+
+def metric_noise_points(cluster=None, **_):
+    """Number of noise points (DBSCAN labels them -1); lower is better."""
+    labels = np.asarray(cluster)
+    return _result("noise_points", int((labels == -1).sum()), "minimize", "internal")
+
+
+def metric_loglik(obj=None, **_):
+    """Log-likelihood of a probabilistic model (e.g. GMM); higher is better."""
+    value = getattr(obj, "loglik", np.nan) if obj is not None else np.nan
+    return _result("loglik", value, "maximize", "internal")
 
 
 def _entropy(labels) -> float:

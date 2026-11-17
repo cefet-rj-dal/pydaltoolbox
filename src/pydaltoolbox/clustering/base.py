@@ -54,7 +54,9 @@ class Clusterer(DalLearner):
         return self.cluster(data, **kwargs)
 
     def evaluate(self, cluster, attribute=None, **kwargs) -> dict:
-        rows = [fn(data=self.train_data, cluster=cluster) for fn in self.eval_internal]
+        rows = [fn(data=self.train_data, cluster=cluster, obj=self) for fn in self.eval_internal]
         if attribute is not None:
-            rows += [fn(cluster=cluster, attribute=attribute) for fn in self.eval_external]
+            rows += [
+                fn(cluster=cluster, attribute=attribute, obj=self) for fn in self.eval_external
+            ]
         return {"metrics": pd.DataFrame(rows, columns=["metric", "value", "goal", "type"])}

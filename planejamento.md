@@ -193,7 +193,7 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 
 #### ⬜ Fase 7 — Clustering (sklearn) *(em sub-blocos)*
 - [x] **7a** `Clusterer` base + métricas (`sklearn.metrics`) + `ClusterKmeans`
-- [ ] **7b** `ClusterDbscan`, `ClusterGmm`, `ClusterHclust`
+- [x] **7b** `ClusterDbscan` (eps via cotovelo kNN), `ClusterGmm` (G via BIC), `ClusterHclust`
 - [ ] **7c** `CluTune`
 - Exemplos: `examples/clustering/`.
 

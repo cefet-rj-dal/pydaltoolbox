@@ -31,7 +31,13 @@ from .classification import (
     ClaSvm,
     SklearnClassification,
 )
-from .clustering import Clusterer, ClusterKmeans
+from .clustering import (
+    ClusterDbscan,
+    Clusterer,
+    ClusterGmm,
+    ClusterHclust,
+    ClusterKmeans,
+)
 from .regression import (
     RegDtree,
     RegKnn,
@@ -83,6 +89,9 @@ __all__ = [
     "ClaRpart",
     "ClaSvm",
     "Classification",
+    "ClusterDbscan",
+    "ClusterGmm",
+    "ClusterHclust",
     "ClusterKmeans",
     "Clusterer",
     "DalBase",

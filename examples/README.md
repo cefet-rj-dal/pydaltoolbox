@@ -43,6 +43,9 @@ One didactic example per transform (objective + reference + fit/transform/invers
 
 - [01 - k-means](clustering/01-kmeans.md) — partitional clustering with internal and
   external evaluation metrics.
+- [02 - DBSCAN](clustering/02-dbscan.md) — density-based clustering with noise.
+- [03 - Gaussian Mixture](clustering/03-gmm.md) — model-based clustering (BIC selection).
+- [04 - Hierarchical](clustering/04-hclust.md) — agglomerative clustering.
 
 ## Classification
 
