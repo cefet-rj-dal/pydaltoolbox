@@ -47,6 +47,11 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [03 - Gaussian Mixture](clustering/03-gmm.md) — model-based clustering (BIC selection).
 - [04 - Hierarchical](clustering/04-hclust.md) — agglomerative clustering.
 
+## Custom Extensions
+
+- [01 - Autoencoder Base Classes](custom/01-autoencoder-base.md) — identity bases to
+  subclass (the extension pattern downstream packages use).
+
 ## Tuning
 
 - [01 - Classification Tuning](tuning/01-classification-tuning.md) — k-fold CV, maximize a metric.

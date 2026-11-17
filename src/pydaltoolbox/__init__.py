@@ -13,6 +13,7 @@ from .adjust import (
     adjust_factor,
     adjust_matrix,
 )
+from .autoenc import AutoencBaseE, AutoencBaseEd
 from .base import DalBase, DalLearner, DalTransform, Predictor
 from .classification import (
     ClaBagging,
@@ -73,6 +74,8 @@ from .tune import ClaTune, CluTune, DalTune, RegTune
 __version__ = "0.1.0"
 
 __all__ = [
+    "AutoencBaseE",
+    "AutoencBaseEd",
     "BalOversampling",
     "BalSubsampling",
     "CategMapping",

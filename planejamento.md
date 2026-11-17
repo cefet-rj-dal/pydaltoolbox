@@ -197,9 +197,9 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - [x] **7c** `CluTune` — feito junto com a família de tuning (ver Fase 8)
 - Exemplos: `examples/clustering/`.
 
-#### ⬜ Fase 8 — Tuning + bases de autoencoder
+#### ✅ Fase 8 — Tuning + bases de autoencoder
 - [x] `DalTune` base + `ClaTune`, `RegTune`, `CluTune` (feito junto, a pedido — família completa)
-- [ ] `AutoencBaseE`, `AutoencBaseEd` (identidade) — harbinger herda
+- [x] `AutoencBaseE`, `AutoencBaseEd` (identidade) — harbinger herda
 - Exemplos: tuning workflow.
 
 #### ⬜ Fase 9 — Fechamento da v1  →  🚀 **Publicação (`0.1.0`)**
