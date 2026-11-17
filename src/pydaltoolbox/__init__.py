@@ -42,7 +42,14 @@ from .regression import (
     SklearnRegression,
 )
 from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
-from .transform import MinMax, ZScore
+from .transform import (
+    ImputationSimple,
+    MinMax,
+    NaRemoval,
+    OutliersBoxplot,
+    OutliersGaussian,
+    ZScore,
+)
 
 __version__ = "0.1.0"
 
@@ -65,7 +72,11 @@ __all__ = [
     "DalLearner",
     "DalTransform",
     "DataSample",
+    "ImputationSimple",
     "MinMax",
+    "NaRemoval",
+    "OutliersBoxplot",
+    "OutliersGaussian",
     "Predictor",
     "RegDtree",
     "RegKnn",

@@ -184,8 +184,8 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 
 #### ⬜ Fase 6 — Transformações essenciais *(em sub-blocos)*
 - [x] **6a** Normalização: `MinMax`, `ZScore` (fit/transform/inverse_transform)
-- [ ] `DtPca`, `CategMapping` (one-hot), `NaRemoval`, `ImputationSimple`
-- [ ] Outliers: `OutliersBoxplot`, `OutliersGaussian`
+- [x] **6b** Limpeza: `NaRemoval`, `ImputationSimple`, `OutliersBoxplot`, `OutliersGaussian`
+- [ ] **6c** Codificação/projeção: `CategMapping` (one-hot), `DtPca`
 - [ ] Seleção: `FeatureSelectionCorr`, `FeatureSelectionLasso`,
       `FeatureSelectionInfoGain`, `FeatureSelectionStepwise`
 - [ ] Balanceamento simples (`SampleBalance`, over/subsampling via `resample`)

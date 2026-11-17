@@ -27,6 +27,10 @@ One didactic example per transform (objective + reference + fit/transform/invers
 
 - [01 - Min-Max Normalization](transf/01-minmax.md)
 - [02 - Z-Score Normalization](transf/02-zscore.md)
+- [03 - Missing-Value Removal](transf/03-na-removal.md)
+- [04 - Simple Imputation](transf/04-imputation.md)
+- [05 - Outlier Removal (Boxplot/IQR)](transf/05-outliers-boxplot.md)
+- [06 - Outlier Removal (Gaussian/3-sigma)](transf/06-outliers-gaussian.md)
 
 ## Classification
 
