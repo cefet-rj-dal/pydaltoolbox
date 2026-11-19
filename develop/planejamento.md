@@ -35,14 +35,15 @@ Nossa contribuição é a **interface uniforme** (Linha de Experimento), não os
 algoritmos. Como o sklearn cobre a grande maioria dos métodos do daltoolbox, a v1
 pode ser **ampla** sem custo de implementação alto.
 
-**Adiado para o Bloco B** (lib extra ou complexidade real):
-`xgboost` (dep compilada), `pam`/k-medoids (sklearn-extra), fuzzy `cmeans` (skfuzzy),
-`louvain` (networkx), seleção `relief` (skrebate), imputação preditiva/por árvore,
-smoothing avançado, autoencoders com backend de deep learning, mineração de padrões
-(`mlxtend`; sequências em aberto) e gráficos (`matplotlib`).
+**Depois da v1 (0.2.0 → 1.0.0):** o restante das classes do R entra de forma gradual,
+priorizando **implementação nativa** (sem dep nova) e deixando o que é pesado/visual como
+**extra opcional**. O roadmap detalhado, com a tabela de decisão *dependência vs. nativo*,
+está na seção 8 (Bloco B). Resumo: 0.2.0 transformações restantes (nativo), 0.3.0
+clustering/seleção (nativo + extras `[graph]`/`[xgboost]`), 0.4.0 mineração de padrões,
+0.5.0 gráficos (`[viz]`), 1.0.0 estabilização completa.
 
-**Dependências da v1:** `numpy`, `pandas`, `scikit-learn` apenas. O resto vira
-**extra opcional** (`pip install pydaltoolbox[xgboost]`, etc.) quando entrar.
+**Dependências do núcleo (até a 1.0.0):** `numpy`, `pandas`, `scikit-learn` apenas. Tudo
+além disso é **extra opcional** (`pip install pydaltoolbox[graph,xgboost,viz]`).
 
 ---
 
@@ -80,7 +81,7 @@ direto, não o clusterer.)*
 | Modelo de dados | `pandas.DataFrame` |
 | Entrada do `predict` | Aceita frame inteiro **ou** só features; exemplos passam só features |
 | Dependências v1 | `numpy`, `pandas`, `scikit-learn`; demais = extras opcionais |
-| Publicação | **Um único release (`0.1.0`) ao final da Fase 9** (fecho da v1). Eduardo faz o upload (token próprio). PyPI sem prazo; versões imutáveis. Paramos a cada fase para ele conferir a documentação no GitHub. |
+| Publicação | `0.1.0` publicada (fim do Bloco A). Depois, **releases incrementais** `0.2.0 → 1.0.0` por tema (ver seção 8). Eduardo autoriza/roda o upload (token `daldeploy`). PyPI sem prazo; versões imutáveis (sempre incrementar). Pausa a cada fase/sub-bloco para revisão no GitHub. |
 | Autoencoders | Só bases identidade na v1; sem backend de DL |
 | Padrões / Gráficos | Adiados (Bloco B) |
 
@@ -202,26 +203,79 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 - [x] `AutoencBaseE`, `AutoencBaseEd` (identidade) — harbinger herda
 - Exemplos: tuning workflow.
 
-#### ⬜ Fase 9 — Fechamento da v1  →  🚀 **Publicação (`0.1.0`)**
+#### ✅ Fase 9 — Fechamento da v1  →  🚀 **Publicação (`0.1.0`)**
 - [x] Revisão de API pública (64 símbolos), docstrings, `__all__`; suíte consolidada
       (84 testes, ruff limpo); README atualizado para a v1 completa.
-- [ ] **Publicar `pydaltoolbox` 0.1.0 no PyPI** (via `deploy.md`; pipeline validado:
-      build + `twine check` + install em venv limpo). **Eduardo faz o upload.**
+- [x] **Publicado `pydaltoolbox` 0.1.0 no PyPI** (2026-11-17) → https://pypi.org/project/pydaltoolbox/
+      Próximo: caminho 0.2.0 → 1.0.0 (Bloco B, seção 8).
 
 > 🎯 Concluído o Bloco A, `pytspredit` e `pyharbinger` têm fundação completa.
 
-### BLOCO B — pós-v1 (requer lib extra ou complexidade)
+### BLOCO B — caminho 0.2.0 → 1.0.0 (introdução gradual do restante do R)
 
-- 🔭 **Classificação extra:** `ClaXgboost` (extra `[xgboost]`).
-- 🔭 **Clustering extra:** `ClusterPam` (sklearn-extra), `ClusterCmeans` (skfuzzy),
-  `ClusterLouvainGraph` (networkx).
-- 🔭 **Transformações avançadas:** `FeatureSelectionRelief` (skrebate), imputação
-  preditiva/por árvore, smoothing avançado, feature generation, aggregation,
-  heurísticas de curvatura.
-- 🔭 **Autoencoders reais:** backend de deep learning (pacote companheiro).
-- 🔭 **Mineração de padrões:** `PatApriori`/`PatEclat` (`mlxtend`); sequências
-  (`PatCspade`) em aberto; filtros de regras.
-- 🔭 **Gráficos:** ~20 `plot_*` (matplotlib), aos poucos.
+Objetivo: cobrir **todas** as classes do `daltoolbox` (R) de forma incremental, cada
+release coeso por tema. Ordem guiada por **custo de dependência**: primeiro o que é
+**nativo** (sem dep nova), depois o que precisa de **extra opcional**, por último o mais
+pesado/visual. O núcleo (`numpy`/`pandas`/`scikit-learn`) permanece o mesmo até a 1.0.0;
+tudo além disso entra como **extra opcional** (`pip install pydaltoolbox[...]`) — quem
+não usa não paga o custo.
+
+#### Princípio: dependência vs. implementação nativa
+
+Regra: **implementar nativo** quando o algoritmo é simples/didático e a alternativa é uma
+lib pesada, de nicho ou pouco mantida; **adicionar dependência (como extra)** quando o
+algoritmo é complexo/padronizado e existe lib leve e bem mantida. Decisões por componente:
+
+| Componente | Opção com dependência | Opção nativa | Decisão |
+|---|---|---|---|
+| Smoothing, imputação (preditiva/árvore), feature generation, aggregation, hierarchy cut, sampling (simple/groups) | — | numpy/pandas/sklearn (já no núcleo) | **nativo** |
+| `FeatureSelectionRelief` | `skrebate` (pouco mantido) | ReliefF (~algoritmo médio) | **nativo** |
+| `ClusterPam` (k-medoids) | `scikit-learn-extra` (atrasa p/ versões do sklearn) | PAM/CLARA (médio) | **nativo** |
+| `ClusterCmeans` (fuzzy) | `skfuzzy` (leve manutenção) | fuzzy c-means (~40 linhas) | **nativo** |
+| `ClusterLouvainGraph` | `networkx` (puro-Python, Louvain embutido) | Louvain (complexo) | **dep → extra `[graph]`** |
+| `ClaXgboost` | `xgboost` (binário, padrão) | — (não reimplementar) | **dep → extra `[xgboost]`** |
+| `PatApriori`/`PatEclat` + regras | `mlxtend` (puxa matplotlib) | apriori/eclat (médio) | **nativo** (evita matplotlib); mlxtend só se eficiência exigir |
+| `PatCspade` (sequências) | `prefixspan` (nicho) / SPMF (Java) | PrefixSpan (médio) | **nativo** (ou adiar p/ 1.0.0) |
+| Gráficos (`plot_*`) | `matplotlib` (padrão) | — | **dep → extra `[viz]`** |
+
+#### 🔭 0.2.0 — Completar transformações (100% nativo, zero dep nova)
+- Smoothing: `Smoothing` base (+ `evaluate`) + `SmoothingFreq`, `SmoothingInter`,
+  `SmoothingQuantization` (via `KBinsDiscretizer`), `SmoothingCluster` (via `KMeans`).
+- Imputação: `ImputationPredictive` (`IterativeImputer`), `ImputationTree` (árvore sklearn).
+- `FeatureGeneration`, `Aggregation`, `HierarchyCut`.
+- Amostragem restante: `SampleSimple`, `SampleGroups`.
+- *Fecha a família de transformações sem custo de dependência.*
+
+#### 🔭 0.3.0 — Completar clustering e seleção (nativo + 1 extra opcional)
+- `ClusterPam` (k-medoids nativo), `ClusterCmeans` (fuzzy c-means nativo).
+- `FeatureSelectionRelief` (ReliefF nativo); reconciliar variantes `fss`/`stepwise`.
+- `ClusterLouvainGraph` → extra opcional **`[graph]`** (`networkx`).
+- `ClaXgboost` → extra opcional **`[xgboost]`**.
+- *Fecha clustering, feature selection e os learners "pesados" como extras.*
+
+#### 🔭 0.4.0 — Mineração de padrões
+- `PatternMiner` base + `discover` + `patutils`.
+- `PatApriori`, `PatEclat` (nativo; `mlxtend` só se necessário), filtros de regras
+  (`RuleFilter*`), thresholds (`pat_threshold`), `PatDara`.
+- `PatCspade` (sequências) — PrefixSpan nativo; se inviável no prazo, documentar e
+  empurrar para a 1.0.0.
+
+#### 🔭 0.5.0 — Gráficos
+- Família `plot_*` (~23) sobre `matplotlib` → extra opcional **`[viz]`**: bar, boxplot,
+  scatter, density, series, histogram, correlation, radar, pair, dendrogram, etc.
+- Seguir a skill `dataviz` para qualidade visual (temas claro/escuro, paleta acessível).
+
+#### 🔭 1.0.0 — Estabilização (completa)
+- Cobertura de **todas** as classes do R (ou exceções documentadas).
+- Congelar a API pública; revisar docstrings e `__all__`.
+- Site de documentação (equivalente ao pkgdown); paridade com os tutoriais do R.
+- Passada de performance/qualidade; **promover de beta para estável**.
+
+> **Extras opcionais previstos:** `[graph]` (networkx), `[xgboost]`, `[viz]` (matplotlib),
+> e, se adotado, `[patterns]` (mlxtend). Núcleo segue enxuto (numpy/pandas/scikit-learn).
+> **Autoencoders reais** (backend de deep learning) permanecem fora do escopo do
+> pydaltoolbox — as bases identidade bastam; a implementação real fica num pacote
+> companheiro, como no R.
 
 ---
 
