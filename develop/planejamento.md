@@ -169,13 +169,13 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 #### ✅ Fase 3 — Slice vertical de classificação
 `Classification` base + `evaluate`, `ClaDtree`, `datasets`, Tutorial 01.
 
-#### 🔜 Fase 4 — Classificação completa
-- [ ] `ClaKnn`, `ClaNb`, `ClaRf`, `ClaSvm`, `ClaMlp`
-- [ ] `ClaGlm`, `ClaMultinom`, `ClaGlmnet` (sobre `LogisticRegression`)
-- [ ] `ClaMajority` (baseline, `DummyClassifier`)
-- [ ] `ClaBagging`, `ClaBoosting` (ensembles)
-- [ ] `ClaRpart` (≈ árvore)
-- Exemplos: `examples/classification/` (fundamentos, famílias de learners).
+#### ✅ Fase 4 — Classificação completa
+- [x] `ClaKnn`, `ClaNb`, `ClaRf`, `ClaSvm`, `ClaMlp`
+- [x] `ClaGlm`, `ClaMultinom`, `ClaGlmnet` (sobre `LogisticRegression`)
+- [x] `ClaMajority` (baseline, `DummyClassifier`)
+- [x] `ClaBagging`, `ClaBoosting` (ensembles)
+- [x] `ClaRpart` (≈ árvore)
+- [x] Exemplos: `examples/classification/` (13 por método + comparação).
 
 #### ✅ Fase 5 — Regressão completa
 - [x] `Regression` base + `evaluate` (mse/smape/R2)
@@ -249,22 +249,77 @@ quando é complexo/padronizado e existe lib leve e bem mantida. Decisões por co
 
 ### CICLO 1 — rodada temática de baixa dependência (nativo)
 
-Núcleo permanece `numpy`/`pandas`/`scikit-learn`. Sequência sugerida (ajustável; cada
-item pode virar um ou mais `0.x.0`):
+Núcleo permanece `numpy`/`pandas`/`scikit-learn` (sem dep nova). Pré-distribuição com
+**todas as classes a migrar** no Ciclo 1 (~24 unidades), desmembrada em **9 passos**
+(`1.1`–`1.9`); cada passo pode virar um ou mais `0.x.0`. Arquivo R indicado para
+rastreabilidade.
 
-- 🔭 **Transformações restantes:** `Smoothing` base (+ `evaluate`), `SmoothingFreq`,
-  `SmoothingInter`, `SmoothingQuantization` (`KBinsDiscretizer`), `SmoothingCluster`
-  (`KMeans`); `ImputationPredictive` (`IterativeImputer`), `ImputationTree`;
-  `FeatureGeneration`, `Aggregation`, `HierarchyCut`; `SampleSimple`, `SampleGroups`.
-- 🔭 **Clustering (nativo):** `ClusterPam` (k-medoids), `ClusterCmeans` (fuzzy c-means).
-- 🔭 **Seleção de atributos (nativo):** `FeatureSelectionRelief` (ReliefF); reconciliar
-  as variantes `fss`/`stepwise`.
-- 🔭 **Mineração de padrões (nativo):** `PatternMiner` base + `discover` + `patutils`;
-  `PatApriori`, `PatEclat`, filtros de regras (`RuleFilter*`), thresholds, `PatDara`;
-  `PatCspade` (PrefixSpan nativo — se inviável, documentar e levar ao Ciclo 2).
+#### 1.1 — Smoothing
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `Smoothing` (base, + `evaluate`) | binning numpy/pandas | `trans_smoothing.R` |
+| `SmoothingFreq` | binning por frequência | `trans_smoothing_freq.R` |
+| `SmoothingInter` | binning por intervalo | `trans_smoothing_inter.R` |
+| `SmoothingQuantization` | `KBinsDiscretizer` | `trans_smoothing_quantization.R` |
+| `SmoothingCluster` | `KMeans` | `trans_smoothing_cluster.R` |
 
-> ✅ Fim do Ciclo 1: **todo o daltoolbox coberto, exceto Louvain, XGBoost e gráficos**,
-> com o pacote ainda instalável só com o núcleo.
+#### 1.2 — Imputação avançada
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `ImputationPredictive` | `IterativeImputer` | `trans_imputation_predictive.R` |
+| `ImputationTree` | árvore sklearn | `trans_imputation_tree.R` |
+
+#### 1.3 — Transformações de atributos
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `FeatureGeneration` | pandas | `trans_feature_generation.R` |
+| `Aggregation` | pandas (groupby) | `trans_aggregation.R` |
+| `HierarchyCut` | numpy/pandas | `trans_hierarchy_cut.R` |
+
+#### 1.4 — Amostragem restante
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `SampleSimple` | numpy | `trans_sample_simple.R` |
+| `SampleGroups` | pandas | `trans_sample_groups.R` |
+
+#### 1.5 — Clustering nativo
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `ClusterPam` (k-medoids) | PAM/CLARA | `clu_pam.R` |
+| `ClusterCmeans` (fuzzy) | fuzzy c-means | `clu_cmeans.R` |
+
+#### 1.6 — Seleção de atributos
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `FeatureSelectionRelief` (ReliefF) | numpy | `trans_feature_selection_relief.R` |
+| reconciliar `fss` × `stepwise` | leaps-forward × `stats::step` | `trans_feature_selection_fss.R`, `trans_feature_selection_stepwise.R` |
+
+*(Hoje existe `FeatureSelectionStepwise` baseado no `fss.R`; decidir se mantemos uma
+classe ou criamos `FeatureSelectionFss` + `FeatureSelectionStepwise` distintas.)*
+
+#### 1.7 — Mineração de padrões: base + itemsets
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `PatternMiner` (base, + `discover`) | — | `pat_pattern_miner.R` |
+| `patutils` (utilitários) | — | `pat_utils.R` |
+| `PatApriori` | apriori nativo | `pat_apriori.R` |
+| `PatEclat` | eclat nativo | `pat_eclat.R` |
+
+#### 1.8 — Mineração de padrões: regras e thresholds
+| Classe/função | Backend nativo | Arquivo R |
+|---|---|---|
+| filtros de regras (`RuleFilterNone/Interest/Dara`, `filter_rules`, `rules_tidy`) | numpy/pandas | `pat_rule_filter.R` |
+| thresholds (`pat_support_threshold`, `pat_confidence_threshold`) | numpy | `pat_threshold.R` |
+| `PatDara` (+ `dara_rules`) | nativo | `pat_dara.R` |
+
+#### 1.9 — Mineração de padrões: sequências
+| Classe | Backend nativo | Arquivo R |
+|---|---|---|
+| `PatCspade` | PrefixSpan nativo | `pat_cspade.R` |
+
+> ✅ Fim do Ciclo 1: **todo o daltoolbox coberto, exceto Louvain, XGBoost e gráficos**
+> (que são o Ciclo 2), com o pacote ainda instalável só com o núcleo. Se o PrefixSpan
+> (1.9) se mostrar inviável no prazo, documentar e levar ao Ciclo 2.
 
 ---
 
