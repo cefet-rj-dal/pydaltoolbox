@@ -12,6 +12,13 @@ from .feature_selection import (
 from .normalize import MinMax, ZScore
 from .outliers import OutliersBoxplot, OutliersGaussian
 from .pca import DtPca
+from .smoothing import (
+    Smoothing,
+    SmoothingCluster,
+    SmoothingFreq,
+    SmoothingInter,
+    SmoothingQuantization,
+)
 
 __all__ = [
     "BalOversampling",
@@ -30,5 +37,10 @@ __all__ = [
     "OutliersBoxplot",
     "OutliersGaussian",
     "SampleBalance",
+    "Smoothing",
+    "SmoothingCluster",
+    "SmoothingFreq",
+    "SmoothingInter",
+    "SmoothingQuantization",
     "ZScore",
 ]

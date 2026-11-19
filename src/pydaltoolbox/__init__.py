@@ -67,11 +67,16 @@ from .transform import (
     OutliersBoxplot,
     OutliersGaussian,
     SampleBalance,
+    Smoothing,
+    SmoothingCluster,
+    SmoothingFreq,
+    SmoothingInter,
+    SmoothingQuantization,
     ZScore,
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "AutoencBaseE",
@@ -131,6 +136,11 @@ __all__ = [
     "SampleStratified",
     "SklearnClassification",
     "SklearnRegression",
+    "Smoothing",
+    "SmoothingCluster",
+    "SmoothingFreq",
+    "SmoothingInter",
+    "SmoothingQuantization",
     "ZScore",
     "adjust_class_label",
     "adjust_dataframe",

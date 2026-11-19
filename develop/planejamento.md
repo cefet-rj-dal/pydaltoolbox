@@ -234,7 +234,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 
 | Passo | Versão | Tema |
 |---|---|---|
-| 1.1 | `0.2.0` | Smoothing |
+| 1.1 | `0.2.0` ✅ | Smoothing |
 | 1.2 | `0.3.0` | Imputação avançada |
 | 1.3 | `0.4.0` | Transformações de atributos |
 | 1.4 | `0.5.0` | Amostragem restante |
@@ -280,7 +280,7 @@ Núcleo permanece `numpy`/`pandas`/`scikit-learn` (sem dep nova). Pré-distribui
 (`1.1`–`1.9`); cada passo pode virar um ou mais `0.x.0`. Arquivo R indicado para
 rastreabilidade.
 
-#### 1.1 — Smoothing → `0.2.0`
+#### ✅ 1.1 — Smoothing → `0.2.0` (publicado)
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `Smoothing` (base, + `evaluate`) | binning numpy/pandas | `trans_smoothing.R` |
