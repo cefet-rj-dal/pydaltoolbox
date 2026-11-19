@@ -227,6 +227,32 @@ Releases podem ser **tão pequenos quanto fizer sentido** (um tema, ou até um s
 por release) — não há problema em chegar a muitos ciclos (20+) até a 1.0.0. Cada release
 é um `0.x.0`; versões são imutáveis (sempre incrementar).
 
+#### Mapa de versões (um passo = uma versão = ~um dia)
+
+**Cadência:** publicar **uma versão por dia**, trabalhando **um item por dia**. Cada passo
+dos Ciclos 1 e 2 corresponde a um bump de minor.
+
+| Passo | Versão | Tema |
+|---|---|---|
+| 1.1 | `0.2.0` | Smoothing |
+| 1.2 | `0.3.0` | Imputação avançada |
+| 1.3 | `0.4.0` | Transformações de atributos |
+| 1.4 | `0.5.0` | Amostragem restante |
+| 1.5 | `0.6.0` | Clustering nativo (Pam, Cmeans) |
+| 1.6 | `0.7.0` | Seleção de atributos (Relief + fss/stepwise) |
+| 1.7 | `0.8.0` | Padrões: base + itemsets |
+| 1.8 | `0.9.0` | Padrões: regras e thresholds |
+| 1.9 | `0.10.0` | Padrões: sequências (PrefixSpan) |
+| 2.1 | `0.11.0` | `ClaXgboost` `[xgboost]` |
+| 2.2 | `0.12.0` | `ClusterLouvainGraph` `[graph]` |
+| 2.3 | `0.13.0` | Gráficos: base + distribuição + comparação `[viz]` |
+| 2.4 | `0.14.0` | Gráficos: relação + temporais + estrutura `[viz]` |
+| 2.5 | `0.15.0` | *(opcional)* Padrões: backend `mlxtend` `[patterns]` |
+| — | `1.0.0` | Estabilização (cobertura completa, API congelada, beta→estável) |
+
+*(`0.10.0` > `0.9.0` é válido em semver/PyPI — comparação numérica. Se o passo 2.5 for
+descartado, a 1.0.0 vem após a `0.14.0`.)*
+
 #### Princípio: dependência vs. implementação nativa
 
 Regra: **implementar nativo** quando o algoritmo é simples/didático e a alternativa é uma
@@ -254,7 +280,7 @@ Núcleo permanece `numpy`/`pandas`/`scikit-learn` (sem dep nova). Pré-distribui
 (`1.1`–`1.9`); cada passo pode virar um ou mais `0.x.0`. Arquivo R indicado para
 rastreabilidade.
 
-#### 1.1 — Smoothing
+#### 1.1 — Smoothing → `0.2.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `Smoothing` (base, + `evaluate`) | binning numpy/pandas | `trans_smoothing.R` |
@@ -263,32 +289,32 @@ rastreabilidade.
 | `SmoothingQuantization` | `KBinsDiscretizer` | `trans_smoothing_quantization.R` |
 | `SmoothingCluster` | `KMeans` | `trans_smoothing_cluster.R` |
 
-#### 1.2 — Imputação avançada
+#### 1.2 — Imputação avançada → `0.3.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `ImputationPredictive` | `IterativeImputer` | `trans_imputation_predictive.R` |
 | `ImputationTree` | árvore sklearn | `trans_imputation_tree.R` |
 
-#### 1.3 — Transformações de atributos
+#### 1.3 — Transformações de atributos → `0.4.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `FeatureGeneration` | pandas | `trans_feature_generation.R` |
 | `Aggregation` | pandas (groupby) | `trans_aggregation.R` |
 | `HierarchyCut` | numpy/pandas | `trans_hierarchy_cut.R` |
 
-#### 1.4 — Amostragem restante
+#### 1.4 — Amostragem restante → `0.5.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `SampleSimple` | numpy | `trans_sample_simple.R` |
 | `SampleGroups` | pandas | `trans_sample_groups.R` |
 
-#### 1.5 — Clustering nativo
+#### 1.5 — Clustering nativo → `0.6.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `ClusterPam` (k-medoids) | PAM/CLARA | `clu_pam.R` |
 | `ClusterCmeans` (fuzzy) | fuzzy c-means | `clu_cmeans.R` |
 
-#### 1.6 — Seleção de atributos
+#### 1.6 — Seleção de atributos → `0.7.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `FeatureSelectionRelief` (ReliefF) | numpy | `trans_feature_selection_relief.R` |
@@ -297,7 +323,7 @@ rastreabilidade.
 *(Hoje existe `FeatureSelectionStepwise` baseado no `fss.R`; decidir se mantemos uma
 classe ou criamos `FeatureSelectionFss` + `FeatureSelectionStepwise` distintas.)*
 
-#### 1.7 — Mineração de padrões: base + itemsets
+#### 1.7 — Mineração de padrões: base + itemsets → `0.8.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `PatternMiner` (base, + `discover`) | — | `pat_pattern_miner.R` |
@@ -305,14 +331,14 @@ classe ou criamos `FeatureSelectionFss` + `FeatureSelectionStepwise` distintas.)
 | `PatApriori` | apriori nativo | `pat_apriori.R` |
 | `PatEclat` | eclat nativo | `pat_eclat.R` |
 
-#### 1.8 — Mineração de padrões: regras e thresholds
+#### 1.8 — Mineração de padrões: regras e thresholds → `0.9.0`
 | Classe/função | Backend nativo | Arquivo R |
 |---|---|---|
 | filtros de regras (`RuleFilterNone/Interest/Dara`, `filter_rules`, `rules_tidy`) | numpy/pandas | `pat_rule_filter.R` |
 | thresholds (`pat_support_threshold`, `pat_confidence_threshold`) | numpy | `pat_threshold.R` |
 | `PatDara` (+ `dara_rules`) | nativo | `pat_dara.R` |
 
-#### 1.9 — Mineração de padrões: sequências
+#### 1.9 — Mineração de padrões: sequências → `0.10.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `PatCspade` | PrefixSpan nativo | `pat_cspade.R` |
@@ -330,17 +356,17 @@ Pré-distribuição com **todas as classes/funções** a migrar no Ciclo 2 (25 u
 (granularidade ajustável; ordem/escopo a refinar com o Eduardo). Cada arquivo R está
 indicado para rastreabilidade.
 
-#### 2.1 — Classificação extra → `[xgboost]`
+#### 2.1 — Classificação extra → `[xgboost]` · `0.11.0`
 | Classe | Backend | Arquivo R |
 |---|---|---|
 | `ClaXgboost` | `xgboost` | `cla_xgboost.R` |
 
-#### 2.2 — Clustering extra → `[graph]`
+#### 2.2 — Clustering extra → `[graph]` · `0.12.0`
 | Classe | Backend | Arquivo R |
 |---|---|---|
 | `ClusterLouvainGraph` | `networkx` (Louvain) | `clu_louvain.R` |
 
-#### 2.3 — Gráficos: base + distribuição + comparação → `[viz]` (`matplotlib`)
+#### 2.3 — Gráficos: base + distribuição + comparação → `[viz]` (`matplotlib`) · `0.13.0`
 Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessível).
 | Função/base | Tipo | Arquivo R |
 |---|---|---|
@@ -357,7 +383,7 @@ Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessí
 | `plot_pieplot` | comparação | `grf_pieplot.R` |
 | `plot_radar` | comparação | `grf_radar.R` |
 
-#### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]`
+#### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]` · `0.14.0`
 11 gráficos.
 | Função | Tipo | Arquivo R |
 |---|---|---|
@@ -373,7 +399,7 @@ Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessí
 | `plot_ts_pred` | temporal | `grf_ts_pred.R` |
 | `plot_dendrogram` | estrutura | `grf_dendrogram.R` |
 
-#### 2.5 — (opcional) Padrões: backend alternativo → `[patterns]`
+#### 2.5 — (opcional) Padrões: backend alternativo → `[patterns]` · `0.15.0`
 Sem classes novas: trocar/aumentar o backend de `PatApriori`/`PatEclat` para `mlxtend`
 **somente** se o nativo do Ciclo 1 precisar de mais eficiência. Decidir junto.
 
