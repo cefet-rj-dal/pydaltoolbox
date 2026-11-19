@@ -35,12 +35,12 @@ Nossa contribuição é a **interface uniforme** (Linha de Experimento), não os
 algoritmos. Como o sklearn cobre a grande maioria dos métodos do daltoolbox, a v1
 pode ser **ampla** sem custo de implementação alto.
 
-**Depois da v1 (0.2.0 → 1.0.0):** o restante das classes do R entra de forma gradual,
-priorizando **implementação nativa** (sem dep nova) e deixando o que é pesado/visual como
-**extra opcional**. O roadmap detalhado, com a tabela de decisão *dependência vs. nativo*,
-está na seção 8 (Bloco B). Resumo: 0.2.0 transformações restantes (nativo), 0.3.0
-clustering/seleção (nativo + extras `[graph]`/`[xgboost]`), 0.4.0 mineração de padrões,
-0.5.0 gráficos (`[viz]`), 1.0.0 estabilização completa.
+**Depois da v1 — dois ciclos temáticos até a 1.0.0:** **Ciclo 1** passa por cada tema só
+com o que é **nativo** (sem dep nova) — entrega a largura do framework barato; **Ciclo 2**
+volta em cada tema e acrescenta as classes de **maior dependência** como extras opcionais
+(`[graph]`, `[xgboost]`, `[viz]`...). Releases podem ser bem pequenos (muitos ciclos são
+bem-vindos). O roadmap detalhado, com a tabela de decisão *dependência vs. nativo*, está
+na seção 8 (Bloco B). O Ciclo 2 será refinado em conjunto.
 
 **Dependências do núcleo (até a 1.0.0):** `numpy`, `pandas`, `scikit-learn` apenas. Tudo
 além disso é **extra opcional** (`pip install pydaltoolbox[graph,xgboost,viz]`).
@@ -81,7 +81,7 @@ direto, não o clusterer.)*
 | Modelo de dados | `pandas.DataFrame` |
 | Entrada do `predict` | Aceita frame inteiro **ou** só features; exemplos passam só features |
 | Dependências v1 | `numpy`, `pandas`, `scikit-learn`; demais = extras opcionais |
-| Publicação | `0.1.0` publicada (fim do Bloco A). Depois, **releases incrementais** `0.2.0 → 1.0.0` por tema (ver seção 8). Eduardo autoriza/roda o upload (token `daldeploy`). PyPI sem prazo; versões imutáveis (sempre incrementar). Pausa a cada fase/sub-bloco para revisão no GitHub. |
+| Publicação | `0.1.0` publicada (fim do Bloco A). Depois, **releases incrementais** até a `1.0.0` em **dois ciclos temáticos** (ver seção 8; muitos ciclos pequenos são bem-vindos). Eduardo autoriza/roda o upload (token `daldeploy`). PyPI sem prazo; versões imutáveis (sempre incrementar). Pausa a cada fase/sub-bloco para revisão no GitHub. |
 | Autoencoders | Só bases identidade na v1; sem backend de DL |
 | Padrões / Gráficos | Adiados (Bloco B) |
 
@@ -211,71 +211,89 @@ Legenda: ✅ feito · 🔜 próximo · ⬜ pendente (v1) · 🔭 Bloco B (pós-v
 
 > 🎯 Concluído o Bloco A, `pytspredit` e `pyharbinger` têm fundação completa.
 
-### BLOCO B — caminho 0.2.0 → 1.0.0 (introdução gradual do restante do R)
+### BLOCO B — dois ciclos temáticos até a 1.0.0
 
-Objetivo: cobrir **todas** as classes do `daltoolbox` (R) de forma incremental, cada
-release coeso por tema. Ordem guiada por **custo de dependência**: primeiro o que é
-**nativo** (sem dep nova), depois o que precisa de **extra opcional**, por último o mais
-pesado/visual. O núcleo (`numpy`/`pandas`/`scikit-learn`) permanece o mesmo até a 1.0.0;
-tudo além disso entra como **extra opcional** (`pip install pydaltoolbox[...]`) — quem
-não usa não paga o custo.
+Cobrir **todas** as classes do `daltoolbox` (R) em **duas rodadas** temáticas:
+
+- **Ciclo 1 — baixa dependência (nativo):** passar por cada tema implementando só o que é
+  nativo (núcleo `numpy`/`pandas`/`scikit-learn`, sem dep nova). Entrega a **largura** do
+  framework barato: ao fim do ciclo, todos os temas têm cobertura, menos as classes que
+  exigem lib pesada.
+- **Ciclo 2 — completar (maior dependência):** voltar em cada tema e acrescentar as
+  classes que precisam de **extra opcional** (`[graph]`, `[xgboost]`, `[viz]`, ...).
+  **Este ciclo será refinado em conjunto** (escopo e ordem a decidir com o Eduardo).
+
+Releases podem ser **tão pequenos quanto fizer sentido** (um tema, ou até um sub-bloco,
+por release) — não há problema em chegar a muitos ciclos (20+) até a 1.0.0. Cada release
+é um `0.x.0`; versões são imutáveis (sempre incrementar).
 
 #### Princípio: dependência vs. implementação nativa
 
 Regra: **implementar nativo** quando o algoritmo é simples/didático e a alternativa é uma
-lib pesada, de nicho ou pouco mantida; **adicionar dependência (como extra)** quando o
-algoritmo é complexo/padronizado e existe lib leve e bem mantida. Decisões por componente:
+lib pesada, de nicho ou pouco mantida; **adicionar dependência (como extra opcional)**
+quando é complexo/padronizado e existe lib leve e bem mantida. Decisões por componente:
 
-| Componente | Opção com dependência | Opção nativa | Decisão |
-|---|---|---|---|
-| Smoothing, imputação (preditiva/árvore), feature generation, aggregation, hierarchy cut, sampling (simple/groups) | — | numpy/pandas/sklearn (já no núcleo) | **nativo** |
-| `FeatureSelectionRelief` | `skrebate` (pouco mantido) | ReliefF (~algoritmo médio) | **nativo** |
-| `ClusterPam` (k-medoids) | `scikit-learn-extra` (atrasa p/ versões do sklearn) | PAM/CLARA (médio) | **nativo** |
-| `ClusterCmeans` (fuzzy) | `skfuzzy` (leve manutenção) | fuzzy c-means (~40 linhas) | **nativo** |
-| `ClusterLouvainGraph` | `networkx` (puro-Python, Louvain embutido) | Louvain (complexo) | **dep → extra `[graph]`** |
-| `ClaXgboost` | `xgboost` (binário, padrão) | — (não reimplementar) | **dep → extra `[xgboost]`** |
-| `PatApriori`/`PatEclat` + regras | `mlxtend` (puxa matplotlib) | apriori/eclat (médio) | **nativo** (evita matplotlib); mlxtend só se eficiência exigir |
-| `PatCspade` (sequências) | `prefixspan` (nicho) / SPMF (Java) | PrefixSpan (médio) | **nativo** (ou adiar p/ 1.0.0) |
-| Gráficos (`plot_*`) | `matplotlib` (padrão) | — | **dep → extra `[viz]`** |
+| Componente | Opção com dependência | Opção nativa | Decisão | Ciclo |
+|---|---|---|---|---|
+| Smoothing, imputação (preditiva/árvore), feature generation, aggregation, hierarchy cut, sampling (simple/groups) | — | numpy/pandas/sklearn (já no núcleo) | **nativo** | 1 |
+| `FeatureSelectionRelief` | `skrebate` (pouco mantido) | ReliefF (médio) | **nativo** | 1 |
+| `ClusterPam` (k-medoids) | `scikit-learn-extra` | PAM/CLARA (médio) | **nativo** | 1 |
+| `ClusterCmeans` (fuzzy) | `skfuzzy` | fuzzy c-means (~40 linhas) | **nativo** | 1 |
+| `PatApriori`/`PatEclat` + regras | `mlxtend` (puxa matplotlib) | apriori/eclat (médio) | **nativo** | 1 |
+| `PatCspade` (sequências) | `prefixspan` / SPMF (Java) | PrefixSpan (médio) | **nativo** | 1 |
+| `ClusterLouvainGraph` | `networkx` (Louvain embutido) | Louvain (complexo) | **dep → `[graph]`** | 2 |
+| `ClaXgboost` | `xgboost` (binário) | — (não reimplementar) | **dep → `[xgboost]`** | 2 |
+| Gráficos (`plot_*`, ~23) | `matplotlib` | — | **dep → `[viz]`** | 2 |
 
-#### 🔭 0.2.0 — Completar transformações (100% nativo, zero dep nova)
-- Smoothing: `Smoothing` base (+ `evaluate`) + `SmoothingFreq`, `SmoothingInter`,
-  `SmoothingQuantization` (via `KBinsDiscretizer`), `SmoothingCluster` (via `KMeans`).
-- Imputação: `ImputationPredictive` (`IterativeImputer`), `ImputationTree` (árvore sklearn).
-- `FeatureGeneration`, `Aggregation`, `HierarchyCut`.
-- Amostragem restante: `SampleSimple`, `SampleGroups`.
-- *Fecha a família de transformações sem custo de dependência.*
+---
 
-#### 🔭 0.3.0 — Completar clustering e seleção (nativo + 1 extra opcional)
-- `ClusterPam` (k-medoids nativo), `ClusterCmeans` (fuzzy c-means nativo).
-- `FeatureSelectionRelief` (ReliefF nativo); reconciliar variantes `fss`/`stepwise`.
-- `ClusterLouvainGraph` → extra opcional **`[graph]`** (`networkx`).
-- `ClaXgboost` → extra opcional **`[xgboost]`**.
-- *Fecha clustering, feature selection e os learners "pesados" como extras.*
+### CICLO 1 — rodada temática de baixa dependência (nativo)
 
-#### 🔭 0.4.0 — Mineração de padrões
-- `PatternMiner` base + `discover` + `patutils`.
-- `PatApriori`, `PatEclat` (nativo; `mlxtend` só se necessário), filtros de regras
-  (`RuleFilter*`), thresholds (`pat_threshold`), `PatDara`.
-- `PatCspade` (sequências) — PrefixSpan nativo; se inviável no prazo, documentar e
-  empurrar para a 1.0.0.
+Núcleo permanece `numpy`/`pandas`/`scikit-learn`. Sequência sugerida (ajustável; cada
+item pode virar um ou mais `0.x.0`):
 
-#### 🔭 0.5.0 — Gráficos
-- Família `plot_*` (~23) sobre `matplotlib` → extra opcional **`[viz]`**: bar, boxplot,
-  scatter, density, series, histogram, correlation, radar, pair, dendrogram, etc.
-- Seguir a skill `dataviz` para qualidade visual (temas claro/escuro, paleta acessível).
+- 🔭 **Transformações restantes:** `Smoothing` base (+ `evaluate`), `SmoothingFreq`,
+  `SmoothingInter`, `SmoothingQuantization` (`KBinsDiscretizer`), `SmoothingCluster`
+  (`KMeans`); `ImputationPredictive` (`IterativeImputer`), `ImputationTree`;
+  `FeatureGeneration`, `Aggregation`, `HierarchyCut`; `SampleSimple`, `SampleGroups`.
+- 🔭 **Clustering (nativo):** `ClusterPam` (k-medoids), `ClusterCmeans` (fuzzy c-means).
+- 🔭 **Seleção de atributos (nativo):** `FeatureSelectionRelief` (ReliefF); reconciliar
+  as variantes `fss`/`stepwise`.
+- 🔭 **Mineração de padrões (nativo):** `PatternMiner` base + `discover` + `patutils`;
+  `PatApriori`, `PatEclat`, filtros de regras (`RuleFilter*`), thresholds, `PatDara`;
+  `PatCspade` (PrefixSpan nativo — se inviável, documentar e levar ao Ciclo 2).
 
-#### 🔭 1.0.0 — Estabilização (completa)
+> ✅ Fim do Ciclo 1: **todo o daltoolbox coberto, exceto Louvain, XGBoost e gráficos**,
+> com o pacote ainda instalável só com o núcleo.
+
+---
+
+### CICLO 2 — rodada temática completa (classes de maior dependência) · *a refinar juntos*
+
+Revisitar cada tema acrescentando o que exige **extra opcional**. Escopo/ordem a definir
+com o Eduardo; esboço inicial:
+
+- 🔭 **Classificação:** `ClaXgboost` → `[xgboost]`.
+- 🔭 **Clustering:** `ClusterLouvainGraph` → `[graph]` (`networkx`).
+- 🔭 **Gráficos:** família `plot_*` (~23) → `[viz]` (`matplotlib`), seguindo a skill
+  `dataviz` (temas claro/escuro, paleta acessível). Tema inteiro é de Ciclo 2.
+- 🔭 **Padrões (se necessário):** backend alternativo (`mlxtend`/`[patterns]`) caso o
+  nativo do Ciclo 1 precise de mais eficiência.
+- 🔭 *(outros itens de maior dependência que surgirem — decidir juntos.)*
+
+> **Autoencoders reais** (backend de deep learning) permanecem **fora** do pydaltoolbox:
+> as bases identidade bastam; a implementação real fica num pacote companheiro, como no R.
+
+---
+
+### 🔭 1.0.0 — Estabilização (completa)
 - Cobertura de **todas** as classes do R (ou exceções documentadas).
 - Congelar a API pública; revisar docstrings e `__all__`.
 - Site de documentação (equivalente ao pkgdown); paridade com os tutoriais do R.
 - Passada de performance/qualidade; **promover de beta para estável**.
 
 > **Extras opcionais previstos:** `[graph]` (networkx), `[xgboost]`, `[viz]` (matplotlib),
-> e, se adotado, `[patterns]` (mlxtend). Núcleo segue enxuto (numpy/pandas/scikit-learn).
-> **Autoencoders reais** (backend de deep learning) permanecem fora do escopo do
-> pydaltoolbox — as bases identidade bastam; a implementação real fica num pacote
-> companheiro, como no R.
+> e, se adotado, `[patterns]` (mlxtend). Núcleo enxuto (numpy/pandas/scikit-learn) até a 1.0.0.
 
 ---
 
