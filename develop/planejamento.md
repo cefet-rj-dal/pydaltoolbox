@@ -270,17 +270,62 @@ item pode virar um ou mais `0.x.0`):
 
 ### CICLO 2 — rodada temática completa (classes de maior dependência) · *a refinar juntos*
 
-Revisitar cada tema acrescentando o que exige **extra opcional**. Escopo/ordem a definir
-com o Eduardo; esboço inicial:
+Pré-distribuição com **todas as classes/funções** a migrar no Ciclo 2 (25 unidades:
+2 learners + base de gráficos + 22 `plot_*`). Agrupadas em sub-releases `0.x.0`
+(granularidade ajustável; ordem/escopo a refinar com o Eduardo). Cada arquivo R está
+indicado para rastreabilidade.
 
-- 🔭 **Classificação:** `ClaXgboost` → `[xgboost]`.
-- 🔭 **Clustering:** `ClusterLouvainGraph` → `[graph]` (`networkx`).
-- 🔭 **Gráficos:** família `plot_*` (~23) → `[viz]` (`matplotlib`), seguindo a skill
-  `dataviz` (temas claro/escuro, paleta acessível). Tema inteiro é de Ciclo 2.
-- 🔭 **Padrões (se necessário):** backend alternativo (`mlxtend`/`[patterns]`) caso o
-  nativo do Ciclo 1 precise de mais eficiência.
-- 🔭 *(outros itens de maior dependência que surgirem — decidir juntos.)*
+#### 2.1 — Classificação extra → `[xgboost]`
+| Classe | Backend | Arquivo R |
+|---|---|---|
+| `ClaXgboost` | `xgboost` | `cla_xgboost.R` |
 
+#### 2.2 — Clustering extra → `[graph]`
+| Classe | Backend | Arquivo R |
+|---|---|---|
+| `ClusterLouvainGraph` | `networkx` (Louvain) | `clu_louvain.R` |
+
+#### 2.3 — Gráficos: base + distribuição + comparação → `[viz]` (`matplotlib`)
+Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessível).
+| Função/base | Tipo | Arquivo R |
+|---|---|---|
+| `GraphicsDalGraphics` (base/utilitários) | base | `graphics_dal_graphics.R` |
+| `plot_hist` | distribuição | `grf_hist.R` |
+| `plot_density` | distribuição | `grf_density.R` |
+| `plot_density_class` | distribuição | `grf_density_class.R` |
+| `plot_boxplot` | distribuição | `grf_boxplot.R` |
+| `plot_boxplot_class` | distribuição | `grf_boxplot_class.R` |
+| `plot_bar` | comparação | `grf_bar.R` |
+| `plot_groupedbar` | comparação | `grf_groupedbar.R` |
+| `plot_stackedbar` | comparação | `grf_stackedbar.R` |
+| `plot_lollipop` | comparação | `grf_lollipop.R` |
+| `plot_pieplot` | comparação | `grf_pieplot.R` |
+| `plot_radar` | comparação | `grf_radar.R` |
+
+#### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]`
+11 gráficos.
+| Função | Tipo | Arquivo R |
+|---|---|---|
+| `plot_scatter` | relação | `grf_scatter.R` |
+| `plot_points` | relação | `grf_points.R` |
+| `plot_correlation` | relação | `grf_correlation.R` |
+| `plot_pair` | relação | `grf_pair.R` |
+| `plot_pair_adv` | relação | `grf_pair_adv.R` |
+| `plot_parallel` | relação | `grf_parallel.R` |
+| `plot_pixel` | relação | `grf_pixel.R` |
+| `plot_series` | temporal | `grf_series.R` |
+| `plot_ts` | temporal | `grf_ts.R` |
+| `plot_ts_pred` | temporal | `grf_ts_pred.R` |
+| `plot_dendrogram` | estrutura | `grf_dendrogram.R` |
+
+#### 2.5 — (opcional) Padrões: backend alternativo → `[patterns]`
+Sem classes novas: trocar/aumentar o backend de `PatApriori`/`PatEclat` para `mlxtend`
+**somente** se o nativo do Ciclo 1 precisar de mais eficiência. Decidir junto.
+
+> **Resumo do Ciclo 2:** `ClaXgboost`, `ClusterLouvainGraph`, `GraphicsDalGraphics` + 22
+> `plot_*`. Extras introduzidos: `[xgboost]`, `[graph]` (networkx), `[viz]` (matplotlib),
+> e opcionalmente `[patterns]` (mlxtend).
+>
 > **Autoencoders reais** (backend de deep learning) permanecem **fora** do pydaltoolbox:
 > as bases identidade bastam; a implementação real fica num pacote companheiro, como no R.
 
