@@ -40,6 +40,7 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [13 - Class Balancing](transf/13-balancing.md)
 - [14 - Smoothing by Binning](transf/14-smoothing.md)
 - [15 - Predictive Imputation](transf/15-imputation-predictive.md)
+- [16 - Feature Engineering](transf/16-feature-engineering.md)
 
 ## Clustering
 

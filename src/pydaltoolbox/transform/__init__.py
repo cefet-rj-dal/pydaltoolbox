@@ -3,6 +3,7 @@ from .balance import BalOversampling, BalSubsampling, SampleBalance
 from .clean import ImputationSimple, NaRemoval
 from .curvature import FitCurvatureMax, FitCurvatureMin
 from .encode import CategMapping
+from .feature import Aggregation, FeatureGeneration, HierarchyCut
 from .feature_selection import (
     FeatureSelectionCorr,
     FeatureSelectionInfoGain,
@@ -22,16 +23,19 @@ from .smoothing import (
 )
 
 __all__ = [
+    "Aggregation",
     "BalOversampling",
     "BalSubsampling",
     "CategMapping",
     "DtPca",
+    "FeatureGeneration",
     "FeatureSelectionCorr",
     "FeatureSelectionInfoGain",
     "FeatureSelectionLasso",
     "FeatureSelectionStepwise",
     "FitCurvatureMax",
     "FitCurvatureMin",
+    "HierarchyCut",
     "ImputationPredictive",
     "ImputationSimple",
     "ImputationTree",

@@ -236,7 +236,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 |---|---|---|
 | 1.1 | `0.2.0` ✅ | Smoothing |
 | 1.2 | `0.3.0` ✅ | Imputação avançada |
-| 1.3 | `0.4.0` | Transformações de atributos |
+| 1.3 | `0.4.0` ✅ | Transformações de atributos |
 | 1.4 | `0.5.0` | Amostragem restante |
 | 1.5 | `0.6.0` | Clustering nativo (Pam, Cmeans) |
 | 1.6 | `0.7.0` | Seleção de atributos (Relief + fss/stepwise) |
@@ -295,7 +295,7 @@ rastreabilidade.
 | `ImputationPredictive` | `IterativeImputer` | `trans_imputation_predictive.R` |
 | `ImputationTree` | árvore sklearn | `trans_imputation_tree.R` |
 
-#### 1.3 — Transformações de atributos → `0.4.0`
+#### ✅ 1.3 — Transformações de atributos → `0.4.0` (publicado)
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `FeatureGeneration` | pandas | `trans_feature_generation.R` |

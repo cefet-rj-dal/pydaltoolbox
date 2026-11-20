@@ -51,16 +51,19 @@ from .regression import (
 )
 from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
 from .transform import (
+    Aggregation,
     BalOversampling,
     BalSubsampling,
     CategMapping,
     DtPca,
+    FeatureGeneration,
     FeatureSelectionCorr,
     FeatureSelectionInfoGain,
     FeatureSelectionLasso,
     FeatureSelectionStepwise,
     FitCurvatureMax,
     FitCurvatureMin,
+    HierarchyCut,
     ImputationPredictive,
     ImputationSimple,
     ImputationTree,
@@ -78,9 +81,10 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
+    "Aggregation",
     "AutoencBaseE",
     "AutoencBaseEd",
     "BalOversampling",
@@ -113,12 +117,14 @@ __all__ = [
     "DalTune",
     "DataSample",
     "DtPca",
+    "FeatureGeneration",
     "FeatureSelectionCorr",
     "FeatureSelectionInfoGain",
     "FeatureSelectionLasso",
     "FeatureSelectionStepwise",
     "FitCurvatureMax",
     "FitCurvatureMin",
+    "HierarchyCut",
     "ImputationPredictive",
     "ImputationSimple",
     "ImputationTree",
