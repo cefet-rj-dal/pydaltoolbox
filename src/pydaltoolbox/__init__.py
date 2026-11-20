@@ -61,7 +61,9 @@ from .transform import (
     FeatureSelectionStepwise,
     FitCurvatureMax,
     FitCurvatureMin,
+    ImputationPredictive,
     ImputationSimple,
+    ImputationTree,
     MinMax,
     NaRemoval,
     OutliersBoxplot,
@@ -76,7 +78,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "AutoencBaseE",
@@ -117,7 +119,9 @@ __all__ = [
     "FeatureSelectionStepwise",
     "FitCurvatureMax",
     "FitCurvatureMin",
+    "ImputationPredictive",
     "ImputationSimple",
+    "ImputationTree",
     "MinMax",
     "NaRemoval",
     "OutliersBoxplot",

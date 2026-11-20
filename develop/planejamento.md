@@ -235,7 +235,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | Passo | Versão | Tema |
 |---|---|---|
 | 1.1 | `0.2.0` ✅ | Smoothing |
-| 1.2 | `0.3.0` | Imputação avançada |
+| 1.2 | `0.3.0` ✅ | Imputação avançada |
 | 1.3 | `0.4.0` | Transformações de atributos |
 | 1.4 | `0.5.0` | Amostragem restante |
 | 1.5 | `0.6.0` | Clustering nativo (Pam, Cmeans) |
@@ -289,7 +289,7 @@ rastreabilidade.
 | `SmoothingQuantization` | `KBinsDiscretizer` | `trans_smoothing_quantization.R` |
 | `SmoothingCluster` | `KMeans` | `trans_smoothing_cluster.R` |
 
-#### 1.2 — Imputação avançada → `0.3.0`
+#### ✅ 1.2 — Imputação avançada → `0.3.0` (publicado)
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `ImputationPredictive` | `IterativeImputer` | `trans_imputation_predictive.R` |

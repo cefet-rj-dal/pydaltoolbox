@@ -39,6 +39,7 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [12 - Feature Selection (forward stepwise)](transf/12-fs-stepwise.md)
 - [13 - Class Balancing](transf/13-balancing.md)
 - [14 - Smoothing by Binning](transf/14-smoothing.md)
+- [15 - Predictive Imputation](transf/15-imputation-predictive.md)
 
 ## Clustering
 

@@ -9,6 +9,7 @@ from .feature_selection import (
     FeatureSelectionLasso,
     FeatureSelectionStepwise,
 )
+from .imputation import ImputationPredictive, ImputationTree
 from .normalize import MinMax, ZScore
 from .outliers import OutliersBoxplot, OutliersGaussian
 from .pca import DtPca
@@ -31,7 +32,9 @@ __all__ = [
     "FeatureSelectionStepwise",
     "FitCurvatureMax",
     "FitCurvatureMin",
+    "ImputationPredictive",
     "ImputationSimple",
+    "ImputationTree",
     "MinMax",
     "NaRemoval",
     "OutliersBoxplot",
