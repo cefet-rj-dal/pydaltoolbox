@@ -15,8 +15,9 @@ them with a uniform `fit` / `action` / `evaluate` contract. Building a new metho
 means subclassing a base and implementing two or three methods; sampling,
 evaluation and tuning come for free.
 
-It is the foundation of the DAL Python family that will also include `pytspredit`
-(time series prediction) and `pyharbinger` (time series event detection).
+It is the foundation of the DAL Python family that also includes
+[`pytspredit`](https://github.com/cefet-rj-dal/pytspredit) (time series prediction) and
+[`pyharbinger`](https://github.com/cefet-rj-dal/pyharbinger) (time series event detection).
 
 ---
 
@@ -28,8 +29,9 @@ Install the latest release from PyPI:
 pip install pydaltoolbox
 ```
 
-> **Beta:** the current release (`0.1.0`) is in a testing phase this month, on the way
-> to the `1.0.0` launch. Feedback and issues are very welcome.
+> **Beta:** the v1 foundation is released and new features are landing incrementally
+> (one release at a time) on the way to the `1.0.0` launch. The badge above always shows
+> the latest version. Feedback and issues are very welcome.
 
 The development version is available on GitHub:
 
@@ -87,7 +89,8 @@ python tools/build_examples.py
 
 ## Status
 
-Beta (`0.1.0`) — the v1 foundation is complete and in testing toward `1.0.0`. Implemented:
+Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward `1.0.0`
+(see the [roadmap](develop/planejamento.md) for the live plan and version map). Implemented:
 
 - **Core Experiment Line:** `DalBase`, `DalTransform`, `DalLearner`, `Predictor`,
   `set_params`, and the `adjust_*` helpers.
@@ -100,18 +103,26 @@ Beta (`0.1.0`) — the v1 foundation is complete and in testing toward `1.0.0`. 
   `RegSvm`, `RegMlp`.
 - **Clustering:** `Clusterer` base + metrics + `ClusterKmeans`, `ClusterDbscan`,
   `ClusterGmm`, `ClusterHclust`.
-- **Transformations:** `MinMax`, `ZScore`, `NaRemoval`, `ImputationSimple`,
-  `OutliersBoxplot`, `OutliersGaussian`, `CategMapping`, `DtPca`, feature selection
-  (`Corr`, `Lasso`, `InfoGain`, `Stepwise`), balancing (`SampleBalance`,
-  `BalSubsampling`, `BalOversampling`), and curvature helpers.
+- **Transformations:**
+  - normalization: `MinMax`, `ZScore`
+  - cleaning: `NaRemoval`, `ImputationSimple`, `OutliersBoxplot`, `OutliersGaussian`
+  - predictive imputation: `ImputationPredictive`, `ImputationTree` *(0.3.0)*
+  - encoding / projection: `CategMapping`, `DtPca`
+  - feature selection: `FeatureSelectionCorr`, `Lasso`, `InfoGain`, `Stepwise`
+  - feature engineering: `FeatureGeneration`, `Aggregation`, `HierarchyCut` *(0.4.0)*
+  - smoothing: `SmoothingInter`, `SmoothingFreq`, `SmoothingQuantization`, `SmoothingCluster` *(0.2.0)*
+  - balancing: `SampleBalance`, `BalSubsampling`, `BalOversampling`
+  - sampling: `SampleSimple`, `SampleGroups` *(0.5.0)*
+  - curvature helpers: `FitCurvatureMin`, `FitCurvatureMax`
 - **Tuning:** `DalTune` base + `ClaTune`, `RegTune`, `CluTune`.
 - **Autoencoder bases:** `AutoencBaseE`, `AutoencBaseEd` (identity, for extension).
 - **Reference datasets:** `datasets.iris()`, `datasets.diabetes()`, `datasets.boston()`.
 
 Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
 backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
-like `tree`/`rpart`). See [develop/planejamento.md](develop/planejamento.md) for the roadmap and what is
-deferred to later versions (xgboost, k-medoids, fuzzy c-means, pattern mining, graphics).
+like `tree`/`rpart`). See the [roadmap](develop/planejamento.md) for what is still coming —
+remaining native clustering (k-medoids, fuzzy c-means), ReliefF, pattern mining, and the
+dependency-gated extras (XGBoost, graph clustering, graphics).
 
 ---
 

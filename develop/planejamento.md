@@ -146,8 +146,11 @@ balanceamento simples→`sklearn.utils.resample`.
 
 **Comandos:** `pip install -e ".[docs]"` · `python tools/build_examples.py`.
 
-**Ritual por fase:** implemento + testes → crio o notebook do tema → rodo o build →
-você confere o `.md` processado no GitHub → escalamos.
+**Ritual por fase (release):** implemento + testes → notebook do tema + build →
+bump de versão (`pyproject.toml` + `__version__`) → **atualizar a lista de features do
+`README.md` da raiz** → `ruff`+`pytest` verdes → commit + push → você confere no GitHub →
+`twine upload`. *(A versão no README é mostrada pelo badge do PyPI — não fixar número no
+texto; manter só a lista de componentes em dia.)*
 
 ---
 
