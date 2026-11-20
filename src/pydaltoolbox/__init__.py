@@ -49,7 +49,14 @@ from .regression import (
     RegSvm,
     SklearnRegression,
 )
-from .sampling import DataSample, SampleRandom, SampleStratified, train_test_from_folds
+from .sampling import (
+    DataSample,
+    SampleGroups,
+    SampleRandom,
+    SampleSimple,
+    SampleStratified,
+    train_test_from_folds,
+)
 from .transform import (
     Aggregation,
     BalOversampling,
@@ -81,7 +88,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 __all__ = [
     "Aggregation",
@@ -142,7 +149,9 @@ __all__ = [
     "RegTune",
     "Regression",
     "SampleBalance",
+    "SampleGroups",
     "SampleRandom",
+    "SampleSimple",
     "SampleStratified",
     "SklearnClassification",
     "SklearnRegression",

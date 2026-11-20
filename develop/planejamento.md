@@ -237,7 +237,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.1 | `0.2.0` ✅ | Smoothing |
 | 1.2 | `0.3.0` ✅ | Imputação avançada |
 | 1.3 | `0.4.0` ✅ | Transformações de atributos |
-| 1.4 | `0.5.0` | Amostragem restante |
+| 1.4 | `0.5.0` ✅ | Amostragem restante |
 | 1.5 | `0.6.0` | Clustering nativo (Pam, Cmeans) |
 | 1.6 | `0.7.0` | Seleção de atributos (Relief + fss/stepwise) |
 | 1.7 | `0.8.0` | Padrões: base + itemsets |
@@ -302,7 +302,7 @@ rastreabilidade.
 | `Aggregation` | pandas (groupby) | `trans_aggregation.R` |
 | `HierarchyCut` | numpy/pandas | `trans_hierarchy_cut.R` |
 
-#### 1.4 — Amostragem restante → `0.5.0`
+#### ✅ 1.4 — Amostragem restante → `0.5.0` (publicado)
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `SampleSimple` | numpy | `trans_sample_simple.R` |

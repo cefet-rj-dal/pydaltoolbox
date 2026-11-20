@@ -41,6 +41,7 @@ One didactic example per transform (objective + reference + fit/transform/invers
 - [14 - Smoothing by Binning](transf/14-smoothing.md)
 - [15 - Predictive Imputation](transf/15-imputation-predictive.md)
 - [16 - Feature Engineering](transf/16-feature-engineering.md)
+- [17 - Simple & Group Sampling](transf/17-simple-group-sampling.md)
 
 ## Clustering
 

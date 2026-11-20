@@ -12,7 +12,14 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 from .adjust import adjust_dataframe
 from .base import DalTransform
 
-__all__ = ["DataSample", "SampleRandom", "SampleStratified", "train_test_from_folds"]
+__all__ = [
+    "DataSample",
+    "SampleGroups",
+    "SampleRandom",
+    "SampleSimple",
+    "SampleStratified",
+    "train_test_from_folds",
+]
 
 
 class DataSample(DalTransform):
@@ -111,3 +118,62 @@ def train_test_from_folds(folds: list[pd.DataFrame], k: int) -> dict:
     train_parts = [f for i, f in enumerate(folds, start=1) if i != k]
     train = pd.concat(train_parts, ignore_index=True) if train_parts else test.iloc[0:0]
     return {"train": train, "test": test}
+
+
+class SampleSimple(DalTransform):
+    """Draw a simple random sample of rows, with or without replacement.
+
+    Mirrors R ``sample_simple(size, replace, prob)``. ``transform`` returns a sampled
+    subset of the rows (or elements, for a 1-D input).
+
+    Parameters
+    ----------
+    size:
+        Number of samples to draw.
+    replace:
+        Sample with replacement if ``True``.
+    prob:
+        Optional per-row sampling weights.
+    seed:
+        Optional seed for reproducibility.
+    """
+
+    def __init__(self, size: int, replace: bool = False, prob=None, seed: int | None = None) -> None:
+        self.size = size
+        self.replace = replace
+        self.prob = prob
+        self.seed = seed
+
+    def transform(self, data, **kwargs):
+        if isinstance(data, (pd.DataFrame, pd.Series)):
+            return data.sample(
+                n=self.size, replace=self.replace, weights=self.prob, random_state=self.seed
+            ).reset_index(drop=True)
+        arr = np.asarray(data)
+        rng = np.random.default_rng(self.seed)
+        idx = rng.choice(len(arr), size=self.size, replace=self.replace, p=self.prob)
+        return arr[idx]
+
+
+class SampleGroups(DalTransform):
+    """Cluster (group) sampling: keep all rows of ``n_groups`` sampled groups.
+
+    Mirrors R ``sample_groups(attribute, n_groups)``. Groups are the distinct values of
+    ``attribute`` already present in the data (not inferred by clustering).
+    """
+
+    def __init__(self, attribute: str, n_groups: int, seed: int | None = None) -> None:
+        self.attribute = attribute
+        self.n_groups = n_groups
+        self.seed = seed
+
+    def transform(self, data, **kwargs) -> pd.DataFrame:
+        data = adjust_dataframe(data)
+        if self.attribute not in data.columns:
+            raise ValueError(f"sample_groups: '{self.attribute}' must be a valid column name.")
+        groups = pd.unique(data[self.attribute])
+        if len(groups) < self.n_groups:
+            raise ValueError("sample_groups: n_groups exceeds the number of available groups.")
+        rng = np.random.default_rng(self.seed)
+        selected = rng.choice(groups, size=self.n_groups, replace=False)
+        return data[data[self.attribute].isin(selected)].reset_index(drop=True)
