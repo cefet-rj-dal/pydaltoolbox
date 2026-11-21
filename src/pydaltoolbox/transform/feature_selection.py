@@ -249,11 +249,14 @@ class FeatureSelectionFss(DalTransform):
     (regression).
 
     Porting:
-        Mirrors ``trans_feature_selection_fss.R``. Fidelity: approximate.
-        - Greedy forward selection with ``LinearRegression`` keeping the best adjusted
-          R-squared, instead of R ``leaps::regsubsets`` best-subset search. Both optimize
-          adjusted R-squared over nested forward models, so the selected subset usually
-          agrees; it may differ when a non-greedy subset wins.
+        Canonical implementation; the R ``trans_feature_selection_fss.R`` is a backport of
+        this. Fidelity: approximate.
+        - Native greedy forward selection (refit with ``LinearRegression``), equivalent to
+          R ``leaps::regsubsets(method = "forward")``: both add one variable at a time and
+          keep the size with the best adjusted R-squared. Verified identical on mtcars
+          (selects am, cyl, disp, hp, qsec, wt). The value here is dependency removal
+          (drops ``leaps``), not an algorithmic change (not a ++); numeric ties may differ
+          by backend.
 
     References:
         Hocking, R. R. (1976). The Analysis and Selection of Variables in Linear
