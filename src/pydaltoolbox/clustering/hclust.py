@@ -20,9 +20,21 @@ __all__ = ["ClusterHclust"]
 class ClusterHclust(Clusterer):
     """Agglomerative hierarchical clustering (wraps scikit-learn).
 
-    Cuts the dendrogram at ``k`` clusters, or at a distance threshold ``h`` when given.
-    Features are standardized first by default (as in the R package). Does not support
-    clustering new data after fit.
+    Agglomerative hierarchical clustering starts with each point in its own cluster and
+    repeatedly merges the two closest clusters, according to a linkage criterion (e.g.
+    Ward's minimum-variance), building a dendrogram over a distance matrix. A flat
+    partition is obtained by cutting the tree at ``k`` clusters, or at a distance
+    threshold ``h`` when given. Features are standardized first by default (as in the R
+    package). A hierarchical partition is judged through separation/cohesion indices
+    rather than a centroid-style criterion, so WCSS is not the main metric. Does not
+    support clustering new data after fit.
+
+    References:
+        Johnson, S. C. (1967). Hierarchical clustering schemes. Psychometrika.
+        Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation
+        and validation of cluster analysis.
+        Davies, D. L., & Bouldin, D. W. (1979). A cluster separation measure.
+        Calinski, T., & Harabasz, J. (1974). A dendrite method for cluster analysis.
     """
 
     def __init__(

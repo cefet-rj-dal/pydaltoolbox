@@ -20,9 +20,22 @@ __all__ = ["ClusterDbscan"]
 class ClusterDbscan(Clusterer):
     """DBSCAN clustering (wraps scikit-learn's DBSCAN).
 
-    Finds dense regions and labels sparse points as noise (-1). If ``eps`` is not given,
-    it is estimated from the elbow of the sorted k-nearest-neighbor distance curve, as
-    in the R package. Does not support clustering new data after fit.
+    DBSCAN (Density-Based Spatial Clustering of Applications with Noise) discovers
+    clusters as dense regions of points separated by sparse areas, controlled by two
+    hyperparameters: ``eps`` (the neighborhood radius) and ``min_pts`` (the minimum
+    number of points forming a dense region). Points in low-density areas are labeled
+    as noise (-1). Unlike centroid methods it does not force every point into a cluster
+    and finds clusters of arbitrary shape. If ``eps`` is not given, it is estimated
+    from the elbow of the sorted k-nearest-neighbor distance curve, as in the R package.
+    Does not support clustering new data after fit.
+
+    The main metric is the noise-point count rather than WCSS, because WCSS ignores
+    DBSCAN's central modeling choice: distinguishing dense clusters from noise.
+
+    References:
+        Ester, M., Kriegel, H.-P., Sander, J., Xu, X. (1996). A Density-Based
+        Algorithm for Discovering Clusters in Large Spatial Databases with Noise.
+        Zhao, Y., & Karypis, G. (2001). Criterion functions for document clustering.
     """
 
     def __init__(self, min_pts: int = 3, eps: float | None = None) -> None:

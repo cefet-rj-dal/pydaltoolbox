@@ -15,10 +15,21 @@ __all__ = ["ClaSvm"]
 class ClaSvm(SklearnClassification):
     """Support vector classifier (wraps scikit-learn's SVC).
 
+    Support Vector Machines find a maximum-margin hyperplane separating the classes in a
+    feature space defined by a kernel (linear, radial/RBF, polynomial, sigmoid). The
+    ``cost`` controls the trade-off between margin width and training error, and
+    ``kernel`` sets the feature map.
+
     The features are standardized inside the model, replicating R ``e1071::svm``'s
     ``scale = TRUE`` default (SVMs are scale-sensitive). ``probability=True`` is
     required so ``predict`` can return class scores. The default ``cost`` matches
     the daltoolbox default.
+
+    References:
+        Cortes, C., and Vapnik, V. (1995). Support-Vector Networks. Machine Learning,
+        20(3):273-297.
+        Chang, C.-C., and Lin, C.-J. (2011). LIBSVM: A library for support vector
+        machines.
     """
 
     def __init__(

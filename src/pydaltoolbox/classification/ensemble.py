@@ -19,7 +19,18 @@ __all__ = ["ClaBagging", "ClaBoosting", "ClaRf"]
 
 
 class ClaRf(SklearnClassification):
-    """Random forest classifier (wraps scikit-learn)."""
+    """Random forest classifier (wraps scikit-learn).
+
+    A random forest combines many decorrelated decision trees -- each grown on a
+    bootstrap sample using a random subset of features at every split -- and aggregates
+    their votes, which reduces variance and overfitting. Key hyperparameters are the
+    number of trees (``ntree``) and the number of variables tried per split (``mtry``).
+
+    References:
+        Breiman, L. (2001). Random Forests. Machine Learning, 45(1):5-32.
+        Liaw, A., and Wiener, M. (2002). Classification and Regression by randomForest.
+        R News, 2(3):18-22.
+    """
 
     def __init__(
         self,
@@ -43,7 +54,16 @@ class ClaRf(SklearnClassification):
 
 
 class ClaBagging(SklearnClassification):
-    """Bagging classifier (wraps scikit-learn)."""
+    """Bagging classifier (wraps scikit-learn).
+
+    Bootstrap aggregating (bagging) trains an ensemble of base classifiers, each on a
+    bootstrap resample of the training data, and combines them by majority vote. By
+    averaging over resamples it reduces the variance of unstable learners such as
+    decision trees.
+
+    References:
+        Breiman, L. (1996). Bagging predictors. Machine Learning, 24(2):123-140.
+    """
 
     def __init__(
         self,
@@ -61,7 +81,18 @@ class ClaBagging(SklearnClassification):
 
 
 class ClaBoosting(SklearnClassification):
-    """AdaBoost classifier (the ``adabag`` boosting analog, wraps scikit-learn)."""
+    """AdaBoost classifier (the ``adabag`` boosting analog, wraps scikit-learn).
+
+    Boosting builds an ensemble sequentially: each new weak learner focuses on the
+    examples the previous ones misclassified (by reweighting the training set), and the
+    learners are combined into a weighted vote. AdaBoost (adaptive boosting) is the
+    classic instance of this scheme and often yields strong accuracy from simple trees.
+
+    References:
+        Freund, Y., and Schapire, R. E. (1997). A Decision-Theoretic Generalization of
+        On-Line Learning and an Application to Boosting. Journal of Computer and System
+        Sciences, 55(1):119-139.
+    """
 
     def __init__(
         self,

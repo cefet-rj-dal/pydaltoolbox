@@ -47,12 +47,30 @@ class _FitCurvature(DalTransform):
 
 
 class FitCurvatureMin(_FitCurvature):
-    """Return the position/value of minimum curvature (concave elbow)."""
+    """Return the position/value of minimum curvature (concave elbow).
+
+    Locates the knee/elbow of a monotone curve as the point of extreme second derivative
+    (curvature) of a fitted smoothing spline -- the "Kneedle" heuristic -- used, for
+    example, to choose the number of PCA components or clusters.
+
+    References:
+        Satopaa, V., Albrecht, J., Irwin, D., and Raghavan, B. (2011). Finding a
+        "Kneedle" in a Haystack: Detecting Knee Points in System Behavior. ICDCSW.
+    """
 
     _pick = staticmethod(np.argmin)
 
 
 class FitCurvatureMax(_FitCurvature):
-    """Return the position/value of maximum curvature (convex elbow)."""
+    """Return the position/value of maximum curvature (convex elbow).
+
+    Locates the knee/elbow of a monotone curve as the point of extreme second derivative
+    (curvature) of a fitted smoothing spline -- the "Kneedle" heuristic -- used, for
+    example, to estimate the DBSCAN ``eps`` from the k-distance curve.
+
+    References:
+        Satopaa, V., Albrecht, J., Irwin, D., and Raghavan, B. (2011). Finding a
+        "Kneedle" in a Haystack: Detecting Knee Points in System Behavior. ICDCSW.
+    """
 
     _pick = staticmethod(np.argmax)

@@ -13,8 +13,14 @@ __all__ = ["ClaMajority"]
 class ClaMajority(SklearnClassification):
     """Majority-class baseline (wraps scikit-learn's DummyClassifier).
 
-    Always predicts the most frequent class. Useful as a reference floor against
-    which real learners are compared.
+    Always predicts the most frequent class, ignoring the predictors. It is a minimum
+    reference point: if a real classifier does not outperform this baseline, it is often
+    worth revisiting the predictors, the sampling strategy, or the evaluation protocol
+    before tuning models.
+
+    References:
+        Witten, I. H., Frank, E., Hall, M. A., and Pal, C. J. (2016). Data Mining:
+        Practical Machine Learning Tools and Techniques (4th ed.). Morgan Kaufmann.
     """
 
     def __init__(self, attribute: str, slevels: Sequence | None = None) -> None:

@@ -16,10 +16,20 @@ __all__ = ["RegMlp"]
 class RegMlp(SklearnRegression):
     """Single-hidden-layer MLP regressor (wraps scikit-learn).
 
+    A feedforward neural network with one hidden layer of ``size`` units, trained by
+    back-propagation with L2 regularization controlled by ``decay``. It can model smooth
+    non-linear relationships; data should be scaled for stable training.
+
     Features and target are standardized inside the model (neural networks are
     scale-sensitive and the R ``nnet`` documentation recommends scaling). ``size`` ->
     hidden layer width (if ``None``, a ``ceil(n_features / 3)`` heuristic like the R
     package), ``decay`` -> L2 regularization (``alpha``), matching the R defaults.
+
+    References:
+        Rumelhart, D., Hinton, G., and Williams, R. (1986). Learning representations by
+        back-propagating errors. Nature, 323:533-536.
+        Bishop, C. M. (1995). Neural Networks for Pattern Recognition. Oxford University
+        Press.
     """
 
     def __init__(

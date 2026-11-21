@@ -13,7 +13,17 @@ __all__ = ["ImputationSimple", "NaRemoval"]
 
 
 class NaRemoval(DalTransform):
-    """Remove rows that contain any missing value. Mirrors R ``na_removal()``."""
+    """Remove rows that contain any missing value. Mirrors R ``na_removal()``.
+
+    Complete-case analysis (listwise deletion): any row with at least one missing value
+    is dropped. It is simple and unbiased when data are missing completely at random, but
+    discards information and can bias results otherwise, so it is best when missingness is
+    rare.
+
+    References:
+        Little, R. J. A., and Rubin, D. B. (2019). Statistical Analysis with Missing Data
+        (3rd ed.). Wiley.
+    """
 
     def transform(self, data, **kwargs) -> pd.DataFrame:
         data = adjust_dataframe(data)
@@ -23,8 +33,20 @@ class NaRemoval(DalTransform):
 class ImputationSimple(DalTransform):
     """Impute missing values with simple per-column statistics.
 
+    Univariate imputation: each missing entry is replaced by a summary of its own column
+    (median/mean for numeric, mode for categorical), learned on ``fit`` and reused on
+    ``transform`` so train and test are filled consistently. Fast and robust, though it
+    ignores relationships between columns (see :class:`ImputationTree` for a predictive
+    alternative).
+
     Numeric columns are filled with the median (default) or mean; non-numeric columns
     with the mode (most frequent value). Mirrors R ``imputation_simple()``.
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann.
+        Little, R. J. A., and Rubin, D. B. (2019). Statistical Analysis with Missing Data
+        (3rd ed.). Wiley.
 
     Parameters
     ----------

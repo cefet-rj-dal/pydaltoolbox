@@ -53,8 +53,18 @@ def _entropy_eval(bins, attribute) -> dict:
 class Smoothing(DalTransform):
     """Base smoothing: bin a numeric vector and replace values by bin means.
 
+    Smoothing by binning is a discretization technique that reduces noise and minor
+    fluctuations: the value range is partitioned into ``n`` bins and every value is
+    replaced by its bin's mean. Subclasses differ only in how the bin boundaries are
+    placed. It is also a simple way to turn a continuous attribute into a small number of
+    representative levels.
+
     Subclasses implement :meth:`_compute_interval`. ``n`` may be an int or a collection
     of candidate ints (tuned at fit).
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann. (Discretization)
     """
 
     def __init__(self, n) -> None:
@@ -116,7 +126,16 @@ class Smoothing(DalTransform):
 
 
 class SmoothingInter(Smoothing):
-    """Equal-interval bins with robust (boxplot-whisker) bounds. Mirrors ``smoothing_inter``."""
+    """Equal-interval bins with robust (boxplot-whisker) bounds. Mirrors ``smoothing_inter``.
+
+    Equal-width binning: the range is split into ``n`` intervals of equal size. Here the
+    range is taken from robust boxplot whiskers rather than the raw min/max, so extreme
+    outliers do not stretch the bins.
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann. (Discretization)
+    """
 
     def _compute_interval(self, values: np.ndarray) -> np.ndarray:
         q1, q3 = np.percentile(values, [25, 75])
@@ -131,14 +150,32 @@ class SmoothingInter(Smoothing):
 
 
 class SmoothingFreq(Smoothing):
-    """Equal-frequency (quantile) bins. Mirrors ``smoothing_freq``."""
+    """Equal-frequency (quantile) bins. Mirrors ``smoothing_freq``.
+
+    Equal-frequency (equal-depth) binning: boundaries are placed at quantiles so each bin
+    holds roughly the same number of observations. This adapts to skewed distributions
+    better than equal-width bins.
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann. (Discretization)
+    """
 
     def _compute_interval(self, values: np.ndarray) -> np.ndarray:
         return np.quantile(values, np.linspace(0, 1, self.n + 1))
 
 
 class SmoothingQuantization(Smoothing):
-    """k-means quantization of the values. Mirrors ``smoothing_quantization``."""
+    """k-means quantization of the values. Mirrors ``smoothing_quantization``.
+
+    Clusters the one-dimensional values with k-means and derives bin boundaries from the
+    cluster centers (their midpoints). Bins therefore follow the natural grouping of the
+    data rather than a fixed width or frequency.
+
+    References:
+        MacQueen, J. (1967). Some Methods for Classification and Analysis of Multivariate
+        Observations.
+    """
 
     def __init__(self, n, seed: int | None = None) -> None:
         super().__init__(n)
@@ -155,8 +192,16 @@ class SmoothingQuantization(Smoothing):
 class SmoothingCluster(Smoothing):
     """Class-aware clustering of value + one-hot label. Mirrors ``smoothing_cluster``.
 
+    A supervised discretization: the value is clustered together with the one-hot encoded
+    class label, so bins tend to group together values that share a class. This yields
+    class-coherent intervals, which is why tuning minimizes label entropy across bins.
+
     ``fit`` takes a DataFrame with one numeric column and the class column named
     ``class_label``. Tuning (``n`` as candidates) minimizes entropy.
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann. (Discretization)
     """
 
     def __init__(self, class_label: str, n, seed: int | None = None) -> None:

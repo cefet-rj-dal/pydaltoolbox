@@ -47,8 +47,15 @@ class _Outliers(DalTransform):
 class OutliersBoxplot(_Outliers):
     """Remove outliers using Tukey's IQR rule (Q1 - alpha*IQR, Q3 + alpha*IQR).
 
+    Tukey's boxplot rule flags values that fall beyond the quartiles by a multiple of the
+    interquartile range (IQR). Being based on quantiles rather than the mean/sd, it is
+    robust to the very outliers it detects and makes no distributional assumption.
+
     ``alpha=1.5`` are the standard whiskers; ``alpha=3`` targets extreme values.
     Mirrors R ``outliers_boxplot()``.
+
+    References:
+        Tukey, J. W. (1977). Exploratory Data Analysis. Addison-Wesley.
     """
 
     def __init__(self, alpha: float = 1.5) -> None:
@@ -64,8 +71,17 @@ class OutliersBoxplot(_Outliers):
 class OutliersGaussian(_Outliers):
     """Remove outliers using the Gaussian rule (mean +/- alpha*sd).
 
+    Flags values lying more than ``alpha`` standard deviations from the mean. Under an
+    approximately normal distribution the three-sigma band (``alpha=3``) covers about
+    99.7% of the data, so points outside it are treated as outliers. Best suited to
+    roughly symmetric, bell-shaped columns.
+
     ``alpha=3`` is the three-sigma rule. Mirrors R ``outliers_gaussian()``
     (sample standard deviation, ddof=1).
+
+    References:
+        Pukelsheim, F. (1994). The Three Sigma Rule. The American Statistician,
+        48(2):88-91.
     """
 
     def __init__(self, alpha: float = 3.0) -> None:

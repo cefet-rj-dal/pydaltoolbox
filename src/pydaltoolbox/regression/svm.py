@@ -14,10 +14,22 @@ __all__ = ["RegSvm"]
 class RegSvm(SklearnRegression):
     """Support vector regressor (wraps scikit-learn's SVR).
 
+    Support Vector Regression fits a function within an epsilon-insensitive tube around
+    the data, ignoring errors smaller than ``epsilon`` and penalizing larger ones. The
+    ``cost`` controls regularization strength, ``epsilon`` sets the width of the
+    insensitive tube, and ``kernel`` defines the feature map (linear, radial/RBF,
+    polynomial, sigmoid).
+
     Both the features and the target are standardized inside the model, replicating
     R ``e1071::svm``'s ``scale = TRUE`` default (which scales x and y and reverses it
     on prediction). Without this, SVR badly underfits targets with large magnitude.
     The default ``cost`` matches the daltoolbox default.
+
+    References:
+        Drucker, H., Burges, C., Kaufman, L., Smola, A., and Vapnik, V. (1997). Support
+        Vector Regression Machines. Advances in Neural Information Processing Systems 9.
+        Chang, C.-C., and Lin, C.-J. (2011). LIBSVM: A library for support vector
+        machines.
     """
 
     def __init__(

@@ -18,6 +18,16 @@ __all__ = ["CategMapping"]
 class CategMapping(DalTransform):
     """One-hot encode a categorical column into indicator columns.
 
+    One-hot (dummy) encoding turns a categorical attribute with ``m`` levels into ``m``
+    binary indicator columns, so models that require numeric input can use it without
+    imposing a false ordinal relationship between the categories. Levels are learned on
+    ``fit`` so train and test produce the same columns.
+
+    References:
+        Kuhn, M., and Johnson, K. (2013). Applied Predictive Modeling. Springer.
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann.
+
     Parameters
     ----------
     attribute:

@@ -33,8 +33,17 @@ def _restore_categoricals(result: pd.DataFrame, original: pd.DataFrame) -> pd.Da
 class SampleBalance(DalTransform):
     """Balance classes by up- or down-sampling. Mirrors R ``sample_balance()``.
 
+    Rebalances a skewed class distribution by resampling, so a learner is not dominated by
+    the majority class. Down-sampling discards majority examples (risking information
+    loss); up-sampling replicates minority examples (risking overfitting). Resampling
+    should be applied to the training set only.
+
     ``method="down"`` reduces every class to the minority count; ``method="up"``
     grows every class to the majority count by sampling with replacement.
+
+    References:
+        He, H., and Garcia, E. A. (2009). Learning from Imbalanced Data. IEEE
+        Transactions on Knowledge and Data Engineering, 21(9):1263-1284.
     """
 
     def __init__(self, attribute: str, method: str = "down", seed: int | None = None) -> None:
@@ -59,7 +68,16 @@ class SampleBalance(DalTransform):
 
 
 class BalSubsampling(DalTransform):
-    """Undersample every class to the minority count. Mirrors R ``bal_subsampling()``."""
+    """Undersample every class to the minority count. Mirrors R ``bal_subsampling()``.
+
+    Random undersampling: majority classes are reduced (without replacement) to the size
+    of the minority class, producing a balanced training set. Cheap and effective when
+    the majority class is large, at the cost of discarding some data.
+
+    References:
+        He, H., and Garcia, E. A. (2009). Learning from Imbalanced Data. IEEE
+        Transactions on Knowledge and Data Engineering, 21(9):1263-1284.
+    """
 
     def __init__(self, attribute: str, seed: int | None = None) -> None:
         self.attribute = attribute
@@ -80,9 +98,20 @@ class BalSubsampling(DalTransform):
 class BalOversampling(DalTransform):
     """Oversample every class to the majority count. Mirrors R ``bal_oversampling()``.
 
+    Grows minority classes up to the majority count. SMOTE (Synthetic Minority
+    Over-sampling Technique) creates new examples by interpolating between a minority
+    sample and one of its ``k`` nearest neighbors, rather than merely duplicating points,
+    which enlarges the decision region of the minority class and mitigates the overfitting
+    of plain replication.
+
     ``method="random"`` replicates existing minority examples; ``method="smote"``
     generates synthetic ones by interpolating between a sample and one of its ``k``
     nearest neighbors.
+
+    References:
+        Chawla, N. V., Bowyer, K. W., Hall, L. O., and Kegelmeyer, W. P. (2002). SMOTE:
+        Synthetic Minority Over-sampling Technique. Journal of Artificial Intelligence
+        Research, 16:321-357.
     """
 
     def __init__(

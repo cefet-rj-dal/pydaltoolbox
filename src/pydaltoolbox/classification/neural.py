@@ -16,10 +16,21 @@ __all__ = ["ClaMlp"]
 class ClaMlp(SklearnClassification):
     """Single-hidden-layer MLP classifier (wraps scikit-learn).
 
+    A multi-layer perceptron is a feedforward neural network trained by
+    back-propagation. This single-hidden-layer model uses a softmax output over one-hot
+    targets; ``size`` controls the number of hidden units and ``decay`` applies L2
+    regularization. Features should be scaled for stable training.
+
     Features are standardized inside the model: neural networks are scale-sensitive
     and the R ``nnet`` documentation explicitly recommends scaling. ``size`` -> hidden
     layer width (if ``None``, a ``ceil(n_features / 3)`` heuristic like the R package),
     ``decay`` -> L2 regularization (``alpha``).
+
+    References:
+        Rumelhart, D., Hinton, G., and Williams, R. (1986). Learning representations by
+        back-propagating errors. Nature, 323:533-536.
+        Bishop, C. M. (1995). Neural Networks for Pattern Recognition. Oxford University
+        Press.
     """
 
     def __init__(

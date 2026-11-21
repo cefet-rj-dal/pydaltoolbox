@@ -22,7 +22,16 @@ def _numeric_columns(data: pd.DataFrame) -> list:
 class MinMax(DalTransform):
     """Min-max normalization: scale numeric columns to [0, 1] per column.
 
+    A linear rescaling that maps each column onto a common [0, 1] range, preserving the
+    shape of its distribution. It puts features on equal footing for scale-sensitive
+    methods (distance-based learners, neural networks) without distorting relative
+    spacing.
+
     ``(x - min) / (max - min)``; constant columns map to 0. Mirrors R ``minmax()``.
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann. (Normalization)
     """
 
     def __init__(self) -> None:
@@ -53,9 +62,18 @@ class MinMax(DalTransform):
 class ZScore(DalTransform):
     """Z-score normalization: standardize numeric columns to mean 0 / sd 1.
 
+    Centers each column on its mean and scales by its standard deviation, so the result
+    is expressed in standard-deviation units. Unlike min-max it is not bounded and is
+    more robust to differing spreads, which suits methods that assume roughly centered,
+    unit-variance inputs.
+
     Optionally rescaled to a target mean (``nmean``) and sd (``nsd``):
     ``((x - mean) / sd) * nsd + nmean``. Constant columns map to ``nmean``.
     Mirrors R ``zscore()`` (sample standard deviation, ddof=1).
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann. (Standardization)
     """
 
     def __init__(self, nmean: float = 0.0, nsd: float = 1.0) -> None:

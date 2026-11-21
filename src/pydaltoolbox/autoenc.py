@@ -17,12 +17,22 @@ __all__ = ["AutoencBaseE", "AutoencBaseEd"]
 class AutoencBaseE(DalTransform):
     """Base class for encoder-only autoencoders (identity by default).
 
+    An autoencoder is a neural network trained to reconstruct its input through a
+    lower-dimensional bottleneck, so the bottleneck learns a compressed (non-linear)
+    encoding of the data -- a non-linear generalization of PCA. This encoder-only base
+    exposes just the input-to-code mapping; by default it is the identity, so a subclass
+    (e.g. a deep-learning-backed autoencoder) supplies the real ``fit``/``transform``.
+
     Parameters
     ----------
     input_size:
         Dimensionality of the input vector.
     encoding_size:
         Dimensionality of the latent (encoded) representation.
+
+    References:
+        Hinton, G. E., and Salakhutdinov, R. R. (2006). Reducing the Dimensionality of
+        Data with Neural Networks. Science, 313(5786):504-507.
     """
 
     def __init__(self, input_size: int, encoding_size: int) -> None:
@@ -39,12 +49,21 @@ class AutoencBaseE(DalTransform):
 class AutoencBaseEd(DalTransform):
     """Base class for encoder + decoder autoencoders (identity by default).
 
+    Like :class:`AutoencBaseE`, but exposes the full encode-then-decode round trip: the
+    input is mapped to a latent code and back to the original space. The reconstruction
+    (and its error) is useful for denoising, anomaly detection and generative modeling.
+    By default it is the identity, so a subclass supplies the real ``fit``/``transform``.
+
     Parameters
     ----------
     input_size:
         Dimensionality of the input vector.
     encoding_size:
         Dimensionality of the latent (encoded) representation.
+
+    References:
+        Hinton, G. E., and Salakhutdinov, R. R. (2006). Reducing the Dimensionality of
+        Data with Neural Networks. Science, 313(5786):504-507.
     """
 
     def __init__(self, input_size: int, encoding_size: int) -> None:

@@ -11,9 +11,17 @@ __all__ = ["RegDtree"]
 class RegDtree(SklearnRegression):
     """Decision tree for regression (wraps scikit-learn).
 
+    A regression tree recursively partitions the feature space, choosing splits that
+    reduce the within-node squared error; each leaf predicts a constant (the mean of its
+    training targets), so the model is a piecewise-constant, interpretable function.
+
     Pre-pruning defaults (``min_samples_split=10``, ``min_samples_leaf=5``) approximate
     R ``tree::tree`` (``minsize=10``, ``mincut=5``). A fully grown tree overfits and
     generalizes poorly, which is why the pre-pruning matters for quality.
+
+    References:
+        Breiman, L., Friedman, J., Olshen, R., and Stone, C. (1984). Classification and
+        Regression Trees. Wadsworth.
     """
 
     def __init__(self, attribute: str, random_state: int | None = None) -> None:

@@ -23,7 +23,17 @@ __all__ = [
 
 
 class DataSample(DalTransform):
-    """Base class for sampling strategies."""
+    """Base class for sampling strategies.
+
+    Sampling methods partition data for honest model evaluation: a held-out test set
+    estimates generalization, and k-fold cross-validation averages performance over
+    several train/test rotations to reduce the variance of that estimate. Subclasses
+    implement :meth:`train_test` and :meth:`k_fold`.
+
+    References:
+        Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy
+        Estimation and Model Selection. IJCAI.
+    """
 
     def train_test(self, data, perc: float = 0.8, **kwargs) -> dict:
         """Return ``{'train': ..., 'test': ...}``. Default is empty."""
@@ -37,11 +47,19 @@ class DataSample(DalTransform):
 class SampleRandom(DataSample):
     """Train/test split and k-fold partitioning by simple random sampling.
 
+    Partitions rows uniformly at random: ``train_test`` holds out a fraction for testing,
+    and ``k_fold`` divides the data into ``k`` equal parts for cross-validation. Simple and
+    unbiased when classes are reasonably balanced (use :class:`SampleStratified` otherwise).
+
     Parameters
     ----------
     seed:
         Optional seed for reproducible splits (Python/R differ in RNG, so splits
         will not match R exactly, only be reproducible within Python).
+
+    References:
+        Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy
+        Estimation and Model Selection. IJCAI.
     """
 
     def __init__(self, seed: int | None = None) -> None:
@@ -71,8 +89,10 @@ class SampleRandom(DataSample):
 class SampleStratified(SampleRandom):
     """Train/test split and k-fold that preserve the target class proportions.
 
-    Use this sampler when the response distribution matters, especially in
-    imbalanced classification. Mirrors R's ``sample_stratified(attribute)``.
+    Stratified sampling keeps each class represented in the same proportion across the
+    splits as in the full data, which lowers the variance and bias of the performance
+    estimate -- important for imbalanced classification where random splits can under- or
+    over-represent rare classes. Mirrors R's ``sample_stratified(attribute)``.
 
     Parameters
     ----------
@@ -80,6 +100,10 @@ class SampleStratified(SampleRandom):
         Name of the target column whose class proportions should be preserved.
     seed:
         Optional seed for reproducible splits.
+
+    References:
+        Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy
+        Estimation and Model Selection. IJCAI.
     """
 
     def __init__(self, attribute: str, seed: int | None = None) -> None:
@@ -123,8 +147,15 @@ def train_test_from_folds(folds: list[pd.DataFrame], k: int) -> dict:
 class SampleSimple(DalTransform):
     """Draw a simple random sample of rows, with or without replacement.
 
+    Simple random sampling: every row has an equal (or ``prob``-weighted) chance of being
+    drawn. Without replacement it yields a subset; with replacement it supports bootstrap
+    resampling. Useful for subsetting large data or building resamples.
+
     Mirrors R ``sample_simple(size, replace, prob)``. ``transform`` returns a sampled
     subset of the rows (or elements, for a 1-D input).
+
+    References:
+        Cochran, W. G. (1977). Sampling Techniques (3rd ed.). Wiley.
 
     Parameters
     ----------
@@ -158,8 +189,16 @@ class SampleSimple(DalTransform):
 class SampleGroups(DalTransform):
     """Cluster (group) sampling: keep all rows of ``n_groups`` sampled groups.
 
+    Cluster sampling draws whole pre-existing groups at random and keeps all their rows,
+    rather than sampling individual rows. It is the right choice when observations are
+    naturally nested (e.g. by subject, site or batch) and must be kept together to avoid
+    leakage between train and test.
+
     Mirrors R ``sample_groups(attribute, n_groups)``. Groups are the distinct values of
     ``attribute`` already present in the data (not inferred by clustering).
+
+    References:
+        Cochran, W. G. (1977). Sampling Techniques (3rd ed.). Wiley.
     """
 
     def __init__(self, attribute: str, n_groups: int, seed: int | None = None) -> None:

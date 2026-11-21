@@ -23,6 +23,17 @@ __all__ = ["DtPca"]
 class DtPca(DalTransform):
     """Principal Component Analysis as a transform.
 
+    PCA finds an orthogonal set of directions (principal components) that successively
+    capture the greatest possible variance of the (standardized) data. Projecting onto
+    the leading components reduces dimensionality and decorrelates the features while
+    retaining most of the information, which helps downstream models and visualization.
+
+    References:
+        Pearson, K. (1901). On lines and planes of closest fit to systems of points in
+        space. Philosophical Magazine, 2(11):559-572.
+        Hotelling, H. (1933). Analysis of a complex of statistical variables into
+        principal components. Journal of Educational Psychology, 24:417-441.
+
     Parameters
     ----------
     attribute:

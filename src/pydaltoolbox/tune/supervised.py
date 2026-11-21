@@ -10,7 +10,18 @@ __all__ = ["ClaTune", "RegTune"]
 
 
 class ClaTune(DalTune):
-    """Tune a classifier by k-fold CV, maximizing a classification metric."""
+    """Tune a classifier by k-fold CV, maximizing a classification metric.
+
+    Performs a grid search over the hyperparameter ``ranges``: each configuration is
+    scored by k-fold cross-validation (the data is split into ``folds`` parts, each used
+    once as the validation set), and the configuration with the best mean metric is
+    refit on the full data. Cross-validation gives a less optimistic, lower-variance
+    estimate of out-of-sample performance than a single train/test split.
+
+    References:
+        Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy
+        Estimation and Model Selection. IJCAI.
+    """
 
     def __init__(
         self,
@@ -47,7 +58,17 @@ class ClaTune(DalTune):
 
 
 class RegTune(DalTune):
-    """Tune a regressor by k-fold CV, minimizing the mean squared error."""
+    """Tune a regressor by k-fold CV, minimizing the mean squared error.
+
+    Grid search over the hyperparameter ``ranges``, scoring each configuration by k-fold
+    cross-validation and refitting the best on the full data. The selection criterion is
+    the mean squared error averaged across folds, which estimates generalization error
+    more reliably than a single split.
+
+    References:
+        Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy
+        Estimation and Model Selection. IJCAI.
+    """
 
     def fit(self, data, **kwargs):
         grid = self._grid()

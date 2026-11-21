@@ -65,10 +65,25 @@ def _pam(d: np.ndarray, k: int, max_iter: int) -> np.ndarray:
 class ClusterPam(Clusterer):
     """PAM (Partitioning Around Medoids) clustering (native implementation).
 
-    More robust to outliers than k-means. Defaults follow the R package: silhouette is
-    the main metric; internal evaluation uses silhouette, Davies-Bouldin and
-    Calinski-Harabasz; external evaluation uses entropy, purity and the adjusted Rand
-    index. New data is assigned to the nearest medoid.
+    PAM groups the data around ``k`` representative observations called *medoids*,
+    minimizing the total distance of each point to its nearest medoid. Because a medoid
+    is an actual data point rather than a mean, PAM is more robust to outliers and noise
+    than k-means and works with any dissimilarity. It proceeds in two phases: BUILD, a
+    greedy selection of the initial medoids, and SWAP, which iteratively exchanges a
+    medoid with a non-medoid whenever that lowers the total cost. New data is assigned to
+    the nearest medoid.
+
+    Defaults follow the R package: silhouette is the main metric; internal evaluation
+    uses silhouette, Davies-Bouldin and Calinski-Harabasz; external evaluation uses
+    entropy, purity and the adjusted Rand index.
+
+    References:
+        Kaufman, L., & Rousseeuw, P. J. (1990). Finding Groups in Data: An Introduction
+        to Cluster Analysis.
+        Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and
+        validation of cluster analysis.
+        Davies, D. L., & Bouldin, D. W. (1979). A cluster separation measure.
+        Calinski, T., & Harabasz, J. (1974). A dendrite method for cluster analysis.
     """
 
     def __init__(self, k: int = 1, max_iter: int = 100) -> None:

@@ -32,6 +32,18 @@ class ImputationPredictive(DalTransform):
 
     This base only resolves target/sources; concrete subclasses (e.g.
     :class:`ImputationTree`) implement ``fit``/``transform``.
+
+    Predictive imputation treats each incomplete column as a supervised learning problem:
+    a model is trained on the rows where it is observed and predicts the missing entries
+    from the other columns. This exploits relationships between variables, giving more
+    plausible fills than constant/mean imputation -- the idea behind chained-equations
+    imputation.
+
+    References:
+        Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
+        (3rd ed.). Morgan Kaufmann.
+        van Buuren, S., and Groothuis-Oudshoorn, K. (2011). mice: Multivariate
+        Imputation by Chained Equations in R. Journal of Statistical Software, 45(3):1-67.
     """
 
     def __init__(self, target: str, sources: list | None = None, method: str = "median") -> None:
@@ -60,8 +72,16 @@ class ImputationTree(ImputationPredictive):
     """Tree-based predictive imputation of a single target column.
 
     Fits a decision tree (regressor for a numeric target, classifier otherwise) on the
-    observed-target rows, using the source columns as predictors. Mirrors
-    ``imputation_tree``; pre-pruning defaults match R's ``tree`` package.
+    observed-target rows, using the source columns as predictors, then predicts the
+    missing values. A tree captures non-linear dependencies and interactions among the
+    sources without requiring them to be scaled. Mirrors ``imputation_tree``; pre-pruning
+    defaults match R's ``tree`` package.
+
+    References:
+        Breiman, L., Friedman, J., Olshen, R., and Stone, C. (1984). Classification and
+        Regression Trees. Wadsworth.
+        van Buuren, S., and Groothuis-Oudshoorn, K. (2011). mice: Multivariate
+        Imputation by Chained Equations in R. Journal of Statistical Software, 45(3):1-67.
     """
 
     def __init__(

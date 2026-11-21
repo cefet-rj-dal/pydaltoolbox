@@ -50,7 +50,19 @@ def _find_correlation(corr: pd.DataFrame, cutoff: float) -> list:
 
 
 class FeatureSelectionCorr(DalTransform):
-    """Remove highly correlated numeric features (|corr| > cutoff)."""
+    """Remove highly correlated numeric features (|corr| > cutoff).
+
+    A filter method that discards redundant predictors: for each pair whose absolute
+    correlation exceeds the cutoff, it drops the one with the larger mean correlation to
+    the rest. Reducing collinearity stabilizes linear models and shrinks the feature set
+    without consulting the target. Approximates R ``caret::findCorrelation``.
+
+    References:
+        Hall, M. A. (1999). Correlation-based Feature Selection for Machine Learning.
+        PhD thesis, University of Waikato.
+        Kuhn, M. (2008). Building Predictive Models in R Using the caret Package. Journal
+        of Statistical Software, 28(5):1-26.
+    """
 
     def __init__(self, cutoff: float = 0.9, features: list | None = None, keep: list | None = None) -> None:
         self.cutoff = cutoff
@@ -85,7 +97,18 @@ class FeatureSelectionCorr(DalTransform):
 class FeatureSelectionLasso(DalTransform):
     """Select predictors with non-zero L1 (lasso) coefficients. Target must be numeric.
 
-    Features are standardized before the lasso fit, matching glmnet's internal scaling.
+    An embedded method: the lasso adds an L1 penalty to least squares, which shrinks some
+    coefficients exactly to zero and thereby performs selection while fitting. The
+    surviving (non-zero) predictors are kept. The penalty strength is chosen by
+    cross-validation. Features are standardized before the lasso fit, matching glmnet's
+    internal scaling.
+
+    References:
+        Tibshirani, R. (1996). Regression Shrinkage and Selection via the Lasso. Journal
+        of the Royal Statistical Society, Series B, 58(1):267-288.
+        Friedman, J., Hastie, T., and Tibshirani, R. (2010). Regularization Paths for
+        Generalized Linear Models via Coordinate Descent. Journal of Statistical
+        Software, 33(1):1-22.
     """
 
     def __init__(self, attribute: str, features: list | None = None) -> None:
@@ -119,7 +142,19 @@ class FeatureSelectionLasso(DalTransform):
 
 
 class FeatureSelectionInfoGain(DalTransform):
-    """Rank features by entropy-based information gain; numeric ones are quantile-binned."""
+    """Rank features by entropy-based information gain; numeric ones are quantile-binned.
+
+    A filter method that scores each feature by its information gain -- the reduction in
+    the target's entropy once the feature is known (mutual information). Higher gain means
+    the feature is more informative about the class. Numeric features are quantile-binned
+    first so entropy can be computed. This is the splitting criterion behind ID3/C4.5
+    decision trees, used here as a univariate ranker.
+
+    References:
+        Quinlan, J. R. (1986). Induction of Decision Trees. Machine Learning, 1(1):81-106.
+        Cover, T. M., and Thomas, J. A. (2006). Elements of Information Theory (2nd ed.).
+        Wiley.
+    """
 
     def __init__(
         self,
@@ -188,7 +223,16 @@ class FeatureSelectionInfoGain(DalTransform):
 class FeatureSelectionStepwise(DalTransform):
     """Forward subset search keeping the subset with the highest adjusted R-squared.
 
-    Target must be numeric (regression). Mirrors R ``feature_selection_fss`` (leaps).
+    A wrapper method: predictors are added one at a time (greedy forward selection), each
+    step adding the variable that most improves the fit, and the subset with the best
+    adjusted R-squared is kept. The adjusted R-squared penalizes extra predictors, guarding
+    against adding variables that do not pay for their complexity. Target must be numeric
+    (regression). Mirrors R ``feature_selection_fss`` (leaps).
+
+    References:
+        Hocking, R. R. (1976). The Analysis and Selection of Variables in Linear
+        Regression. Biometrics, 32(1):1-49.
+        Miller, A. (2002). Subset Selection in Regression (2nd ed.). Chapman & Hall/CRC.
     """
 
     def __init__(self, attribute: str, features: list | None = None) -> None:

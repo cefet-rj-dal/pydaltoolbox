@@ -32,10 +32,27 @@ def _distance(x: np.ndarray, centers: np.ndarray, dist: str) -> np.ndarray:
 class ClusterCmeans(Clusterer):
     """Fuzzy c-means clustering (native implementation).
 
+    Fuzzy c-means is a soft-partition method: rather than assigning each point to a
+    single cluster, it gives every point a graded membership in each of the ``centers``
+    clusters. It minimizes a weighted within-cluster objective in which memberships are
+    raised to the fuzziness exponent ``m`` (m > 1); larger ``m`` yields softer, more
+    overlapping partitions. The algorithm alternates between updating cluster centers as
+    membership-weighted means and recomputing memberships from the distances to those
+    centers, until convergence. The hard assignment (argmax of the membership) is
+    returned by ``cluster``; the full membership matrix is kept in ``membership_``.
+
     Defaults follow the R package: silhouette is the main metric; internal evaluation
     uses silhouette and the within-cluster fuzzy error; external evaluation uses
     entropy, purity and the adjusted Rand index. Does not support clustering new data
     after fit.
+
+    References:
+        Bezdek, J. C. (1981). Pattern Recognition with Fuzzy Objective Function
+        Algorithms.
+        Dunn, J. C. (1973). A Fuzzy Relative of the ISODATA Process and Its Use in
+        Detecting Compact Well-Separated Clusters.
+        Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and
+        validation of cluster analysis.
     """
 
     def __init__(
