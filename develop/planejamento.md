@@ -47,6 +47,38 @@ além disso é **extra opcional** (`pip install pydaltoolbox[graph,xgboost,viz]`
 
 ---
 
+## 2b. Princípio de longo prazo — back-implementation (Python = releitura, R = backport)
+
+> **Direção estratégica (2026-11-20, Eduardo), comum aos três pacotes DAL
+> (`pydaltoolbox`, `pytspredit`, `pyharbinger`).**
+
+A família DAL adota, ao longo do tempo, uma **inversão de papéis**:
+
+- **A versão Python é a releitura** — reimplementação própria (nativa) dos
+  trabalhos anteriores, **dona dos algoritmos**, não apenas um *wrapper* de libs
+  de terceiros.
+- **A versão R passa a ser um backport da versão Python** — o Python vira a
+  referência canônica e o R acompanha (invertendo a direção histórica R→Python).
+
+Isso deixa o trabalho **sólido e autocontido**: a paridade fica **sob nosso
+controle**, não refém dos defaults de pacotes de terceiros.
+
+**Trilha de back-implementation (gradual e seletiva):** trocar dependências de
+terceiros pela nossa implementação quando a lib **falta / não é mantida / causa
+atrito (wheel/compilação) / impede a paridade**. Como `pydaltoolbox` é a
+**fundação**, ele é o lugar natural para as implementações próprias dos
+algoritmos-base; as libs canônicas e estáveis (`scikit-learn`, `scipy`, `numpy`,
+`pandas`) **seguem embrulhadas** salvo atrito real.
+
+**Ação 1 — gate "diferença pequena":** ao portar nativo, **medir o gap vs. o
+pacote de referência** (R / lib original) nos exemplos; aceitar só se pequeno,
+documentando a tolerância. Gap grande → investigar antes.
+
+**Trade-off explícito:** isto flexiona o princípio "não reimplementar" acima —
+reimplementamos nos casos citados e seguimos embrulhando as libs canônicas.
+
+---
+
 ## 3. Superfície que os downstream usam (guia de prioridade)
 
 Levantado do código de `harbinger` e `tspredit`. O que eles mais consomem ganha
