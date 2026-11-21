@@ -82,6 +82,41 @@ def test_pam_recovers_species_and_assigns_new_data():
     assert set(np.unique(new_labels)).issubset({0, 1, 2})
 
 
+def test_pam_fastpam_matches_bruteforce_swap():
+    """FastPAM1 must reach the same medoids/labels as the classic brute-force SWAP."""
+    from pydaltoolbox.clustering.pam import _build, _euclidean_matrix, _pam
+
+    x, _ = _iris()
+    xm = x.to_numpy(dtype=float)
+    d = _euclidean_matrix(xm, xm)
+    k = 3
+
+    # brute-force PAM SWAP from the same BUILD seed (reference implementation)
+    medoids = _build(d, k)
+    n = d.shape[0]
+    for _ in range(100):
+        current = d[:, medoids].min(axis=1).sum()
+        best_delta, best_swap = 0.0, None
+        non_medoids = [h for h in range(n) if h not in set(medoids.tolist())]
+        for mi in range(k):
+            for h in non_medoids:
+                trial = medoids.copy()
+                trial[mi] = h
+                delta = d[:, trial].min(axis=1).sum() - current
+                if delta < best_delta - 1e-9:
+                    best_delta, best_swap = delta, (mi, h)
+        if best_swap is None:
+            break
+        mi, h = best_swap
+        medoids[mi] = h
+        medoids = np.sort(medoids)
+
+    fast = _pam(d, k, max_iter=100)
+    assert set(fast.tolist()) == set(medoids.tolist())
+    # identical medoids => identical total cost
+    assert np.isclose(d[:, fast].min(axis=1).sum(), d[:, medoids].min(axis=1).sum())
+
+
 def test_cmeans_membership_and_withinerror():
     x, species = _iris()
     model = ClusterCmeans(centers=3, m=2, seed=42).fit(x)

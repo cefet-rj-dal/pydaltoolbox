@@ -86,6 +86,47 @@ canônicas e comuns. Quando já existe uma implementação **madura** de um dos 
 back-implementation**, porque o R já tem um MLP nativo excelente e a diferença é
 pequena. Cada candidato é **decidido em conjunto**, caso a caso, nunca por automação.
 
+### 2b.1 — Duas fontes de valor + inversão de atribuição (2026-11-21, Eduardo)
+
+Uma reimplementação nativa vale a pena por **uma** destas duas razões (basta uma):
+
+1. **Inovação (++)** — otimização ou melhoria de qualidade **medível** vs. a
+   referência. **Simplificar para ficar mais rápido conta como inovação** quando a
+   perda de qualidade é nula ou documentadamente pequena (não precisa ser mais
+   "esperto", pode ser mais enxuto/rápido com o mesmo resultado).
+2. **Posse / remoção de dependência** — mesmo **sem** ++, portar do Python canônico
+   para o R faz o R deixar de depender da lib de nicho (`e1071`, `cluster`, …) e virar
+   **código nosso citando o artigo**. Autocontido, paridade sob nosso controle, sem
+   atrito de build. (É o caso do **c-means**: tirar o `e1071` já se justifica; ++ de
+   inicialização robusta — múltiplos restarts / seeding k-means++ — fica opcional.)
+
+**Inversão de atribuição (importante).** Quando o R passa a ser backport do Python, a
+documentação inverte o sentido:
+- **citar o artigo** como fonte do algoritmo (Bezdek 1981 / Kaufman-Rousseeuw 1990 /
+  Chawla 2002 / Kononenko 1994 …);
+- declarar **"reimplementação independente"**, não "usa/embrulha o pacote xyz";
+- "inspirado em `e1071`/`cluster`" vira nota de reconhecimento, não dependência.
+- O `Porting:` do Python e o roxygen do R refletem isso (Fidelity: `adapted`, nativo).
+
+**Bônus de licença.** Reimplementar a partir do **artigo** (+ nosso código) é limpo:
+não herdamos a licença do código de terceiros. Por isso toda back-implementation deve
+ter **alguma diferença intencional e documentada** — nunca cópia do código-fonte alheio.
+
+**Fluxo acordado:** *estudar otimização no Python → validar o ++ (ou a paridade) →
+backport para o R tirando a dependência → atualizar atribuição nos dois lados.*
+
+**Candidatos priorizados (a estudar, decididos caso a caso):**
+| Candidato | Situação hoje | ++ alvo | Sem dep nova |
+|---|---|---|---|
+| **Relief** | cópia do *"simplified RELIEF"* do R | **ReliefF completo**: k vizinhos + prior multiclasse + `random_state` | sim |
+| **SMOTE** (`BalOversampling`) | cópia do SMOTE local simplificado do R | **Borderline-SMOTE / ADASYN** (sintetiza na fronteira) + SMOTE-NC real | sim |
+| **PAM** (`ClusterPam`) | nativo, mas SWAP de livro-texto (mais lento que `cluster::pam`) | **FastPAM** (mesmo resultado, SWAP O(k)× mais barato) | sim |
+| **c-means** (`ClusterCmeans`) | FCM nativo correto | *(opcional)* init robusta; valor principal = tirar `e1071` | sim |
+
+Observação sobre PAM: diferente dos outros, aqui **não copiamos o R** (o R só chamava
+`cluster::pam`); o risco é a nossa versão nativa ser **mais lenta** que a lib que
+substituiu — o ++ é eficiência.
+
 ---
 
 ## 3. Superfície que os downstream usam (guia de prioridade)
