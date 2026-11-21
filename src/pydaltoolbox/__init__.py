@@ -33,11 +33,13 @@ from .classification import (
     SklearnClassification,
 )
 from .clustering import (
+    ClusterCmeans,
     ClusterDbscan,
     Clusterer,
     ClusterGmm,
     ClusterHclust,
     ClusterKmeans,
+    ClusterPam,
 )
 from .regression import (
     RegDtree,
@@ -88,7 +90,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 __all__ = [
     "Aggregation",
@@ -113,10 +115,12 @@ __all__ = [
     "ClaTune",
     "Classification",
     "CluTune",
+    "ClusterCmeans",
     "ClusterDbscan",
     "ClusterGmm",
     "ClusterHclust",
     "ClusterKmeans",
+    "ClusterPam",
     "Clusterer",
     "DalBase",
     "DalLearner",

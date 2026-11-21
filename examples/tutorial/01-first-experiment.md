@@ -15,7 +15,7 @@ import pydaltoolbox as dal
 print("pydaltoolbox", dal.__version__)
 ```
 
-    pydaltoolbox 0.1.0
+    pydaltoolbox 0.6.0
     
 
 Start by loading a dataset and identifying the target variable. In classification

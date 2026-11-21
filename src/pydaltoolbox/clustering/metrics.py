@@ -25,6 +25,7 @@ __all__ = [
     "metric_purity",
     "metric_silhouette",
     "metric_wcss",
+    "metric_withinerror",
     "selector_best",
     "selector_elbow",
 ]
@@ -87,6 +88,12 @@ def metric_loglik(obj=None, **_):
     """Log-likelihood of a probabilistic model (e.g. GMM); higher is better."""
     value = getattr(obj, "loglik", np.nan) if obj is not None else np.nan
     return _result("loglik", value, "maximize", "internal")
+
+
+def metric_withinerror(obj=None, **_):
+    """Within-cluster fuzzy error of a fuzzy model (e.g. c-means); lower is better."""
+    value = getattr(obj, "withinerror", np.nan) if obj is not None else np.nan
+    return _result("withinerror", value, "minimize", "internal")
 
 
 def _entropy(labels) -> float:

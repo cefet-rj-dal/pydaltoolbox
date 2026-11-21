@@ -102,7 +102,7 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
 - **Regression:** `Regression` base + `RegLm`, `RegDtree`, `RegKnn`, `RegRf`,
   `RegSvm`, `RegMlp`.
 - **Clustering:** `Clusterer` base + metrics + `ClusterKmeans`, `ClusterDbscan`,
-  `ClusterGmm`, `ClusterHclust`.
+  `ClusterGmm`, `ClusterHclust`, `ClusterPam`, `ClusterCmeans` *(0.6.0)*.
 - **Transformations:**
   - normalization: `MinMax`, `ZScore`
   - cleaning: `NaRemoval`, `ImputationSimple`, `OutliersBoxplot`, `OutliersGaussian`
@@ -121,8 +121,8 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
 Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
 backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
 like `tree`/`rpart`). See the [roadmap](develop/planejamento.md) for what is still coming —
-remaining native clustering (k-medoids, fuzzy c-means), ReliefF, pattern mining, and the
-dependency-gated extras (XGBoost, graph clustering, graphics).
+ReliefF feature selection, pattern mining, and the dependency-gated extras (XGBoost,
+graph clustering, graphics).
 
 ---
 
