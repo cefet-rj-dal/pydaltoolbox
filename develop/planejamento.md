@@ -114,10 +114,10 @@ documenta **original + inovação**, com atribuição invertida:
   Fidelity: adapted.` + bullet *"Native implementation written from the references (no
   external dependency)"* + bullet `Innovation (++): <o que melhora> ... measured
   <evidência>` (números concretos quando houver, ex.: "~20x faster at k=20, identical result").
-- **Nunca escrever "not a wrapper of pkg" nem "inspired by pkg"** (Eduardo 2026-11-21): isso
-  pressupõe que copiamos e estamos nos defendendo. Dizer o que o código **é** (nativo, a
-  partir da literatura) e citar o artigo; um "no external dependency" neutro é ok, uma
-  negação defensiva não.
+- **Nunca escrever "not a wrapper of pkg"** (Eduardo 2026-11-21): pressupõe que copiamos e
+  estamos nos defendendo. **"inspired by pkg" é ok** — sinaliza que evoluímos a partir dali.
+  Também ok um "no external dependency" neutro; o que não vale é a **negação defensiva**
+  ("not a wrapper"). Citar o artigo nas References de qualquer modo.
 - R roxygen `@details` → *"independent reimplementation … no external dependency"* + a
   inovação + evidência; `@references` inclui os artigos. Primeiro aplicado ao **PAM**;
   reusar em fss, kNN, caret, Relief, SMOTE, cmeans.

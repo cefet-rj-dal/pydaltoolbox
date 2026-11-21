@@ -109,8 +109,9 @@ class ClusterPam(Clusterer):
     Porting:
         Canonical implementation; the R ``clu_pam.R`` is a backport of this. Fidelity:
         adapted.
-        - Native implementation of PAM (BUILD + FastPAM1 SWAP), written from the
-          references; dependency footprint stays numpy (no external clustering package).
+        - Native implementation of PAM (BUILD + FastPAM1 SWAP), inspired by the classic
+          PAM and evolved with the FastPAM1 swap (see References); dependency footprint
+          stays numpy (no external clustering package).
         - Innovation (++): the FastPAM1 swap reaches the same local optimum as classic PAM
           (identical medoids) while being asymptotically cheaper -- O(n^2 k) vs O(n^2 k^2)
           per iteration -- measured ~4x/20x/64x faster at k=10/20/30 on synthetic data.
