@@ -283,7 +283,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.3 | `0.4.0` ✅ | Transformações de atributos |
 | 1.4 | `0.5.0` ✅ | Amostragem restante |
 | 1.5 | `0.6.0` ✅ | Clustering nativo (Pam, Cmeans) |
-| 1.6 | `0.7.0` | Seleção de atributos (Relief + fss/stepwise) |
+| 1.6 | `0.7.0` ✅ | Seleção de atributos (Relief + fss/stepwise) |
 | 1.7 | `0.8.0` | Padrões: base + itemsets |
 | 1.8 | `0.9.0` | Padrões: regras e thresholds |
 | 1.9 | `0.10.0` | Padrões: sequências (PrefixSpan) |
@@ -358,14 +358,20 @@ rastreabilidade.
 | `ClusterPam` (k-medoids) | PAM/CLARA | `clu_pam.R` |
 | `ClusterCmeans` (fuzzy) | fuzzy c-means | `clu_cmeans.R` |
 
-#### 1.6 — Seleção de atributos → `0.7.0`
+#### 1.6 — Seleção de atributos → `0.7.0` ✅
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
+| `FeatureSelectionFss` | numpy + sklearn `LinearRegression` (forward por R² ajustado) | `trans_feature_selection_fss.R` |
+| `FeatureSelectionStepwise` | nativo: sklearn `LogisticRegression`/`LinearRegression` + AIC calculado à mão + busca gulosa | `trans_feature_selection_stepwise.R` |
 | `FeatureSelectionRelief` (ReliefF) | numpy | `trans_feature_selection_relief.R` |
-| reconciliar `fss` × `stepwise` | leaps-forward × `stats::step` | `trans_feature_selection_fss.R`, `trans_feature_selection_stepwise.R` |
 
-*(Hoje existe `FeatureSelectionStepwise` baseado no `fss.R`; decidir se mantemos uma
-classe ou criamos `FeatureSelectionFss` + `FeatureSelectionStepwise` distintas.)*
+**Decisão (2026-11-21, com Eduardo):** quebra limpa de nome (pré-1.0). O antigo
+`FeatureSelectionStepwise` (que implementava o `fss`) foi movido para
+`FeatureSelectionFss`; `FeatureSelectionStepwise` agora é o stepwise-GLM correto
+(espelho do `stats::step`: `direction` forward/backward/both, `family` binomial-default
+ou gaussian, seleção por AIC). **Backend nativo, sem statsmodels** — AIC = `2k − 2·logLik`
+com logistic/linear do sklearn. Sem dependência nova. Relief é ReliefF nativo em numpy
+(sem `skrebate`).
 
 #### 1.7 — Mineração de padrões: base + itemsets → `0.8.0`
 | Classe | Backend nativo | Arquivo R |

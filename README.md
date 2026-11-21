@@ -108,7 +108,7 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
   - cleaning: `NaRemoval`, `ImputationSimple`, `OutliersBoxplot`, `OutliersGaussian`
   - predictive imputation: `ImputationPredictive`, `ImputationTree` *(0.3.0)*
   - encoding / projection: `CategMapping`, `DtPca`
-  - feature selection: `FeatureSelectionCorr`, `Lasso`, `InfoGain`, `Stepwise`
+  - feature selection: `FeatureSelectionCorr`, `Lasso`, `InfoGain`, `Fss`, `Stepwise`, `Relief`
   - feature engineering: `FeatureGeneration`, `Aggregation`, `HierarchyCut` *(0.4.0)*
   - smoothing: `SmoothingInter`, `SmoothingFreq`, `SmoothingQuantization`, `SmoothingCluster` *(0.2.0)*
   - balancing: `SampleBalance`, `BalSubsampling`, `BalOversampling`
@@ -121,8 +121,7 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
 Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
 backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
 like `tree`/`rpart`). See the [roadmap](develop/planejamento.md) for what is still coming —
-ReliefF feature selection, pattern mining, and the dependency-gated extras (XGBoost,
-graph clustering, graphics).
+pattern mining and the dependency-gated extras (XGBoost, graph clustering, graphics).
 
 ---
 

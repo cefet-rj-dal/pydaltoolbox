@@ -6,8 +6,10 @@ from .encode import CategMapping
 from .feature import Aggregation, FeatureGeneration, HierarchyCut
 from .feature_selection import (
     FeatureSelectionCorr,
+    FeatureSelectionFss,
     FeatureSelectionInfoGain,
     FeatureSelectionLasso,
+    FeatureSelectionRelief,
     FeatureSelectionStepwise,
 )
 from .imputation import ImputationPredictive, ImputationTree
@@ -30,8 +32,10 @@ __all__ = [
     "DtPca",
     "FeatureGeneration",
     "FeatureSelectionCorr",
+    "FeatureSelectionFss",
     "FeatureSelectionInfoGain",
     "FeatureSelectionLasso",
+    "FeatureSelectionRelief",
     "FeatureSelectionStepwise",
     "FitCurvatureMax",
     "FitCurvatureMin",

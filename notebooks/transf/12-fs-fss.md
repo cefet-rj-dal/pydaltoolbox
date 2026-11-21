@@ -10,12 +10,12 @@ jupyter:
     name: python3
 ---
 
-# Feature Selection by Forward Stepwise (FeatureSelectionStepwise)
+# Feature Selection by Forward Subset Search (FeatureSelectionFss)
 
-Forward stepwise search starts from no predictors and adds, one at a time, the feature
+Forward subset search starts from no predictors and adds, one at a time, the feature
 that most improves the fit; it then keeps the subset size with the best adjusted
 R-squared (which penalizes adding uninformative predictors). The target must be
-numeric.
+numeric. This mirrors the R `feature_selection_fss` (`leaps::regsubsets`, forward).
 
 **Reference:** Hocking, R. R. (1976). *The Analysis and Selection of Variables in
 Linear Regression.* Biometrics.
@@ -24,7 +24,7 @@ Linear Regression.* Biometrics.
 import pydaltoolbox as dal
 
 diabetes = dal.datasets.diabetes()
-fs = dal.FeatureSelectionStepwise("target").fit(diabetes)
+fs = dal.FeatureSelectionFss("target").fit(diabetes)
 print("selected:", fs.selected)
 ```
 

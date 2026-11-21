@@ -67,8 +67,10 @@ from .transform import (
     DtPca,
     FeatureGeneration,
     FeatureSelectionCorr,
+    FeatureSelectionFss,
     FeatureSelectionInfoGain,
     FeatureSelectionLasso,
+    FeatureSelectionRelief,
     FeatureSelectionStepwise,
     FitCurvatureMax,
     FitCurvatureMin,
@@ -90,7 +92,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 __all__ = [
     "Aggregation",
@@ -130,8 +132,10 @@ __all__ = [
     "DtPca",
     "FeatureGeneration",
     "FeatureSelectionCorr",
+    "FeatureSelectionFss",
     "FeatureSelectionInfoGain",
     "FeatureSelectionLasso",
+    "FeatureSelectionRelief",
     "FeatureSelectionStepwise",
     "FitCurvatureMax",
     "FitCurvatureMin",
