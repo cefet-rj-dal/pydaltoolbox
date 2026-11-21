@@ -12,6 +12,11 @@ class CluTune(DalTune):
     For each configuration the clusterer is fitted and its main metric is computed on
     the training data; the base model's selector (best, or elbow) picks the winning
     configuration. No cross-validation -- clustering is unsupervised.
+
+    Porting:
+        Mirrors ``clu_tune.R``. Fidelity: approximate.
+        - Selects over the pydaltoolbox clusterers using the base model's intrinsic metric
+          and selector; numeric results follow the underlying clusterer's backend/RNG.
     """
 
     def fit(self, data, **kwargs):

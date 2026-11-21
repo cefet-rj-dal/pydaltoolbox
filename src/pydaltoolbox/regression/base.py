@@ -23,6 +23,12 @@ class Regression(Predictor):
     ----------
     attribute:
         Name of the numeric target column.
+
+    Porting:
+        Mirrors ``reg_regression.R``. Fidelity: adapted.
+        - Idiomatic-Python API (see :class:`~pydaltoolbox.base.DalBase`); provides the
+          standard regression ``evaluate`` (MSE, sMAPE, R2) -- the most-used contract
+          downstream.
     """
 
     def __init__(self, attribute: str) -> None:
@@ -56,6 +62,11 @@ class SklearnRegression(Regression):
 
     Subclasses implement :meth:`_make_model` and store tunable hyperparameters as
     attributes; fit/predict are shared.
+
+    Porting:
+        No direct R analog. Fidelity: adapted.
+        - Python-only helper that factors out the shared scikit-learn integration for the
+          concrete ``Reg*`` learners.
     """
 
     def _make_model(self):  # pragma: no cover - overridden by subclasses

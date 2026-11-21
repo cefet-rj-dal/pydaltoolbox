@@ -77,6 +77,12 @@ class ClusterPam(Clusterer):
     uses silhouette, Davies-Bouldin and Calinski-Harabasz; external evaluation uses
     entropy, purity and the adjusted Rand index.
 
+    Porting:
+        Mirrors ``clu_pam.R``. Fidelity: adapted.
+        - Native numpy BUILD + SWAP implementation instead of R ``cluster::pam`` (keeps
+          the dependency footprint to numpy; no ``scikit-learn-extra``).
+        - New data is assigned to the nearest medoid, as in R.
+
     References:
         Kaufman, L., & Rousseeuw, P. J. (1990). Finding Groups in Data: An Introduction
         to Cluster Analysis.

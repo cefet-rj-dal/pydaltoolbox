@@ -39,6 +39,11 @@ class ImputationPredictive(DalTransform):
     plausible fills than constant/mean imputation -- the idea behind chained-equations
     imputation.
 
+    Porting:
+        Mirrors ``trans_imputation_predictive.R``. Fidelity: adapted.
+        - Base class: resolves target/sources and pre-fills source columns with
+          :class:`ImputationSimple`; concrete subclasses supply the model.
+
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
         (3rd ed.). Morgan Kaufmann.
@@ -74,8 +79,13 @@ class ImputationTree(ImputationPredictive):
     Fits a decision tree (regressor for a numeric target, classifier otherwise) on the
     observed-target rows, using the source columns as predictors, then predicts the
     missing values. A tree captures non-linear dependencies and interactions among the
-    sources without requiring them to be scaled. Mirrors ``imputation_tree``; pre-pruning
-    defaults match R's ``tree`` package.
+    sources without requiring them to be scaled.
+
+    Porting:
+        Mirrors ``trans_imputation_tree.R``. Fidelity: adapted.
+        - scikit-learn decision tree backend instead of R ``tree``; pre-pruning defaults
+          match R's ``tree`` package.
+        - Categorical source columns are one-hot encoded before fitting the tree.
 
     References:
         Breiman, L., Friedman, J., Olshen, R., and Stone, C. (1984). Classification and

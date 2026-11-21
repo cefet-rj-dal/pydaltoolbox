@@ -18,6 +18,10 @@ class ClaKnn(SklearnClassification):
     off bias and variance; the distance metric is Euclidean by default, so features
     should be on comparable scales.
 
+    Porting:
+        Mirrors ``cla_knn.R``. Fidelity: approximate.
+        - scikit-learn ``KNeighborsClassifier`` backend; default ``k=5``.
+
     References:
         Cover, T., and Hart, P. (1967). Nearest neighbor pattern classification. IEEE
         Transactions on Information Theory, 13(1):21-27.

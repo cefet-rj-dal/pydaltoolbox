@@ -62,6 +62,11 @@ class Smoothing(DalTransform):
     Subclasses implement :meth:`_compute_interval`. ``n`` may be an int or a collection
     of candidate ints (tuned at fit).
 
+    Porting:
+        Mirrors ``trans_smoothing.R``. Fidelity: adapted.
+        - R-bug fix: when ``n`` is tuned, this refits with the chosen ``n``; the R base
+          keeps the last candidate's boundaries instead, which looks like a bug.
+
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
         (3rd ed.). Morgan Kaufmann. (Discretization)
@@ -132,6 +137,10 @@ class SmoothingInter(Smoothing):
     range is taken from robust boxplot whiskers rather than the raw min/max, so extreme
     outliers do not stretch the bins.
 
+    Porting:
+        Mirrors ``trans_smoothing_inter.R``. Fidelity: exact.
+        - Inherits the tuning-refit adaptation from :class:`Smoothing`.
+
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
         (3rd ed.). Morgan Kaufmann. (Discretization)
@@ -156,6 +165,10 @@ class SmoothingFreq(Smoothing):
     holds roughly the same number of observations. This adapts to skewed distributions
     better than equal-width bins.
 
+    Porting:
+        Mirrors ``trans_smoothing_freq.R``. Fidelity: exact.
+        - Inherits the tuning-refit adaptation from :class:`Smoothing`.
+
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
         (3rd ed.). Morgan Kaufmann. (Discretization)
@@ -171,6 +184,11 @@ class SmoothingQuantization(Smoothing):
     Clusters the one-dimensional values with k-means and derives bin boundaries from the
     cluster centers (their midpoints). Bins therefore follow the natural grouping of the
     data rather than a fixed width or frequency.
+
+    Porting:
+        Mirrors ``trans_smoothing_quantization.R``. Fidelity: approximate.
+        - scikit-learn ``KMeans`` backend (RNG/init differ from R); inherits the
+          tuning-refit adaptation from :class:`Smoothing`.
 
     References:
         MacQueen, J. (1967). Some Methods for Classification and Analysis of Multivariate
@@ -198,6 +216,11 @@ class SmoothingCluster(Smoothing):
 
     ``fit`` takes a DataFrame with one numeric column and the class column named
     ``class_label``. Tuning (``n`` as candidates) minimizes entropy.
+
+    Porting:
+        Mirrors ``trans_smoothing_cluster.R``. Fidelity: approximate.
+        - scikit-learn ``KMeans`` backend (RNG/init differ from R); tuning minimizes
+          label entropy across bins.
 
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques

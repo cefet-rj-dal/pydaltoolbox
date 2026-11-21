@@ -25,6 +25,13 @@ class RegMlp(SklearnRegression):
     hidden layer width (if ``None``, a ``ceil(n_features / 3)`` heuristic like the R
     package), ``decay`` -> L2 regularization (``alpha``), matching the R defaults.
 
+    Porting:
+        Mirrors ``reg_mlp.R``. Fidelity: adapted.
+        - scikit-learn ``MLPRegressor`` backend instead of R ``nnet``.
+        - Wraps ``StandardScaler`` on features and target (via
+          ``TransformedTargetRegressor``), as R ``nnet`` recommends scaling; ``decay=0.05``
+          and the ``ceil(n_features/3)`` hidden-size heuristic match the R defaults.
+
     References:
         Rumelhart, D., Hinton, G., and Williams, R. (1986). Learning representations by
         back-propagating errors. Nature, 323:533-536.

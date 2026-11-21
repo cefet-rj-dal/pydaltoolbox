@@ -27,7 +27,10 @@ class MinMax(DalTransform):
     methods (distance-based learners, neural networks) without distorting relative
     spacing.
 
-    ``(x - min) / (max - min)``; constant columns map to 0. Mirrors R ``minmax()``.
+    ``(x - min) / (max - min)``; constant columns map to 0.
+
+    Porting:
+        Mirrors ``trans_norm_minmax.R``. Fidelity: exact.
 
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
@@ -69,7 +72,10 @@ class ZScore(DalTransform):
 
     Optionally rescaled to a target mean (``nmean``) and sd (``nsd``):
     ``((x - mean) / sd) * nsd + nmean``. Constant columns map to ``nmean``.
-    Mirrors R ``zscore()`` (sample standard deviation, ddof=1).
+
+    Porting:
+        Mirrors ``trans_norm_zscore.R``. Fidelity: exact.
+        - Uses the sample standard deviation (``ddof=1``), as R does.
 
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques

@@ -30,6 +30,11 @@ class ClusterKmeans(Clusterer):
     because it decreases mechanically as ``k`` grows, making it a weak standalone
     criterion for comparing partitions.
 
+    Porting:
+        Mirrors ``clu_kmeans.R``. Fidelity: approximate.
+        - scikit-learn ``KMeans`` backend instead of R ``stats::kmeans``; results differ
+          numerically with the initialization/RNG (``n_init=10``, ``random_state=seed``).
+
     References:
         MacQueen, J. (1967). Some Methods for Classification and Analysis of
         Multivariate Observations.

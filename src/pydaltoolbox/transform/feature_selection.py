@@ -55,7 +55,12 @@ class FeatureSelectionCorr(DalTransform):
     A filter method that discards redundant predictors: for each pair whose absolute
     correlation exceeds the cutoff, it drops the one with the larger mean correlation to
     the rest. Reducing collinearity stabilizes linear models and shrinks the feature set
-    without consulting the target. Approximates R ``caret::findCorrelation``.
+    without consulting the target.
+
+    Porting:
+        Mirrors ``trans_feature_selection_corr.R``. Fidelity: approximate.
+        - Approximates R ``caret::findCorrelation``: for each highly correlated pair it
+          drops the member with the larger mean absolute correlation to the rest.
 
     References:
         Hall, M. A. (1999). Correlation-based Feature Selection for Machine Learning.
@@ -103,6 +108,11 @@ class FeatureSelectionLasso(DalTransform):
     cross-validation. Features are standardized before the lasso fit, matching glmnet's
     internal scaling.
 
+    Porting:
+        Mirrors ``trans_feature_selection_lasso.R``. Fidelity: approximate.
+        - scikit-learn ``LassoCV`` backend instead of R ``glmnet``; the cross-validated
+          penalty and the surviving set may differ from ``cv.glmnet``.
+
     References:
         Tibshirani, R. (1996). Regression Shrinkage and Selection via the Lasso. Journal
         of the Royal Statistical Society, Series B, 58(1):267-288.
@@ -149,6 +159,11 @@ class FeatureSelectionInfoGain(DalTransform):
     the feature is more informative about the class. Numeric features are quantile-binned
     first so entropy can be computed. This is the splitting criterion behind ID3/C4.5
     decision trees, used here as a univariate ranker.
+
+    Porting:
+        Mirrors ``trans_feature_selection_info_gain.R``. Fidelity: adapted.
+        - Native entropy computation instead of R ``FSelector``; numeric features are
+          quantile-binned (``bins``) before the gain is computed.
 
     References:
         Quinlan, J. R. (1986). Induction of Decision Trees. Machine Learning, 1(1):81-106.
@@ -227,7 +242,13 @@ class FeatureSelectionStepwise(DalTransform):
     step adding the variable that most improves the fit, and the subset with the best
     adjusted R-squared is kept. The adjusted R-squared penalizes extra predictors, guarding
     against adding variables that do not pay for their complexity. Target must be numeric
-    (regression). Mirrors R ``feature_selection_fss`` (leaps).
+    (regression).
+
+    Porting:
+        Mirrors ``trans_feature_selection_fss.R``. Fidelity: approximate.
+        - Greedy forward selection with ``LinearRegression`` keeping the best adjusted
+          R-squared, instead of R ``leaps`` best-subset search. (Step 1.6 of the roadmap
+          will reconcile ``fss`` vs ``stepwise``.)
 
     References:
         Hocking, R. R. (1976). The Analysis and Selection of Variables in Linear

@@ -23,6 +23,12 @@ class CategMapping(DalTransform):
     imposing a false ordinal relationship between the categories. Levels are learned on
     ``fit`` so train and test produce the same columns.
 
+    Porting:
+        Mirrors ``trans_categ_mapping.R``. Fidelity: adapted.
+        - Behavior change: R ``categ_mapping`` returns *only* the target's one-hot columns
+          and drops every other column (error-prone in a pipeline); here the other columns
+          are kept and the attribute is replaced by its one-hot dummies.
+
     References:
         Kuhn, M., and Johnson, K. (2013). Applied Predictive Modeling. Springer.
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques

@@ -13,12 +13,15 @@ __all__ = ["ImputationSimple", "NaRemoval"]
 
 
 class NaRemoval(DalTransform):
-    """Remove rows that contain any missing value. Mirrors R ``na_removal()``.
+    """Remove rows that contain any missing value.
 
     Complete-case analysis (listwise deletion): any row with at least one missing value
     is dropped. It is simple and unbiased when data are missing completely at random, but
     discards information and can bias results otherwise, so it is best when missingness is
     rare.
+
+    Porting:
+        Mirrors ``trans_na_removal.R``. Fidelity: exact.
 
     References:
         Little, R. J. A., and Rubin, D. B. (2019). Statistical Analysis with Missing Data
@@ -40,7 +43,10 @@ class ImputationSimple(DalTransform):
     alternative).
 
     Numeric columns are filled with the median (default) or mean; non-numeric columns
-    with the mode (most frequent value). Mirrors R ``imputation_simple()``.
+    with the mode (most frequent value).
+
+    Porting:
+        Mirrors ``trans_imputation_simple.R``. Fidelity: exact.
 
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques

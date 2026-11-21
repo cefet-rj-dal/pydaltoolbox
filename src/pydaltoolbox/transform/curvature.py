@@ -53,6 +53,12 @@ class FitCurvatureMin(_FitCurvature):
     (curvature) of a fitted smoothing spline -- the "Kneedle" heuristic -- used, for
     example, to choose the number of PCA components or clusters.
 
+    Porting:
+        Mirrors ``trans_fit_curvature_min.R``. Fidelity: approximate.
+        - Uses a scipy smoothing spline (closest analog to R ``smooth.spline``), falling
+          back to a discrete second-derivative estimate when scipy's spline is
+          unavailable or fails.
+
     References:
         Satopaa, V., Albrecht, J., Irwin, D., and Raghavan, B. (2011). Finding a
         "Kneedle" in a Haystack: Detecting Knee Points in System Behavior. ICDCSW.
@@ -67,6 +73,12 @@ class FitCurvatureMax(_FitCurvature):
     Locates the knee/elbow of a monotone curve as the point of extreme second derivative
     (curvature) of a fitted smoothing spline -- the "Kneedle" heuristic -- used, for
     example, to estimate the DBSCAN ``eps`` from the k-distance curve.
+
+    Porting:
+        Mirrors ``trans_fit_curvature_max.R``. Fidelity: approximate.
+        - Uses a scipy smoothing spline (closest analog to R ``smooth.spline``), falling
+          back to a discrete second-derivative estimate when scipy's spline is
+          unavailable or fails.
 
     References:
         Satopaa, V., Albrecht, J., Irwin, D., and Raghavan, B. (2011). Finding a

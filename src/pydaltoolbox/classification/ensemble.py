@@ -26,6 +26,11 @@ class ClaRf(SklearnClassification):
     their votes, which reduces variance and overfitting. Key hyperparameters are the
     number of trees (``ntree``) and the number of variables tried per split (``mtry``).
 
+    Porting:
+        Mirrors ``cla_rf.R``. Fidelity: approximate.
+        - scikit-learn ``RandomForestClassifier`` backend instead of R ``randomForest``;
+          results differ numerically with the RNG/implementation.
+
     References:
         Breiman, L. (2001). Random Forests. Machine Learning, 45(1):5-32.
         Liaw, A., and Wiener, M. (2002). Classification and Regression by randomForest.
@@ -61,6 +66,11 @@ class ClaBagging(SklearnClassification):
     averaging over resamples it reduces the variance of unstable learners such as
     decision trees.
 
+    Porting:
+        Mirrors ``cla_bagging.R``. Fidelity: approximate.
+        - scikit-learn ``BaggingClassifier`` backend instead of R ``ipred::bagging``;
+          results differ numerically with the RNG/implementation.
+
     References:
         Breiman, L. (1996). Bagging predictors. Machine Learning, 24(2):123-140.
     """
@@ -87,6 +97,11 @@ class ClaBoosting(SklearnClassification):
     examples the previous ones misclassified (by reweighting the training set), and the
     learners are combined into a weighted vote. AdaBoost (adaptive boosting) is the
     classic instance of this scheme and often yields strong accuracy from simple trees.
+
+    Porting:
+        Mirrors ``cla_boosting.R``. Fidelity: adapted.
+        - scikit-learn ``AdaBoostClassifier`` backend instead of R ``adabag::boosting``
+          (a related SAMME-style boosting rather than the exact adabag algorithm).
 
     References:
         Freund, Y., and Schapire, R. E. (1997). A Decision-Theoretic Generalization of

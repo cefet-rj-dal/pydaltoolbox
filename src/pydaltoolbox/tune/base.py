@@ -37,6 +37,12 @@ class DalTune(DalBase):
         Dict mapping hyperparameter name to the list of values to try.
     seed:
         Optional seed for reproducible fold generation.
+
+    Porting:
+        Mirrors ``dal_tune.R``. Fidelity: adapted.
+        - Idiomatic-Python API (see :class:`~pydaltoolbox.base.DalBase`); concrete tuners
+          (:class:`~pydaltoolbox.tune.ClaTune`, ``RegTune``, ``CluTune``) supply the
+          search/scoring.
     """
 
     def __init__(self, base_model, folds: int = 10, ranges: dict | None = None, seed: int | None = None) -> None:

@@ -23,6 +23,12 @@ class ClaGlm(SklearnClassification):
     a linear combination of the predictors, fitted by maximum likelihood. Simple,
     interpretable, and a strong baseline for (mainly binary) classification.
 
+    Porting:
+        Mirrors ``cla_glm.R``. Fidelity: approximate.
+        - scikit-learn ``LogisticRegression`` backend instead of R ``stats::glm``
+          (binomial); sklearn applies a small default L2 penalty, so coefficients differ
+          slightly from an unpenalized glm fit.
+
     References:
         Nelder, J. A., and Wedderburn, R. W. M. (1972). Generalized Linear Models.
         Journal of the Royal Statistical Society, Series A, 135(3):370-384.
@@ -51,6 +57,11 @@ class ClaMultinom(SklearnClassification):
     Extends logistic regression to more than two classes via the multinomial (softmax)
     model, estimating one set of coefficients per class and normalizing their
     exponentials into class probabilities. The analog of R ``nnet::multinom``.
+
+    Porting:
+        Mirrors ``cla_multinom.R``. Fidelity: approximate.
+        - scikit-learn ``LogisticRegression`` (multinomial) backend instead of R
+          ``nnet::multinom``; results differ numerically with the solver/penalty.
 
     References:
         Agresti, A. (2002). Categorical Data Analysis (2nd ed.). Wiley.
@@ -81,6 +92,12 @@ class ClaGlmnet(SklearnClassification):
     coefficients to zero while the L2 part handles correlated predictors, so the model is
     well suited to high-dimensional data. ``alpha`` is the elastic-net mixing ratio
     (0 = ridge, 1 = lasso).
+
+    Porting:
+        Mirrors ``cla_glmnet.R``. Fidelity: approximate.
+        - scikit-learn ``LogisticRegression`` (elastic-net, ``saga`` solver) instead of R
+          ``glmnet``; ``alpha`` maps to sklearn's ``l1_ratio``. Penalty strength is not
+          cross-validated here, so the path differs from ``cv.glmnet``.
 
     References:
         Friedman, J., Hastie, T., and Tibshirani, R. (2010). Regularization Paths for

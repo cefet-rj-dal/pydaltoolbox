@@ -29,6 +29,12 @@ class ClusterHclust(Clusterer):
     rather than a centroid-style criterion, so WCSS is not the main metric. Does not
     support clustering new data after fit.
 
+    Porting:
+        Mirrors ``clu_hclust.R``. Fidelity: approximate.
+        - scikit-learn ``AgglomerativeClustering`` backend instead of R ``stats::hclust``.
+        - Features are standardized before fitting, as in the R package.
+        - Does not support clustering new data after fit.
+
     References:
         Johnson, S. C. (1967). Hierarchical clustering schemes. Psychometrika.
         Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation

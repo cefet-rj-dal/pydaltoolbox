@@ -32,6 +32,12 @@ class ClusterDbscan(Clusterer):
     The main metric is the noise-point count rather than WCSS, because WCSS ignores
     DBSCAN's central modeling choice: distinguishing dense clusters from noise.
 
+    Porting:
+        Mirrors ``clu_dbscan.R``. Fidelity: adapted.
+        - scikit-learn ``DBSCAN`` backend; ``eps`` auto-estimated from the k-distance
+          curve elbow when not given (as in R).
+        - Does not support clustering new data after fit (labels are fixed at fit time).
+
     References:
         Ester, M., Kriegel, H.-P., Sander, J., Xu, X. (1996). A Density-Based
         Algorithm for Discovering Clusters in Large Spatial Databases with Noise.

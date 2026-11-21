@@ -15,6 +15,10 @@ class RegKnn(SklearnRegression):
     training examples -- a non-parametric method well suited to local smoothing. It is
     sensitive to feature scaling, so normalization beforehand is advisable.
 
+    Porting:
+        Mirrors ``reg_knn.R``. Fidelity: approximate.
+        - scikit-learn ``KNeighborsRegressor`` backend; default ``k=5``.
+
     References:
         Altman, N. S. (1992). An Introduction to Kernel and Nearest-Neighbor
         Nonparametric Regression. The American Statistician, 46(3):175-185.

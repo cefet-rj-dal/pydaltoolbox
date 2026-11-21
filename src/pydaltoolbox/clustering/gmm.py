@@ -27,6 +27,12 @@ class ClusterGmm(Clusterer):
     selection). Supports clustering new data (the fitted mixture can assign posteriors
     to unseen points).
 
+    Porting:
+        Mirrors ``clu_gmm.R``. Fidelity: adapted.
+        - scikit-learn ``GaussianMixture`` backend instead of R ``mclust``.
+        - mclust-style component selection reimplemented as minimum BIC over 1..10
+          components when ``g`` is not given.
+
     References:
         Fraley, C., & Raftery, A. E. (2002). Model-based clustering, discriminant
         analysis, and density estimation. Journal of the American Statistical

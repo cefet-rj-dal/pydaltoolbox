@@ -26,6 +26,13 @@ class ClaMlp(SklearnClassification):
     layer width (if ``None``, a ``ceil(n_features / 3)`` heuristic like the R package),
     ``decay`` -> L2 regularization (``alpha``).
 
+    Porting:
+        Mirrors ``cla_mlp.R``. Fidelity: adapted.
+        - scikit-learn ``MLPClassifier`` backend instead of R ``nnet``.
+        - Wraps ``StandardScaler`` (R ``nnet`` recommends scaling; the net is
+          scale-sensitive); ``decay=0.05`` and a ``ceil(n_features/3)`` hidden-size
+          heuristic match the R defaults.
+
     References:
         Rumelhart, D., Hinton, G., and Williams, R. (1986). Learning representations by
         back-propagating errors. Nature, 323:533-536.

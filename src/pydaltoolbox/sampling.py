@@ -30,6 +30,10 @@ class DataSample(DalTransform):
     several train/test rotations to reduce the variance of that estimate. Subclasses
     implement :meth:`train_test` and :meth:`k_fold`.
 
+    Porting:
+        Mirrors ``trans_sample.R``. Fidelity: exact.
+        - Base class: defines the ``train_test``/``k_fold`` contract; subclasses sample.
+
     References:
         Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy
         Estimation and Model Selection. IJCAI.
@@ -50,6 +54,11 @@ class SampleRandom(DataSample):
     Partitions rows uniformly at random: ``train_test`` holds out a fraction for testing,
     and ``k_fold`` divides the data into ``k`` equal parts for cross-validation. Simple and
     unbiased when classes are reasonably balanced (use :class:`SampleStratified` otherwise).
+
+    Porting:
+        Mirrors ``trans_sample_random.R``. Fidelity: approximate.
+        - numpy RNG differs from R, so splits do not match R exactly (reproducible within
+          Python via ``seed``).
 
     Parameters
     ----------
@@ -92,7 +101,12 @@ class SampleStratified(SampleRandom):
     Stratified sampling keeps each class represented in the same proportion across the
     splits as in the full data, which lowers the variance and bias of the performance
     estimate -- important for imbalanced classification where random splits can under- or
-    over-represent rare classes. Mirrors R's ``sample_stratified(attribute)``.
+    over-represent rare classes.
+
+    Porting:
+        Mirrors ``trans_sample_strat.R``. Fidelity: approximate.
+        - scikit-learn ``train_test_split``/``StratifiedKFold`` backend; numpy/sklearn RNG
+          differs from R.
 
     Parameters
     ----------
@@ -151,8 +165,11 @@ class SampleSimple(DalTransform):
     drawn. Without replacement it yields a subset; with replacement it supports bootstrap
     resampling. Useful for subsetting large data or building resamples.
 
-    Mirrors R ``sample_simple(size, replace, prob)``. ``transform`` returns a sampled
-    subset of the rows (or elements, for a 1-D input).
+    ``transform`` returns a sampled subset of the rows (or elements, for a 1-D input).
+
+    Porting:
+        Mirrors ``trans_sample_simple.R``. Fidelity: approximate.
+        - numpy/pandas RNG differs from R (reproducible within Python via ``seed``).
 
     References:
         Cochran, W. G. (1977). Sampling Techniques (3rd ed.). Wiley.
@@ -194,8 +211,12 @@ class SampleGroups(DalTransform):
     naturally nested (e.g. by subject, site or batch) and must be kept together to avoid
     leakage between train and test.
 
-    Mirrors R ``sample_groups(attribute, n_groups)``. Groups are the distinct values of
-    ``attribute`` already present in the data (not inferred by clustering).
+    Groups are the distinct values of ``attribute`` already present in the data (not
+    inferred by clustering).
+
+    Porting:
+        Mirrors ``trans_sample_groups.R``. Fidelity: approximate.
+        - numpy RNG differs from R (reproducible within Python via ``seed``).
 
     References:
         Cochran, W. G. (1977). Sampling Techniques (3rd ed.). Wiley.

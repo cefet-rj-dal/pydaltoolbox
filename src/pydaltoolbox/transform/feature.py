@@ -23,7 +23,12 @@ class FeatureGeneration(DalTransform):
     predictive pipeline.
 
     Each keyword maps a new column name to either a callable ``df -> Series`` or a
-    pandas ``eval`` expression string. Mirrors ``feature_generation``.
+    pandas ``eval`` expression string.
+
+    Porting:
+        Mirrors ``trans_feature_generation.R``. Fidelity: adapted.
+        - API idiom change: R uses non-standard evaluation (named expressions); the
+          Python equivalent takes callables of the DataFrame or ``df.eval`` strings.
 
     References:
         Kuhn, M., and Johnson, K. (2019). Feature Engineering and Selection: A Practical
@@ -62,7 +67,12 @@ class Aggregation(DalTransform):
     to customers -- and is a building block of concept-hierarchy roll-ups in data mining.
 
     Each keyword maps an output column to either a callable ``group_df -> scalar`` or a
-    ``(column, func)`` tuple (e.g. ``("sepal_length", "mean")``). Mirrors ``aggregation``.
+    ``(column, func)`` tuple (e.g. ``("sepal_length", "mean")``).
+
+    Porting:
+        Mirrors ``trans_aggregation.R``. Fidelity: adapted.
+        - API idiom change: R uses non-standard evaluation; the Python equivalent takes
+          group callables or ``(column, func)`` tuples.
 
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques
@@ -106,8 +116,10 @@ class HierarchyCut(DalTransform):
     hierarchy that makes patterns more interpretable and enables roll-up/aggregation at a
     coarser granularity.
 
-    Adds a new column (default ``<attribute>_Level``) with the binned labels. Mirrors
-    ``hierarchy_cut``.
+    Adds a new column (default ``<attribute>_Level``) with the binned labels.
+
+    Porting:
+        Mirrors ``trans_hierarchy_cut.R``. Fidelity: exact.
 
     References:
         Han, J., Kamber, M., and Pei, J. (2011). Data Mining: Concepts and Techniques

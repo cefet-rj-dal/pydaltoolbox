@@ -23,8 +23,12 @@ class ClaDtree(SklearnClassification):
     Gini impurity or entropy), yielding a human-readable set of if-then rules. They are
     fast and interpretable, and often serve as base learners in ensembles.
 
-    Pre-pruning defaults (``min_samples_split=10``, ``min_samples_leaf=5``)
-    approximate R ``tree::tree`` (``minsize=10``, ``mincut=5``).
+    Porting:
+        Mirrors ``cla_dtree.R``. Fidelity: adapted.
+        - scikit-learn ``DecisionTreeClassifier`` backend instead of R ``tree::tree``.
+        - Pre-pruning defaults (``min_samples_split=10``, ``min_samples_leaf=5``)
+          approximate R ``tree::tree`` (``minsize=10``, ``mincut=5``); without them
+          sklearn trees grow to full depth and overfit, hurting quality.
 
     References:
         Breiman, L., Friedman, J., Olshen, R., and Stone, C. (1984). Classification
@@ -55,8 +59,11 @@ class ClaRpart(SklearnClassification):
     impurity like R's ``rpart``. Same interpretable tree model as ``ClaDtree`` with the
     pruning conventions of ``rpart`` rather than ``tree``.
 
-    Pre-pruning defaults (``min_samples_split=20``, ``min_samples_leaf=7``)
-    approximate R ``rpart`` (``minsplit=20``, ``minbucket=7``).
+    Porting:
+        Mirrors ``cla_rpart.R``. Fidelity: adapted.
+        - scikit-learn ``DecisionTreeClassifier`` (Gini) backend instead of R ``rpart``.
+        - Pre-pruning defaults (``min_samples_split=20``, ``min_samples_leaf=7``)
+          approximate R ``rpart`` (``minsplit=20``, ``minbucket=7``).
 
     References:
         Breiman, L., Friedman, J., Olshen, R., and Stone, C. (1984). Classification

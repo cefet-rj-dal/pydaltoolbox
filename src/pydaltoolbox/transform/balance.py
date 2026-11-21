@@ -31,7 +31,7 @@ def _restore_categoricals(result: pd.DataFrame, original: pd.DataFrame) -> pd.Da
 
 
 class SampleBalance(DalTransform):
-    """Balance classes by up- or down-sampling. Mirrors R ``sample_balance()``.
+    """Balance classes by up- or down-sampling.
 
     Rebalances a skewed class distribution by resampling, so a learner is not dominated by
     the majority class. Down-sampling discards majority examples (risking information
@@ -40,6 +40,11 @@ class SampleBalance(DalTransform):
 
     ``method="down"`` reduces every class to the minority count; ``method="up"``
     grows every class to the majority count by sampling with replacement.
+
+    Porting:
+        Mirrors ``trans_sample_balance.R``. Fidelity: approximate.
+        - numpy RNG differs from R, so the specific rows drawn differ (reproducible within
+          Python via ``seed``).
 
     References:
         He, H., and Garcia, E. A. (2009). Learning from Imbalanced Data. IEEE
@@ -68,11 +73,15 @@ class SampleBalance(DalTransform):
 
 
 class BalSubsampling(DalTransform):
-    """Undersample every class to the minority count. Mirrors R ``bal_subsampling()``.
+    """Undersample every class to the minority count.
 
     Random undersampling: majority classes are reduced (without replacement) to the size
     of the minority class, producing a balanced training set. Cheap and effective when
     the majority class is large, at the cost of discarding some data.
+
+    Porting:
+        Mirrors ``trans_sample_subsampling.R``. Fidelity: approximate.
+        - numpy RNG differs from R (reproducible within Python via ``seed``).
 
     References:
         He, H., and Garcia, E. A. (2009). Learning from Imbalanced Data. IEEE
@@ -96,7 +105,7 @@ class BalSubsampling(DalTransform):
 
 
 class BalOversampling(DalTransform):
-    """Oversample every class to the majority count. Mirrors R ``bal_oversampling()``.
+    """Oversample every class to the majority count.
 
     Grows minority classes up to the majority count. SMOTE (Synthetic Minority
     Over-sampling Technique) creates new examples by interpolating between a minority
@@ -107,6 +116,11 @@ class BalOversampling(DalTransform):
     ``method="random"`` replicates existing minority examples; ``method="smote"``
     generates synthetic ones by interpolating between a sample and one of its ``k``
     nearest neighbors.
+
+    Porting:
+        Mirrors ``trans_sample_oversampling.R``. Fidelity: adapted.
+        - SMOTE is implemented natively (local nearest-neighbor interpolation), matching
+          the R implementation without an extra dependency; numpy RNG differs from R.
 
     References:
         Chawla, N. V., Bowyer, K. W., Hall, L. O., and Kegelmeyer, W. P. (2002). SMOTE:

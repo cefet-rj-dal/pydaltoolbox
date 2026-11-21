@@ -15,6 +15,11 @@ class RegLm(SklearnRegression):
     coefficients that minimize the sum of squared residuals (ordinary least squares). It
     is simple, interpretable, and the standard baseline for regression.
 
+    Porting:
+        Mirrors ``reg_lm.R``. Fidelity: exact.
+        - scikit-learn ``LinearRegression`` (OLS) matches R ``stats::lm`` coefficients
+          (both solve ordinary least squares; deterministic).
+
     References:
         Draper, N. R., and Smith, H. (1998). Applied Regression Analysis (3rd ed.).
         Wiley.

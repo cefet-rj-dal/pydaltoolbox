@@ -52,7 +52,9 @@ class OutliersBoxplot(_Outliers):
     robust to the very outliers it detects and makes no distributional assumption.
 
     ``alpha=1.5`` are the standard whiskers; ``alpha=3`` targets extreme values.
-    Mirrors R ``outliers_boxplot()``.
+
+    Porting:
+        Mirrors ``trans_outliers_boxplot.R``. Fidelity: exact.
 
     References:
         Tukey, J. W. (1977). Exploratory Data Analysis. Addison-Wesley.
@@ -76,8 +78,11 @@ class OutliersGaussian(_Outliers):
     99.7% of the data, so points outside it are treated as outliers. Best suited to
     roughly symmetric, bell-shaped columns.
 
-    ``alpha=3`` is the three-sigma rule. Mirrors R ``outliers_gaussian()``
-    (sample standard deviation, ddof=1).
+    ``alpha=3`` is the three-sigma rule.
+
+    Porting:
+        Mirrors ``trans_outliers_gaussian.R``. Fidelity: exact.
+        - Uses the sample standard deviation (``ddof=1``), as R does.
 
     References:
         Pukelsheim, F. (1994). The Three Sigma Rule. The American Statistician,

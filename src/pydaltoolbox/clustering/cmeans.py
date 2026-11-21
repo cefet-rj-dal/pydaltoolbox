@@ -46,6 +46,12 @@ class ClusterCmeans(Clusterer):
     entropy, purity and the adjusted Rand index. Does not support clustering new data
     after fit.
 
+    Porting:
+        Mirrors ``clu_cmeans.R``. Fidelity: adapted.
+        - Native numpy fuzzy c-means implementation instead of R ``e1071::cmeans`` (no
+          extra dependency).
+        - Does not support clustering new data after fit (as in R).
+
     References:
         Bezdek, J. C. (1981). Pattern Recognition with Fuzzy Objective Function
         Algorithms.

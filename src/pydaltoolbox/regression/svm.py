@@ -25,6 +25,14 @@ class RegSvm(SklearnRegression):
     on prediction). Without this, SVR badly underfits targets with large magnitude.
     The default ``cost`` matches the daltoolbox default.
 
+    Porting:
+        Mirrors ``reg_svm.R``. Fidelity: adapted.
+        - scikit-learn ``SVR`` backend instead of R ``e1071::svm``.
+        - Wraps ``StandardScaler`` on the features and, via ``TransformedTargetRegressor``,
+          on the target to replicate ``e1071::svm``'s ``scale=TRUE`` default (which scales
+          x and y and reverses it on prediction); without it SVR underfits large targets.
+        - Default ``cost=10`` matches daltoolbox.
+
     References:
         Drucker, H., Burges, C., Kaufman, L., Smola, A., and Vapnik, V. (1997). Support
         Vector Regression Machines. Advances in Neural Information Processing Systems 9.

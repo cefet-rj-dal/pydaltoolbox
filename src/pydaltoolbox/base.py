@@ -28,7 +28,17 @@ __all__ = ["DalBase", "DalLearner", "DalTransform", "Predictor"]
 
 
 class DalBase:
-    """Minimal abstract base class for all DAL objects."""
+    """Minimal abstract base class for all DAL objects.
+
+    Root of the Experiment Line contract (``fit`` / ``action`` / ``set_params``) that
+    every component shares, enabling uniform, composable pipelines.
+
+    Porting:
+        Mirrors ``dal_base.R``. Fidelity: adapted.
+        - Idiomatic-Python API instead of R S3 generics: instance methods, ``fit``
+          returns ``self`` (chainable), and PascalCase class names (e.g. ``ClaDtree``).
+          This global adaptation applies to every subclass.
+    """
 
     def fit(self, data=None, **kwargs) -> DalBase:
         """Train/adjust the object. Default is a no-op returning ``self``."""
@@ -52,7 +62,13 @@ class DalBase:
 
 
 class DalTransform(DalBase):
-    """Base class for data transformations with optional inverse support."""
+    """Base class for data transformations with optional inverse support.
+
+    Porting:
+        Mirrors ``dal_transform.R``. Fidelity: adapted.
+        - Same Experiment Line contract with the idiomatic-Python API (see
+          :class:`DalBase`); ``action`` dispatches to :meth:`transform`.
+    """
 
     def transform(self, data, **kwargs):
         """Apply the transformation. Default is identity."""
@@ -68,7 +84,13 @@ class DalTransform(DalBase):
 
 
 class DalLearner(DalBase):
-    """Base ancestor for learning tasks (classification, regression, ...)."""
+    """Base ancestor for learning tasks (classification, regression, ...).
+
+    Porting:
+        Mirrors ``dal_learner.R``. Fidelity: adapted.
+        - Idiomatic-Python API (see :class:`DalBase`); ``action`` dispatches to
+          :meth:`predict`.
+    """
 
     def action(self, data, **kwargs):
         """For learners, ``action`` dispatches to :meth:`predict`."""
@@ -87,6 +109,10 @@ class Predictor(DalLearner):
 
     Provides a default :meth:`fit` that records the feature columns (everything
     except the target ``attribute``).
+
+    Porting:
+        Mirrors ``dal_predictor.R``. Fidelity: adapted.
+        - Idiomatic-Python API (see :class:`DalBase`).
     """
 
     def __init__(self) -> None:

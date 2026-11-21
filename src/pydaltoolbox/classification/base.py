@@ -41,6 +41,11 @@ class Classification(Predictor):
         Name of the target column.
     slevels:
         Possible class labels. If ``None`` they are inferred at fit time.
+
+    Porting:
+        Mirrors ``cla_classification.R``. Fidelity: adapted.
+        - Idiomatic-Python API (see :class:`~pydaltoolbox.base.DalBase`); provides the
+          standard classification ``evaluate`` (accuracy and related metrics).
     """
 
     def __init__(self, attribute: str, slevels: Sequence | None = None) -> None:
@@ -117,6 +122,11 @@ class SklearnClassification(Classification):
     Concrete learners only implement :meth:`_make_model` (and store their
     hyperparameters as attributes, so ``set_params`` can tune them). This is the
     Experiment Line extensibility promise in practice.
+
+    Porting:
+        No direct R analog. Fidelity: adapted.
+        - Python-only helper that factors out the shared scikit-learn integration for the
+          concrete ``Cla*`` learners (R repeats this wiring per ``cla_*.R`` file).
     """
 
     def _make_model(self):  # pragma: no cover - overridden by subclasses

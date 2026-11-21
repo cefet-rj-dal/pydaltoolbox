@@ -28,6 +28,13 @@ class DtPca(DalTransform):
     the leading components reduces dimensionality and decorrelates the features while
     retaining most of the information, which helps downstream models and visualization.
 
+    Porting:
+        Mirrors ``trans_dt_pca.R``. Fidelity: approximate.
+        - scikit-learn ``PCA`` backend (with ``StandardScaler``) instead of R
+          ``prcomp(scale.=TRUE)``; component signs are arbitrary and may flip vs R.
+        - The number of components, when not given, is picked by a minimum-curvature
+          elbow on the cumulative explained variance.
+
     References:
         Pearson, K. (1901). On lines and planes of closest fit to systems of points in
         space. Philosophical Magazine, 2(11):559-572.

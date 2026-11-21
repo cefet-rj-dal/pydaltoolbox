@@ -18,6 +18,10 @@ class ClaMajority(SklearnClassification):
     worth revisiting the predictors, the sampling strategy, or the evaluation protocol
     before tuning models.
 
+    Porting:
+        Mirrors ``cla_majority.R``. Fidelity: exact.
+        - scikit-learn ``DummyClassifier(strategy="most_frequent")``; deterministic.
+
     References:
         Witten, I. H., Frank, E., Hall, M. A., and Pal, C. J. (2016). Data Mining:
         Practical Machine Learning Tools and Techniques (4th ed.). Morgan Kaufmann.

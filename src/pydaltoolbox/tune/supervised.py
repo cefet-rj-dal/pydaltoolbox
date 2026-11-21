@@ -18,6 +18,11 @@ class ClaTune(DalTune):
     refit on the full data. Cross-validation gives a less optimistic, lower-variance
     estimate of out-of-sample performance than a single train/test split.
 
+    Porting:
+        Mirrors ``cla_tune.R``. Fidelity: approximate.
+        - Grid search with k-fold CV over the pydaltoolbox learners; numpy RNG differs
+          from R.
+
     References:
         Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy
         Estimation and Model Selection. IJCAI.
@@ -64,6 +69,11 @@ class RegTune(DalTune):
     cross-validation and refitting the best on the full data. The selection criterion is
     the mean squared error averaged across folds, which estimates generalization error
     more reliably than a single split.
+
+    Porting:
+        Mirrors ``reg_tune.R``. Fidelity: approximate.
+        - Grid search with k-fold CV over the pydaltoolbox regressors; numpy RNG differs
+          from R.
 
     References:
         Kohavi, R. (1995). A Study of Cross-Validation and Bootstrap for Accuracy

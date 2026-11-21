@@ -17,7 +17,16 @@ __all__ = ["Clusterer"]
 
 
 class Clusterer(DalLearner):
-    """Base class for clustering algorithms and their evaluation."""
+    """Base class for clustering algorithms and their evaluation.
+
+    Defines the clustering contract (``fit`` / ``cluster`` via ``action`` / ``evaluate``
+    with internal and external metrics) shared by every concrete clusterer.
+
+    Porting:
+        Mirrors ``clu_clusterer.R``. Fidelity: adapted.
+        - Idiomatic-Python API (see :class:`~pydaltoolbox.base.DalBase`); default main
+          metric is WCSS, which concrete clusterers specialize.
+    """
 
     def __init__(self) -> None:
         self.model = None

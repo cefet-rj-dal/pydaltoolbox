@@ -18,6 +18,10 @@ class ClaNb(SklearnClassification):
     classification very fast. The Gaussian variant models each continuous feature's
     class-conditional density as a normal distribution.
 
+    Porting:
+        Mirrors ``cla_nb.R``. Fidelity: approximate.
+        - scikit-learn ``GaussianNB`` backend instead of R ``e1071::naiveBayes``.
+
     References:
         Mitchell, T. (1997). Machine Learning. McGraw-Hill.
     """

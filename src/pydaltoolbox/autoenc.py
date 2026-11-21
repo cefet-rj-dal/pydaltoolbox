@@ -23,6 +23,11 @@ class AutoencBaseE(DalTransform):
     exposes just the input-to-code mapping; by default it is the identity, so a subclass
     (e.g. a deep-learning-backed autoencoder) supplies the real ``fit``/``transform``.
 
+    Porting:
+        Mirrors ``autoenc_base_e.R``. Fidelity: exact.
+        - Identity base (no training/transform), as in R; the real deep-learning backend
+          lives in a companion package.
+
     Parameters
     ----------
     input_size:
@@ -53,6 +58,11 @@ class AutoencBaseEd(DalTransform):
     input is mapped to a latent code and back to the original space. The reconstruction
     (and its error) is useful for denoising, anomaly detection and generative modeling.
     By default it is the identity, so a subclass supplies the real ``fit``/``transform``.
+
+    Porting:
+        Mirrors ``autoenc_base_ed.R``. Fidelity: exact.
+        - Identity base (no training/transform), as in R; the real deep-learning backend
+          lives in a companion package.
 
     Parameters
     ----------

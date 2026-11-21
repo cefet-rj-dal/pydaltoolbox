@@ -25,6 +25,13 @@ class ClaSvm(SklearnClassification):
     required so ``predict`` can return class scores. The default ``cost`` matches
     the daltoolbox default.
 
+    Porting:
+        Mirrors ``cla_svm.R``. Fidelity: adapted.
+        - scikit-learn ``SVC`` backend instead of R ``e1071::svm``.
+        - Wraps ``StandardScaler`` to replicate ``e1071::svm``'s ``scale=TRUE`` default
+          (SVMs are scale-sensitive); default ``cost=10`` matches daltoolbox.
+        - ``probability=True`` so ``predict`` can return class scores.
+
     References:
         Cortes, C., and Vapnik, V. (1995). Support-Vector Networks. Machine Learning,
         20(3):273-297.
