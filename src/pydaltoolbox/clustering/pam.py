@@ -3,8 +3,8 @@
 PAM clusters around representative data points (medoids) instead of centroids, which
 makes it more robust to outliers than k-means. This is a native numpy implementation of
 PAM with the **FastPAM1** swap (Schubert & Rousseeuw, 2019): it reaches the same local
-optimum as classic PAM but evaluates all candidate swaps in one vectorized pass, so no
-third-party dependency (``cluster::pam`` / ``scikit-learn-extra``) is needed.
+optimum as classic PAM but evaluates all candidate swaps in one vectorized pass, with no
+external clustering dependency.
 """
 from __future__ import annotations
 
@@ -109,8 +109,8 @@ class ClusterPam(Clusterer):
     Porting:
         Canonical implementation; the R ``clu_pam.R`` is a backport of this. Fidelity:
         adapted.
-        - Independent native implementation of PAM (BUILD + FastPAM1 SWAP), not a wrapper
-          of ``cluster::pam`` / ``scikit-learn-extra``; dependency footprint stays numpy.
+        - Native implementation of PAM (BUILD + FastPAM1 SWAP), written from the
+          references; dependency footprint stays numpy (no external clustering package).
         - Innovation (++): the FastPAM1 swap reaches the same local optimum as classic PAM
           (identical medoids) while being asymptotically cheaper -- O(n^2 k) vs O(n^2 k^2)
           per iteration -- measured ~4x/20x/64x faster at k=10/20/30 on synthetic data.
