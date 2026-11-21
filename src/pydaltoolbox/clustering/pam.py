@@ -1,9 +1,10 @@
 """PAM -- Partitioning Around Medoids (``clu_pam.R`` analog).
 
 PAM clusters around representative data points (medoids) instead of centroids, which
-makes it more robust to outliers than k-means. The R package wraps ``cluster::pam``;
-this is a native numpy implementation of the classic BUILD + SWAP algorithm, so no
-extra dependency is needed.
+makes it more robust to outliers than k-means. This is a native numpy implementation of
+PAM with the **FastPAM1** swap (Schubert & Rousseeuw, 2019): it reaches the same local
+optimum as classic PAM but evaluates all candidate swaps in one vectorized pass, so no
+third-party dependency (``cluster::pam`` / ``scikit-learn-extra``) is needed.
 """
 from __future__ import annotations
 
@@ -27,38 +28,64 @@ def _euclidean_matrix(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return np.sqrt(((a[:, None, :] - b[None, :, :]) ** 2).sum(axis=2))
 
 
-def _pam(d: np.ndarray, k: int, max_iter: int) -> np.ndarray:
-    """Classic PAM (BUILD then SWAP) on a precomputed distance matrix ``d``.
-
-    Returns the indices of the ``k`` selected medoids.
-    """
-    n = d.shape[0]
-    # BUILD: first medoid minimizes total distance, then greedily add the point
-    # that most reduces the total distance to the nearest medoid.
+def _build(d: np.ndarray, k: int) -> np.ndarray:
+    """PAM BUILD: greedy selection of the initial ``k`` medoids."""
     medoids = [int(np.argmin(d.sum(axis=1)))]
     while len(medoids) < k:
         nearest = d[:, medoids].min(axis=1)
         gains = np.maximum(nearest[None, :] - d, 0.0).sum(axis=1)
         gains[medoids] = -np.inf
         medoids.append(int(np.argmax(gains)))
-    medoids = np.array(sorted(medoids))
+    return np.array(sorted(medoids))
 
-    # SWAP: repeatedly apply the single best medoid/non-medoid swap that lowers cost.
+
+def _pam(d: np.ndarray, k: int, max_iter: int) -> np.ndarray:
+    """PAM clustering on a precomputed distance matrix ``d`` (BUILD then FastPAM1 SWAP).
+
+    FastPAM1 (Schubert & Rousseeuw, 2019) evaluates every medoid/non-medoid swap in a
+    single vectorized pass instead of recomputing the total cost for each candidate, so
+    it reaches the **same** local optimum as classic PAM at a fraction of the cost
+    (O(n^2 k) per iteration instead of O(n^2 k^2)). Returns the indices of the ``k``
+    selected medoids.
+    """
+    n = d.shape[0]
+    medoids = _build(d, k)
+    if k < 2:
+        return medoids
+
+    # SWAP (FastPAM1): decompose the cost change of replacing medoid i with candidate j.
+    # For a point o, let d1/d2 be its distance to the nearest / second-nearest medoid.
+    # Removing medoid i and adding candidate j changes o's assigned distance to
+    #   min(d1, d(o,j))        if o's nearest medoid is NOT i
+    #   min(d2, d(o,j))        if o's nearest medoid IS i
+    # The per-candidate "shared" term (independent of i) plus a per-cluster correction
+    # yields ΔTD(i, j) for all (i, j) at once.
     for _ in range(max_iter):
-        current = d[:, medoids].min(axis=1).sum()
-        best_delta, best_swap = 0.0, None
-        non_medoids = [h for h in range(n) if h not in set(medoids.tolist())]
-        for mi in range(k):
-            for h in non_medoids:
-                trial = medoids.copy()
-                trial[mi] = h
-                delta = d[:, trial].min(axis=1).sum() - current
-                if delta < best_delta:
-                    best_delta, best_swap = delta, (mi, h)
-        if best_swap is None:
+        dm = d[:, medoids]                                   # n x k
+        order = np.argsort(dm, axis=1)
+        nearest_slot = order[:, 0]                           # which medoid slot is nearest
+        rows = np.arange(n)
+        d1 = dm[rows, order[:, 0]][:, None]                  # n x 1
+        d2 = dm[rows, order[:, 1]][:, None]                  # n x 1
+
+        medoid_set = set(medoids.tolist())
+        cand = np.array([j for j in range(n) if j not in medoid_set])
+        if cand.size == 0:
             break
-        mi, h = best_swap
-        medoids[mi] = h
+        dc = d[:, cand]                                      # n x c (point -> candidate)
+        a = np.minimum(d1, dc) - d1                          # n x c, assignment change if i != nearest
+        b = np.minimum(d2, dc) - d1                          # n x c, assignment change if i == nearest
+        shared = a.sum(axis=0)                               # c
+        corr = np.zeros((k, cand.size))
+        np.add.at(corr, nearest_slot, b - a)                # group (b - a) by nearest medoid
+        deltas = shared[None, :] + corr                     # k x c = ΔTD(slot i, candidate j)
+
+        flat = int(np.argmin(deltas))
+        bi, bc = np.unravel_index(flat, deltas.shape)
+        if deltas[bi, bc] >= -1e-9:
+            break
+        medoids[bi] = cand[bc]
+        medoids = np.sort(medoids)
     return medoids
 
 
@@ -70,8 +97,10 @@ class ClusterPam(Clusterer):
     is an actual data point rather than a mean, PAM is more robust to outliers and noise
     than k-means and works with any dissimilarity. It proceeds in two phases: BUILD, a
     greedy selection of the initial medoids, and SWAP, which iteratively exchanges a
-    medoid with a non-medoid whenever that lowers the total cost. New data is assigned to
-    the nearest medoid.
+    medoid with a non-medoid whenever that lowers the total cost. The SWAP phase uses the
+    FastPAM1 scheme, which computes the cost change of every candidate swap in a single
+    vectorized pass and so finds the same solution as classic PAM far more cheaply. New
+    data is assigned to the nearest medoid.
 
     Defaults follow the R package: silhouette is the main metric; internal evaluation
     uses silhouette, Davies-Bouldin and Calinski-Harabasz; external evaluation uses
@@ -79,13 +108,18 @@ class ClusterPam(Clusterer):
 
     Porting:
         Mirrors ``clu_pam.R``. Fidelity: adapted.
-        - Native numpy BUILD + SWAP implementation instead of R ``cluster::pam`` (keeps
-          the dependency footprint to numpy; no ``scikit-learn-extra``).
+        - Independent native implementation of PAM (BUILD + FastPAM1 SWAP), not a wrapper
+          of ``cluster::pam``; keeps the dependency footprint to numpy. FastPAM1 reaches
+          the same local optimum as classic PAM, so results match while the swap search
+          is asymptotically cheaper (O(n^2 k) vs O(n^2 k^2) per iteration).
         - New data is assigned to the nearest medoid, as in R.
 
     References:
         Kaufman, L., & Rousseeuw, P. J. (1990). Finding Groups in Data: An Introduction
         to Cluster Analysis.
+        Schubert, E., & Rousseeuw, P. J. (2019). Faster k-Medoids Clustering: Improving
+        the PAM, CLARA, and CLARANS Algorithms. In Similarity Search and Applications
+        (SISAP 2019), 171-187.
         Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and
         validation of cluster analysis.
         Davies, D. L., & Bouldin, D. W. (1979). A cluster separation measure.
