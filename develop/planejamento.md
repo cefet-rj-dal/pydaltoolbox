@@ -134,20 +134,22 @@ ter **alguma diferença intencional e documentada** — nunca cópia do código-
 **Fluxo acordado:** *estudar otimização no Python → validar o ++ (ou a paridade) →
 backport para o R tirando a dependência → atualizar atribuição nos dois lados.*
 
-**Candidatos priorizados (ciclo de consolidação — ordem: PAM → fss → kNN → caret → Relief → SMOTE):**
+**Candidatos priorizados (ciclo de consolidação — ordem: PAM → fss → ~~kNN~~ → Relief → SMOTE → caret):**
 | Candidato | Situação | Tipo / alvo | Status |
 |---|---|---|---|
 | **PAM** (`ClusterPam`) | SWAP de livro-texto | **++ FastPAM1** (mesmo resultado, ~20× em k=20) + remove `cluster` do R | ✅ feito (py 10677bd / R 583222b) |
 | **fss** | leaps forward (= guloso) | **posse** (não é ++): greedy nativo remove `leaps` do R | ✅ feito (py 68d561c / R 6c8cd8e) |
-| **kNN** | wrappers | **posse**: kNN nativo remove `class` + `FNN` do R | a fazer |
+| **Relief** | *"simplified RELIEF"* (1 hit/miss) | **++ ReliefF completo**: k vizinhos + prior multiclasse + seed (real>ruído 72%→100%) | ✅ feito (py fd7802e / R fc662f3) |
+| **kNN** | `class::knn` + `FNN::knn.reg` | **MANTER** (como o nnet/MLP): FNN dá KD-tree rápido, nativo seria força-bruta mais lento; zero ++ | ⏭️ pulado (Eduardo 2026-11-21) |
+| **SMOTE** (`BalOversampling`) | SMOTE local simplificado | **++ Borderline-SMOTE / ADASYN** + SMOTE-NC real | a fazer |
 | **caret** | wrappers | **posse**: findCorrelation + up/downSample + createDataPartition removem `caret` inteiro | a fazer |
-| **Relief** | cópia do *"simplified RELIEF"* | **++ ReliefF completo**: k vizinhos + prior multiclasse + `random_state` | a fazer |
-| **SMOTE** (`BalOversampling`) | cópia do SMOTE local simplificado | **++ Borderline-SMOTE / ADASYN** + SMOTE-NC real | a fazer |
 | **c-means** (`ClusterCmeans`) | FCM nativo correto | **posse**: remove `e1071` (fica p/ SVM/NB); init robusta opcional | a fazer |
 
 **Lição (2026-11-21):** nem toda back-implementation vira ++. O **fss** mostrou que o alvo
-às vezes já é o mesmo algoritmo (leaps `method="forward"` é guloso), então o valor é só
-**remover a dependência** — e tudo bem. Decidir caso a caso, sem forçar um ++ inexistente.
+às vezes já é o mesmo algoritmo (leaps `method="forward"` é guloso) → valor é só **remover a
+dependência**. E o **kNN** mostrou o oposto: às vezes é melhor **manter** a dep (o `FNN` dá
+busca KD-tree que não superamos sem implementar uma KD-tree própria; sem ++ e com risco de
+regressão). Decidir caso a caso, sem forçar um ++ inexistente nem remover dep útil.
 
 ---
 
