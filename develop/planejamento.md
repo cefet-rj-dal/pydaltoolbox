@@ -108,6 +108,16 @@ documentação inverte o sentido:
 - "inspirado em `e1071`/`cluster`" vira nota de reconhecimento, não dependência.
 - O `Porting:` do Python e o roxygen do R refletem isso (Fidelity: `adapted`, nativo).
 
+**Template de doc "++" (aprovado 2026-11-21)** — toda componente back-implementada
+documenta **original + inovação**, com atribuição invertida:
+- Python `Porting:` → `Canonical implementation; the R <file>.R is a backport of this.
+  Fidelity: adapted.` + bullet *"Independent native implementation, not a wrapper of
+  pkg"* + bullet `Innovation (++): <o que melhora> ... measured <evidência>` (números
+  concretos quando houver, ex.: "~20x faster at k=20, identical result").
+- R roxygen `@details` → *"independent reimplementation (inspired by pkg, not a wrapper),
+  no dependency on pkg"* + a inovação + evidência; `@references` inclui o artigo da
+  inovação. Primeiro aplicado ao **PAM**; reusar em fss, kNN, caret, Relief, SMOTE, cmeans.
+
 **Bônus de licença.** Reimplementar a partir do **artigo** (+ nosso código) é limpo:
 não herdamos a licença do código de terceiros. Por isso toda back-implementation deve
 ter **alguma diferença intencional e documentada** — nunca cópia do código-fonte alheio.
