@@ -114,9 +114,14 @@ documenta **original + inovação**, com atribuição invertida:
   Fidelity: adapted.` + bullet *"Independent native implementation, not a wrapper of
   pkg"* + bullet `Innovation (++): <o que melhora> ... measured <evidência>` (números
   concretos quando houver, ex.: "~20x faster at k=20, identical result").
-- R roxygen `@details` → *"independent reimplementation (inspired by pkg, not a wrapper),
-  no dependency on pkg"* + a inovação + evidência; `@references` inclui o artigo da
-  inovação. Primeiro aplicado ao **PAM**; reusar em fss, kNN, caret, Relief, SMOTE, cmeans.
+- R roxygen `@details` → *"independent reimplementation … no external dependency"* + a
+  inovação + evidência; `@references` inclui os artigos. Primeiro aplicado ao **PAM**;
+  reusar em fss, kNN, caret, Relief, SMOTE, cmeans.
+- **Citar só o artigo-base, não o pacote substituído (Eduardo 2026-11-21)** — porém apenas
+  após **conferir que o nosso código difere da fonte do pacote** (outra linguagem / outra
+  mecânica), para ser implementação-a-partir-da-literatura, não cópia. Conferido no fss: o
+  `leaps` roda em **Fortran compilado** e o nosso é R puro com `lm` → citar só Hocking/Miller,
+  sem "inspirado no leaps". Fazer essa conferência em toda back-implementation.
 
 **Bônus de licença.** Reimplementar a partir do **artigo** (+ nosso código) é limpo:
 não herdamos a licença do código de terceiros. Por isso toda back-implementation deve
