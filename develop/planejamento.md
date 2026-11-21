@@ -125,17 +125,20 @@ ter **alguma diferença intencional e documentada** — nunca cópia do código-
 **Fluxo acordado:** *estudar otimização no Python → validar o ++ (ou a paridade) →
 backport para o R tirando a dependência → atualizar atribuição nos dois lados.*
 
-**Candidatos priorizados (a estudar, decididos caso a caso):**
-| Candidato | Situação hoje | ++ alvo | Sem dep nova |
+**Candidatos priorizados (ciclo de consolidação — ordem: PAM → fss → kNN → caret → Relief → SMOTE):**
+| Candidato | Situação | Tipo / alvo | Status |
 |---|---|---|---|
-| **Relief** | cópia do *"simplified RELIEF"* do R | **ReliefF completo**: k vizinhos + prior multiclasse + `random_state` | sim |
-| **SMOTE** (`BalOversampling`) | cópia do SMOTE local simplificado do R | **Borderline-SMOTE / ADASYN** (sintetiza na fronteira) + SMOTE-NC real | sim |
-| **PAM** (`ClusterPam`) | nativo, mas SWAP de livro-texto (mais lento que `cluster::pam`) | **FastPAM** (mesmo resultado, SWAP O(k)× mais barato) | sim |
-| **c-means** (`ClusterCmeans`) | FCM nativo correto | *(opcional)* init robusta; valor principal = tirar `e1071` | sim |
+| **PAM** (`ClusterPam`) | SWAP de livro-texto | **++ FastPAM1** (mesmo resultado, ~20× em k=20) + remove `cluster` do R | ✅ feito (py 10677bd / R 583222b) |
+| **fss** | leaps forward (= guloso) | **posse** (não é ++): greedy nativo remove `leaps` do R | ✅ feito (py 68d561c / R 6c8cd8e) |
+| **kNN** | wrappers | **posse**: kNN nativo remove `class` + `FNN` do R | a fazer |
+| **caret** | wrappers | **posse**: findCorrelation + up/downSample + createDataPartition removem `caret` inteiro | a fazer |
+| **Relief** | cópia do *"simplified RELIEF"* | **++ ReliefF completo**: k vizinhos + prior multiclasse + `random_state` | a fazer |
+| **SMOTE** (`BalOversampling`) | cópia do SMOTE local simplificado | **++ Borderline-SMOTE / ADASYN** + SMOTE-NC real | a fazer |
+| **c-means** (`ClusterCmeans`) | FCM nativo correto | **posse**: remove `e1071` (fica p/ SVM/NB); init robusta opcional | a fazer |
 
-Observação sobre PAM: diferente dos outros, aqui **não copiamos o R** (o R só chamava
-`cluster::pam`); o risco é a nossa versão nativa ser **mais lenta** que a lib que
-substituiu — o ++ é eficiência.
+**Lição (2026-11-21):** nem toda back-implementation vira ++. O **fss** mostrou que o alvo
+às vezes já é o mesmo algoritmo (leaps `method="forward"` é guloso), então o valor é só
+**remover a dependência** — e tudo bem. Decidir caso a caso, sem forçar um ++ inexistente.
 
 ---
 
