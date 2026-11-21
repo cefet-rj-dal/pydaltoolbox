@@ -116,6 +116,38 @@ def test_relief_requires_two_classes():
     raise AssertionError("expected ValueError for single-class target")
 
 
+def test_relieff_seed_is_reproducible():
+    iris = datasets.iris()
+    binary = iris.assign(label=(iris["Species"] == "versicolor").astype(int)).drop(columns=["Species"])
+    r1 = FeatureSelectionRelief("label", m=50, k=10, seed=7).fit(binary).ranking
+    r2 = FeatureSelectionRelief("label", m=50, k=10, seed=7).fit(binary).ranking
+    assert list(r1["feature"]) == list(r2["feature"])
+    assert r1["score"].tolist() == r2["score"].tolist()
+
+
+def test_relieff_ranks_all_real_features_above_noise():
+    """Full ReliefF (k neighbours) cleanly separates real iris features from noise."""
+    rng = np.random.default_rng(0)
+    iris = datasets.iris()
+    binary = iris.assign(label=(iris["Species"] == "versicolor").astype(int)).drop(columns=["Species"])
+    for j in range(3):
+        binary[f"noise{j}"] = rng.standard_normal(len(binary))
+    real = {"sepal_length", "sepal_width", "petal_length", "petal_width"}
+    fs = FeatureSelectionRelief("label", m=50, k=10, seed=0).fit(binary)
+    scores = fs.ranking.set_index("feature")["score"]
+    worst_real = min(scores[f] for f in real)
+    best_noise = max(scores[f] for f in scores.index if f.startswith("noise"))
+    assert worst_real > best_noise
+
+
+def test_relieff_multiclass_weighting_runs():
+    """ReliefF handles a 3-class target (prior-weighted misses) and recovers petal feats."""
+    iris = datasets.iris()
+    fs = FeatureSelectionRelief("Species", m=50, k=10, seed=1, top=2).fit(iris)
+    assert len(fs.selected) == 2
+    assert any(f.startswith("petal") for f in fs.selected)
+
+
 def test_fit_is_chainable():
     iris = datasets.iris()
     fs = FeatureSelectionCorr()
