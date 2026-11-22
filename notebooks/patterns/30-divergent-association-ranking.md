@@ -91,3 +91,20 @@ scores positive:
 ```python
 rules.attrs["dara_ranking"]["region"]
 ```
+
+## Other rule filters: none and interest measures
+
+Besides DARA, rules can be kept unchanged (`RuleFilterNone`) or filtered by classical
+interest measures (`RuleFilterInterest`: minimum `lift`, Kulczynski `kulc`, support,
+confidence and count, and maximum imbalance ratio `ir`).
+
+```python
+transactions = pd.get_dummies(raw, prefix_sep="=")
+interest = dal.RuleFilterInterest(lift_min=1.0, kulc_min=0.5)
+miner = dal.PatApriori(
+    target="rules", supp=0.1, conf=0.6, minlen=1, maxlen=2,
+    rhs=["outcome=pos"], rule_filter=interest,
+)
+miner.fit(transactions)
+miner.discover(transactions)[["antecedents", "consequents", "support", "confidence", "lift", "kulc", "ir"]]
+```

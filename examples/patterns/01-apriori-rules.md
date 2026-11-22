@@ -57,10 +57,10 @@ itemsets
     0  0.833333                 (milk)
     1  0.833333                (bread)
     2  0.666667               (butter)
-    3  0.666667          (bread, milk)
-    4  0.666667         (butter, milk)
-    5  0.500000        (bread, butter)
-    6  0.500000  (bread, butter, milk)
+    3  0.666667          (milk, bread)
+    4  0.666667         (milk, butter)
+    5  0.500000        (butter, bread)
+    6  0.500000  (milk, butter, bread)
 
 
 
@@ -78,18 +78,18 @@ rules[["antecedents", "consequents", "support", "confidence", "lift"]]
 
 
             antecedents      consequents   support  confidence   lift
-    0           (bread)           (milk)  0.666667        0.80  0.960
-    1            (milk)          (bread)  0.666667        0.80  0.960
-    2          (butter)           (milk)  0.666667        1.00  1.200
-    3            (milk)         (butter)  0.666667        0.80  1.200
-    4           (bread)         (butter)  0.500000        0.60  0.900
-    5          (butter)          (bread)  0.500000        0.75  0.900
-    6   (bread, butter)           (milk)  0.500000        1.00  1.200
-    7     (bread, milk)         (butter)  0.500000        0.75  1.125
-    8    (butter, milk)          (bread)  0.500000        0.75  0.900
-    9           (bread)   (butter, milk)  0.500000        0.60  0.900
-    10         (butter)    (bread, milk)  0.500000        0.75  1.125
-    11           (milk)  (bread, butter)  0.500000        0.60  1.200
+    0            (milk)          (bread)  0.666667        0.80  0.960
+    1           (bread)           (milk)  0.666667        0.80  0.960
+    2            (milk)         (butter)  0.666667        0.80  1.200
+    3          (butter)           (milk)  0.666667        1.00  1.200
+    4          (butter)          (bread)  0.500000        0.75  0.900
+    5           (bread)         (butter)  0.500000        0.60  0.900
+    6    (milk, butter)          (bread)  0.500000        0.75  0.900
+    7     (milk, bread)         (butter)  0.500000        0.75  1.125
+    8   (butter, bread)           (milk)  0.500000        1.00  1.200
+    9            (milk)  (butter, bread)  0.500000        0.60  1.200
+    10         (butter)    (milk, bread)  0.500000        0.75  1.125
+    11          (bread)   (milk, butter)  0.500000        0.60  0.900
 
 
 

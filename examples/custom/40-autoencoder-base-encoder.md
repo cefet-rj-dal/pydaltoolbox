@@ -1,14 +1,12 @@
-# Autoencoder Base Classes (AutoencBaseE / AutoencBaseEd)
+# Autoencoder Base Encoder (AutoencBaseE)
 
-`AutoencBaseE` (encoder) and `AutoencBaseEd` (encoder + decoder) are **identity base
-classes**: they define the contract (an input size and a latent size, plus
-`fit`/`transform`) but do no learning by themselves. The real implementations -- a
-deep-learning backed autoencoder in a companion package, or the detectors in
-`pyharbinger` -- subclass them and override the two methods. Keeping the base here, with
-no deep-learning dependency, is what lets downstream packages extend a stable interface.
+`AutoencBaseE` is an **identity base class**: it defines the contract (an input size and a
+latent size, plus `fit`/`transform`) but does no learning by itself. Real implementations --
+a deep-learning autoencoder in a companion package, or detectors in `pyharbinger` -- subclass
+it and override the two methods. Keeping the base here, with no deep-learning dependency, is
+what lets downstream packages extend a stable interface.
 
-**Reference:** Hinton, G. E., Salakhutdinov, R. R. (2006). *Reducing the Dimensionality
-of Data with Neural Networks.* Science.
+## The base is identity
 
 
 ```python
@@ -16,7 +14,6 @@ import pydaltoolbox as dal
 
 iris = dal.datasets.iris().drop(columns="Species")
 
-# the base is identity: transform returns the input unchanged
 base = dal.AutoencBaseE(input_size=4, encoding_size=2).fit(iris)
 base.transform(iris).head()
 ```
@@ -33,14 +30,13 @@ base.transform(iris).head()
 
 
 
-A concrete encoder just overrides `fit` and `transform` -- here a PCA-based encoder.
-Because it respects the same contract, it drops straight into any workflow.
+## A concrete encoder overrides `fit` and `transform`
+Because it respects the same contract, a PCA-based encoder drops straight into any workflow.
 
 
 ```python
-from sklearn.decomposition import PCA
-
 import pandas as pd
+from sklearn.decomposition import PCA
 
 
 class PcaEncoder(dal.AutoencBaseE):
@@ -53,8 +49,7 @@ class PcaEncoder(dal.AutoencBaseE):
         return pd.DataFrame(codes, columns=["z1", "z2"], index=data.index)
 
 
-encoder = PcaEncoder(input_size=4, encoding_size=2).fit(iris)
-encoder.transform(iris).head()
+PcaEncoder(input_size=4, encoding_size=2).fit(iris).transform(iris).head()
 ```
 
 
@@ -68,3 +63,12 @@ encoder.transform(iris).head()
     4 -2.728717  0.326755
 
 
+
+## What to observe
+- The base already participates in the DAL transformation protocol.
+- The identity behavior is deliberate: this file teaches the extension contract, not a
+  finished neural implementation.
+
+## References
+- Hinton, G. E., and Salakhutdinov, R. R. (2006). *Reducing the Dimensionality of Data with
+  Neural Networks.* Science.
