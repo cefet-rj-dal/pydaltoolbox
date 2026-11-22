@@ -1,16 +1,16 @@
-"""Relation plots: scatter, points, correlation, pair matrix, parallel, pixel.
+"""Relation plots: scatter, points, correlation, parallel, pixel.
 
 Thin adapters over matplotlib / pandas.plotting / scipy that reproduce the
-default behaviour of the corresponding R ``daltoolbox`` ggplot2 graphics. Unless
-noted, each function builds its own figure and returns a
-``matplotlib.axes.Axes`` (``ax.figure`` for the figure).
+default behaviour of the corresponding R ``daltoolbox`` ggplot2 graphics. Each
+function builds its own figure and returns a ``matplotlib.axes.Axes``
+(``ax.figure`` for the figure).
 """
 from __future__ import annotations
 
 import numpy as np
 import pandas as pd
 from matplotlib.colors import LinearSegmentedColormap
-from pandas.plotting import parallel_coordinates, scatter_matrix
+from pandas.plotting import parallel_coordinates
 
 from ._helpers import (
     BASELINE,
@@ -190,53 +190,14 @@ def plot_correlation(df, vars=None, method: str = "pearson",
     return ax
 
 
-def plot_pair(data, cnames, title=None, clabel=None, colors: ColorsArg = None):
-    """Scatter-plot matrix (pairs) over selected columns.
-
-    Theory:
-        A scatter-plot matrix shows every pairwise scatter among several
-        variables in a grid, with univariate distributions on the diagonal --
-        a compact overview of bivariate structure across many variables at once.
-
-    ``cnames`` selects the columns; ``clabel`` optionally colours points by a
-    class column.
-
-    References:
-        Cleveland, W. S. (1985). The Elements of Graphing Data. Wadsworth.
-        Wickham, H. (2016). ggplot2. Springer.
-
-    Porting:
-        Mirrors ``grf_pair.R``. Fidelity: approximate.
-        - Uses ``pandas.plotting.scatter_matrix``; returns the 2-D array of Axes
-          (figure via ``arr.flat[0].figure``) rather than a single Axes.
-    """
-    frame = pd.DataFrame(data)
-    cols = [c for c in cnames if c in frame.columns]
-    if not cols:
-        raise ValueError("plot_pair: no valid columns in 'cnames'.")
-    sub = frame[cols]
-    kwds = {}
-    if clabel is not None:
-        if clabel not in frame.columns:
-            raise ValueError("plot_pair: 'clabel' is not a valid column in 'data'.")
-        levels = list(pd.unique(frame[clabel]))
-        palette = resolve_colors(colors, len(levels))
-        lut = dict(zip(levels, palette))
-        kwds["c"] = frame[clabel].map(lut).to_numpy()
-    arr = scatter_matrix(sub, diagonal="kde", **kwds)
-    fig = arr.flat[0].figure
-    if title:
-        fig.suptitle(title, fontweight="bold")
-    return arr
-
-
 def plot_parallel(data, columns, group, colors: ColorsArg = None, title=None):
     """Parallel-coordinates plot of several variables, lines coloured by group.
 
     Theory:
         Each variable becomes a parallel vertical axis and each observation a
         polyline crossing them; colour by group reveals class separation and
-        multivariate patterns that pairwise plots miss.
+        multivariate patterns that pairwise plots miss. Axes are standardized per
+        column (z-score) so variables on different scales are comparable.
 
     ``columns`` are the numeric axes; ``group`` is the class column.
 
@@ -247,15 +208,19 @@ def plot_parallel(data, columns, group, colors: ColorsArg = None, title=None):
 
     Porting:
         Mirrors ``grf_parallel.R``. Fidelity: approximate.
+        - Per-column z-score scaling (matches the R default) before plotting.
     """
     frame = pd.DataFrame(data)
     col_names = [frame.columns[c] if isinstance(c, int) else c for c in columns]
     group_name = frame.columns[group] if isinstance(group, int) else group
     levels = list(pd.unique(frame[group_name]))
     palette = resolve_colors(colors, len(levels))
+    # standardize each axis (z-score), mirroring the R default
+    scaled = frame[col_names].apply(pd.to_numeric, errors="coerce")
+    scaled = (scaled - scaled.mean()) / scaled.std(ddof=0)
+    scaled[group_name] = frame[group_name].to_numpy()
     ax = new_axes()
-    parallel_coordinates(frame[col_names + [group_name]], group_name, cols=col_names,
-                         color=palette, ax=ax)
+    parallel_coordinates(scaled, group_name, cols=col_names, color=palette, ax=ax)
     apply_theme(ax)
     ax.grid(True, axis="x", color=BASELINE, linewidth=0.5)
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=len(levels),

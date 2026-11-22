@@ -3,8 +3,7 @@
 These `plot_*` functions explore relationships among variables. They mirror the R
 `daltoolbox` ggplot2 graphics on matplotlib / `pandas.plotting` / scipy and need the
 optional `[viz]` extra (`pip install pydaltoolbox[viz]`). Each returns a
-`matplotlib.axes.Axes` — except `plot_pair`, which returns the scatter-matrix grid of
-Axes (`arr.flat[0].figure` for the figure).
+`matplotlib.axes.Axes`.
 
 **Reference:** Cleveland, W. S., & McGill, R. (1984). *Graphical perception.* JASA, 79(387).
 
@@ -99,15 +98,15 @@ ax.figure
     
 
 
-## Pair (scatter matrix)
+## Parallel coordinates
 
-`plot_pair` shows every pairwise scatter, with densities on the diagonal; `clabel` colours
-by class.
+`plot_parallel` draws each observation as a polyline across the variable axes, coloured by
+the class column.
 
 
 ```python
-arr = dal.plot_pair(iris, cnames=list(num.columns), clabel="Species")
-arr.flat[0].figure
+ax = dal.plot_parallel(iris, columns=[0, 1, 2, 3], group="Species")
+ax.figure
 ```
 
 
@@ -125,14 +124,13 @@ arr.flat[0].figure
     
 
 
-## Parallel coordinates
+## Pixel
 
-`plot_parallel` draws each observation as a polyline across the variable axes, coloured by
-the class column.
+`plot_pixel` renders the whole numeric table as a sample-by-attribute heatmap.
 
 
 ```python
-ax = dal.plot_parallel(iris, columns=[0, 1, 2, 3], group="Species")
+ax = dal.plot_pixel(num, title="Iris")
 ax.figure
 ```
 
@@ -148,30 +146,5 @@ ax.figure
 
     
 ![png](output_11_1.png)
-    
-
-
-## Pixel
-
-`plot_pixel` renders the whole numeric table as a sample-by-attribute heatmap.
-
-
-```python
-ax = dal.plot_pixel(num, title="Iris")
-ax.figure
-```
-
-
-
-
-    
-![png](output_13_0.png)
-    
-
-
-
-
-    
-![png](output_13_1.png)
     
 

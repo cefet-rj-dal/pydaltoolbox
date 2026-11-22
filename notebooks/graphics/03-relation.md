@@ -15,8 +15,7 @@ jupyter:
 These `plot_*` functions explore relationships among variables. They mirror the R
 `daltoolbox` ggplot2 graphics on matplotlib / `pandas.plotting` / scipy and need the
 optional `[viz]` extra (`pip install pydaltoolbox[viz]`). Each returns a
-`matplotlib.axes.Axes` — except `plot_pair`, which returns the scatter-matrix grid of
-Axes (`arr.flat[0].figure` for the figure).
+`matplotlib.axes.Axes`.
 
 **Reference:** Cleveland, W. S., & McGill, R. (1984). *Graphical perception.* JASA, 79(387).
 
@@ -60,16 +59,6 @@ co-varying variables near the diagonal.
 ```python
 ax = dal.plot_correlation(num, reorder="hclust")
 ax.figure
-```
-
-## Pair (scatter matrix)
-
-`plot_pair` shows every pairwise scatter, with densities on the diagonal; `clabel` colours
-by class.
-
-```python
-arr = dal.plot_pair(iris, cnames=list(num.columns), clabel="Species")
-arr.flat[0].figure
 ```
 
 ## Parallel coordinates

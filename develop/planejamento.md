@@ -573,8 +573,12 @@ no core. Decidido com o Eduardo: retorno `Axes`, paleta validada da skill `datav
 `viz/relation.py` (scatter/points/correlation/pair/parallel/pixel) + `viz/temporal.py`
 (series/ts/ts_pred) + `viz/structure.py` (dendrogram); retorno `Axes` (exceto `plot_pair`,
 que devolve a grade de Axes do scatter-matrix); `plot_dendrogram` recebe uma linkage do SciPy.
-**PENDENTE (combinado com o Eduardo — fazer depois):** remover `plot_pair_adv` do R
-(`grf_pair_adv.R` + man/examples + `devtools::document()`) e portá-lo p/ o curso `datamining`.
+**Enxugamento de dependência gráfica (feito 2026-11-22):** `plot_pair_adv` e `plot_pair`
+(ambos `GGally::ggpairs`) saíram do daltoolbox e viraram extensões do curso `datamining`
+(pasta `codes/`, sourceadas por URL do GitHub; versões R + Python). No daltoolbox o
+`plot_parallel` foi reescrito em **ggplot2 nativo** (z-score + geom_line, sem `GGally::ggparcoord`)
+e o **`GGally` foi removido do DESCRIPTION**. No pydaltoolbox (**0.16.0**): `plot_pair` removido
+(fica no curso), `plot_parallel` refinado com z-score por coluna → 20 `plot_*`.
 | Função | Tipo | Arquivo R | Backend matplotlib |
 |---|---|---|---|
 | `plot_scatter` | relação | `grf_scatter.R` | `ax.scatter` |

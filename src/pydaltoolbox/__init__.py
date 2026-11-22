@@ -107,7 +107,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.15.0"
+__version__ = "0.16.0"
 
 # Visualization helpers live in the optional ``[viz]`` extra (matplotlib). They
 # are resolved lazily (PEP 562) so importing pydaltoolbox never requires
@@ -123,7 +123,6 @@ _VIZ_EXPORTS = (
     "plot_groupedbar",
     "plot_hist",
     "plot_lollipop",
-    "plot_pair",
     "plot_parallel",
     "plot_pieplot",
     "plot_pixel",
@@ -256,7 +255,6 @@ __all__ = [
     "plot_groupedbar",
     "plot_hist",
     "plot_lollipop",
-    "plot_pair",
     "plot_parallel",
     "plot_pieplot",
     "plot_pixel",

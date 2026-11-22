@@ -1,8 +1,7 @@
 """Tests for the step-2.4 viz plot_* family (relation, temporal, structure).
 
 matplotlib is required; the module is skipped without it. The Agg backend is
-forced so no window opens. Each function returns a matplotlib Axes (plot_pair
-returns the scatter-matrix array of Axes).
+forced so no window opens. Each function returns a matplotlib Axes.
 """
 import numpy as np
 import pandas as pd
@@ -74,19 +73,6 @@ def test_plot_correlation_upper_hclust(iris):
 def test_plot_correlation_needs_two_numeric():
     with pytest.raises(ValueError):
         dal.plot_correlation(pd.DataFrame({"a": [1.0, 2.0, 3.0]}))
-
-
-def test_plot_pair_returns_axes_grid(iris):
-    cols = ["sepal_length", "sepal_width", "petal_length", "petal_width"]
-    arr = dal.plot_pair(iris, cnames=cols, clabel="Species")
-    assert isinstance(arr, np.ndarray)
-    assert arr.shape == (4, 4)
-    assert isinstance(arr.flat[0], Axes)
-
-
-def test_plot_pair_bad_columns(iris):
-    with pytest.raises(ValueError):
-        dal.plot_pair(iris, cnames=["nope"])
 
 
 def test_plot_parallel(iris):

@@ -129,8 +129,12 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
     `plot_boxplot`, `plot_boxplot_class`, `plot_bar`, `plot_groupedbar`, `plot_stackedbar`,
     `plot_lollipop`, `plot_pieplot`, `plot_radar` *(0.14.0)*
   - relation / temporal / structure: `plot_scatter`, `plot_points`, `plot_correlation`,
-    `plot_pair`, `plot_parallel`, `plot_pixel`, `plot_series`, `plot_ts`, `plot_ts_pred`,
+    `plot_parallel`, `plot_pixel`, `plot_series`, `plot_ts`, `plot_ts_pred`,
     `plot_dendrogram` *(0.15.0)*
+
+  (The advanced/basic scatter matrices `plot_pair` / `plot_pair_adv` live as course
+  extensions in the [datamining](https://github.com/eogasawara/datamining) repo, since
+  the R originals relied on `GGally`; use `pandas.plotting.scatter_matrix` directly.)
 - **Tuning:** `DalTune` base + `ClaTune`, `RegTune`, `CluTune`.
 - **Autoencoder bases:** `AutoencBaseE`, `AutoencBaseEd` (identity, for extension).
 - **Reference datasets:** `datasets.iris()`, `datasets.diabetes()`, `datasets.boston()`.

@@ -2,8 +2,7 @@
 
 Each function mirrors a ggplot2 graphic from the R ``daltoolbox`` ``grf_*.R``
 files, builds its own figure, and returns a ``matplotlib.axes.Axes`` so results
-compose cleanly (``plot_pair`` returns the scatter-matrix array of Axes).
-Requires the optional ``[viz]`` extra (``matplotlib``).
+compose cleanly. Requires the optional ``[viz]`` extra (``matplotlib``).
 """
 from .comparison import (
     plot_bar,
@@ -22,7 +21,6 @@ from .distribution import (
 )
 from .relation import (
     plot_correlation,
-    plot_pair,
     plot_parallel,
     plot_pixel,
     plot_points,
@@ -42,7 +40,6 @@ __all__ = [
     "plot_groupedbar",
     "plot_hist",
     "plot_lollipop",
-    "plot_pair",
     "plot_parallel",
     "plot_pieplot",
     "plot_pixel",
