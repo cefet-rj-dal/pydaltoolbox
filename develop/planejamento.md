@@ -142,8 +142,8 @@ backport para o R tirando a dependência → atualizar atribuição nos dois lad
 | **Relief** | *"simplified RELIEF"* (1 hit/miss) | **++ ReliefF completo**: k vizinhos + prior multiclasse + seed (real>ruído 72%→100%) | ✅ feito (py fd7802e / R fc662f3) |
 | **kNN** | `class::knn` + `FNN::knn.reg` | **MANTER** (como o nnet/MLP): FNN dá KD-tree rápido, nativo seria força-bruta mais lento; zero ++ | ⏭️ pulado (Eduardo 2026-11-21) |
 | **SMOTE** (`BalOversampling`) | SMOTE local simplificado | **++ Borderline-SMOTE / ADASYN + SMOTE-NC** (F1 minoria ~0.47 vs ~0.44; sobretudo expansão de capacidade) | ✅ feito (py 9a6bda0 / R d488ea8) |
-| **caret** | wrappers | **posse**: findCorrelation + up/downSample + createDataPartition removem `caret` inteiro | a fazer (próximo) |
-| **c-means** (`ClusterCmeans`) | FCM nativo correto | **posse**: remove `e1071` (fica p/ SVM/NB); init robusta opcional | a fazer |
+| **caret** | wrappers | **posse**: findCorrelation + up/downSample + createDataPartition removem `caret` **inteiro** (findCorrelation idêntico ao caret) | ✅ feito (py 4741f0e / R a0be70f) |
+| **c-means** (`ClusterCmeans`) | FCM nativo correto | **posse**: remove `e1071` (fica p/ SVM/NB); init robusta opcional | a fazer (próximo) |
 
 **Lição (2026-11-21):** nem toda back-implementation vira ++. O **fss** mostrou que o alvo
 às vezes já é o mesmo algoritmo (leaps `method="forward"` é guloso) → valor é só **remover a
