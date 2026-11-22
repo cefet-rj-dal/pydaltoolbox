@@ -17,8 +17,8 @@ atribuição ao trabalho original + descrição da inovação; docstrings com Te
   bases de autoencoder (identidade). Mapeamento quality-faithful validado contra o R
   (SVM escala como `e1071`, árvores pré-podadas como `tree`/`rpart`, MLP escalado como `nnet`).
 - **0.1.0 publicado no PyPI** (conta `eogasawara`); sdist exclui `develop/`, `notebooks/`,
-  `examples/`, `tests/`, `tools/`. Pipeline de docs executáveis: `notebooks/**/*.md` →
-  `examples/**/*.md` via `tools/build_examples.py`.
+  `examples/` e `tests/`. Pipeline de docs executáveis: `notebooks/**/*.md` →
+  `examples/**/*.md` via `notebooks/conversor.py`.
 
 ## Ciclo 1 — passada nativa / baixa-dependência por tema
 Breadth com deps do núcleo (numpy/pandas/scikit-learn). Releases pequenos e frequentes.

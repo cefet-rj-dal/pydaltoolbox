@@ -27,14 +27,14 @@ ax.figure
 
 
     
-![png](output_3_0.png)
+![png](fig/31-time-series-basic/output_3_0.png)
     
 
 
 
 
     
-![png](output_3_1.png)
+![png](fig/31-time-series-basic/output_3_1.png)
     
 
 

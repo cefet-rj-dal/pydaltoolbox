@@ -26,14 +26,14 @@ ax.figure
 
 
     
-![png](output_1_0.png)
+![png](fig/30-visual-analysis-and-reporting/output_1_0.png)
     
 
 
 
 
     
-![png](output_1_1.png)
+![png](fig/30-visual-analysis-and-reporting/output_1_1.png)
     
 
 

@@ -81,8 +81,8 @@ The example sources live under [notebooks/](notebooks/) (jupytext Markdown) and 
 rendered into [examples/](examples/) by:
 
 ```bash
-pip install -e ".[docs]"
-python tools/build_examples.py
+pip install -e ".[docs,patterns,xgboost,viz]"
+python notebooks/conversor.py
 ```
 
 ---
@@ -149,7 +149,7 @@ like `tree`/`rpart`). Pattern mining is complete (Cycle 1 done), `ClaXgboost` ad
 
 ## Related DAL projects
 
-- [DAL Toolbox (R)](https://github.com/cefet-rj-dal/daltoolbox)
+- [DAL Toolbox — R sibling implementation](https://github.com/cefet-rj-dal/daltoolbox)
 - [tspredit (R)](https://github.com/cefet-rj-dal/tspredit)
 - [harbinger (R)](https://github.com/cefet-rj-dal/harbinger)
 - [Data Analytics Lab](https://eic.cefet-rj.br/~dal/)

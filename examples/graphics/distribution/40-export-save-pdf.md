@@ -33,14 +33,14 @@ ax.figure
 
 
     
-![png](output_4_0.png)
+![png](fig/40-export-save-pdf/output_4_0.png)
     
 
 
 
 
     
-![png](output_4_1.png)
+![png](fig/40-export-save-pdf/output_4_1.png)
     
 
 
@@ -53,7 +53,7 @@ ax.figure.savefig(path, bbox_inches="tight")
 print("saved", path)
 ```
 
-    saved C:\Users\eduar\AppData\Local\Temp\series.pdf
+    saved C:/Users/eduar/AppData/Local/Temp/series.pdf
     
 
 ## References

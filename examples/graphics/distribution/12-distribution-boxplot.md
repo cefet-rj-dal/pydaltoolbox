@@ -24,14 +24,14 @@ ax.figure
 
 
     
-![png](output_3_0.png)
+![png](fig/12-distribution-boxplot/output_3_0.png)
     
 
 
 
 
     
-![png](output_3_1.png)
+![png](fig/12-distribution-boxplot/output_3_1.png)
     
 
 

@@ -114,7 +114,7 @@ model.evaluate(test["Species"], test_pred)["metrics"]
 
 
        accuracy  TP  TN  FP  FN  precision  recall  sensitivity  specificity   f1
-    0       1.0  11  19   0   0        1.0     1.0          1.0          1.0  1.0
+    0  0.933333  11  19   0   0        1.0     1.0          1.0          1.0  1.0
 
 
 

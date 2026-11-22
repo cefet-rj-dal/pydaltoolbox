@@ -105,14 +105,14 @@ ax.figure
 
 
     
-![png](output_13_0.png)
+![png](fig/13-hierarchical-hclust/output_13_0.png)
     
 
 
 
 
     
-![png](output_13_1.png)
+![png](fig/13-hierarchical-hclust/output_13_1.png)
     
 
 

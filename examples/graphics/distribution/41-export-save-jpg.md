@@ -33,14 +33,14 @@ ax.figure
 
 
     
-![png](output_4_0.png)
+![png](fig/41-export-save-jpg/output_4_0.png)
     
 
 
 
 
     
-![png](output_4_1.png)
+![png](fig/41-export-save-jpg/output_4_1.png)
     
 
 
@@ -54,8 +54,8 @@ for ext in ("jpg", "png"):
     print("saved", path)
 ```
 
-    saved C:\Users\eduar\AppData\Local\Temp\series.jpg
-    saved C:\Users\eduar\AppData\Local\Temp\series.png
+    saved C:/Users/eduar/AppData/Local/Temp/series.jpg
+    saved C:/Users/eduar/AppData/Local/Temp/series.png
     
 
 ## References

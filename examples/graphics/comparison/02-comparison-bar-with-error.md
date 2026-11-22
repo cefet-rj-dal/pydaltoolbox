@@ -23,7 +23,7 @@ agg = iris.groupby("Species", as_index=False).agg(
 agg
 ```
 
-    C:\Users\eduar\AppData\Local\Temp\ipykernel_12448\2568368498.py:1: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+    C:/Users/eduar/AppData/Local/Temp/ipykernel_1048/2568368498.py:1: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
       agg = iris.groupby("Species", as_index=False).agg(
     
 
@@ -51,14 +51,14 @@ ax.figure
 
 
     
-![png](output_5_0.png)
+![png](fig/02-comparison-bar-with-error/output_5_0.png)
     
 
 
 
 
     
-![png](output_5_1.png)
+![png](fig/02-comparison-bar-with-error/output_5_1.png)
     
 
 

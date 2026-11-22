@@ -27,14 +27,14 @@ ax.figure
 
 
     
-![png](output_3_0.png)
+![png](fig/22-relationship-correlation/output_3_0.png)
     
 
 
 
 
     
-![png](output_3_1.png)
+![png](fig/22-relationship-correlation/output_3_1.png)
     
 
 

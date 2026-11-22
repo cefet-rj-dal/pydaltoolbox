@@ -50,14 +50,14 @@ ax.figure
 
 
     
-![png](output_5_0.png)
+![png](fig/10-distribution-histogram/output_5_0.png)
     
 
 
 
 
     
-![png](output_5_1.png)
+![png](fig/10-distribution-histogram/output_5_1.png)
     
 
 

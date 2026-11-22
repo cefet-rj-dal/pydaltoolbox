@@ -65,9 +65,9 @@ itemsets
     1  0.833333                (bread)
     2  0.666667               (butter)
     3  0.666667          (bread, milk)
-    4  0.666667         (butter, milk)
-    5  0.500000        (butter, bread)
-    6  0.500000  (butter, bread, milk)
+    4  0.666667         (milk, butter)
+    5  0.500000        (bread, butter)
+    6  0.500000  (bread, milk, butter)
 
 
 

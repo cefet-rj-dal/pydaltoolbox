@@ -46,14 +46,14 @@ ax.figure
 
 
     
-![png](output_5_0.png)
+![png](fig/30-time-series-lines/output_5_0.png)
     
 
 
 
 
     
-![png](output_5_1.png)
+![png](fig/30-time-series-lines/output_5_1.png)
     
 
 

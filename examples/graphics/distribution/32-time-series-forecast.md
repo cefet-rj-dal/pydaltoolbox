@@ -35,14 +35,14 @@ ax.figure
 
 
     
-![png](output_5_0.png)
+![png](fig/32-time-series-forecast/output_5_0.png)
     
 
 
 
 
     
-![png](output_5_1.png)
+![png](fig/32-time-series-forecast/output_5_1.png)
     
 
 

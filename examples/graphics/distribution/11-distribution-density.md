@@ -50,14 +50,14 @@ ax.figure
 
 
     
-![png](output_5_0.png)
+![png](fig/11-distribution-density/output_5_0.png)
     
 
 
 
 
     
-![png](output_5_1.png)
+![png](fig/11-distribution-density/output_5_1.png)
     
 
 

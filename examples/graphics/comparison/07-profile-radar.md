@@ -50,14 +50,14 @@ ax.figure
 
 
     
-![png](output_6_0.png)
+![png](fig/07-profile-radar/output_6_0.png)
     
 
 
 
 
     
-![png](output_6_1.png)
+![png](fig/07-profile-radar/output_6_1.png)
     
 
 

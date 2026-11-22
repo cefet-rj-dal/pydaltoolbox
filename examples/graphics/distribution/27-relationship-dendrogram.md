@@ -36,14 +36,14 @@ ax.figure
 
 
     
-![png](output_4_0.png)
+![png](fig/27-relationship-dendrogram/output_4_0.png)
     
 
 
 
 
     
-![png](output_4_1.png)
+![png](fig/27-relationship-dendrogram/output_4_1.png)
     
 
 
