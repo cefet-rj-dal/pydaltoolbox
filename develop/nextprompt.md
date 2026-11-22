@@ -1,4 +1,4 @@
-# Kickoff — pydaltoolbox step 1.8b → release 0.11.0 (mineração de padrões: RuleFilterInterest + thresholds)
+# Kickoff — pydaltoolbox step 1.9 → release 0.12.0 (mineração de padrões: sequências / PrefixSpan)
 
 Cole este prompt numa conversa limpa para continuar o port. É auto-contido; o resto do
 contexto está na memória e em `develop/planejamento.md`.
@@ -11,8 +11,8 @@ contexto está na memória e em `develop/planejamento.md`.
   (`c:\Git\dal\daltoolbox`), liderado por Eduardo Ogasawara (CEFET/RJ, lab DAL).
 - Leia a memória do projeto: `[[pydaltoolbox-port]]`, `[[back-implementation-initiative]]`,
   `[[docstring-theory-and-references]]`, `[[fix-bugs-in-both-r-and-python]]`.
-- Estado: **0.10.0 é a última release** (step 1.8a, rule filters base + DARA).
-  Confirme que `https://pypi.org/pypi/pydaltoolbox/0.10.0/json` está no ar — se o upload ao
+- Estado: **0.11.0 é a última release** (step 1.8b, RuleFilterInterest + thresholds).
+  Confirme que `https://pypi.org/pypi/pydaltoolbox/0.11.0/json` está no ar — se o upload ao
   PyPI tiver ficado pendente (o classificador de auto-mode bloqueia `twine upload`), os
   artefatos já estão em `dist/` e o Eduardo publica (token em `C:\Users\eduar\.pypirc`,
   seção `[pypi]`).
@@ -40,6 +40,16 @@ contexto está na memória e em `develop/planejamento.md`.
   - `PatApriori` ganhou `rule_filter=` (default `RuleFilterNone`; só aplica em `target='rules'`,
     pula itemsets). DARA opera sobre itens `atributo=valor` (one-hot `pd.get_dummies(prefix_sep='=')`).
   - Validado: counter == Tabela 1 do paper e == `pat_dara` do R.
+- **1.8b (0.11.0)** concluído: `RuleFilterInterest` + auto-thresholds.
+  - `pattern/threshold.py`: `SupportThreshold` (curvature[usa `FitCurvatureMax`]/min_count/
+    sqrt/quantile/density) + `ConfidenceThreshold` (rhs_baseline/support_adaptive/fixed).
+  - `PatApriori` **auto-estima** quando `supp=0`/`conf=0` no `fit()` (defaults mudaram p/ 0,
+    espelhando o R); valor >0 explícito vence.
+  - `RuleFilterInterest` (lift/kulc/ir/support/confidence/count). `kulc`=kulczynski do mlxtend,
+    `ir` derivado, `count`=support×n (`rules.attrs['n_transactions']`). lift/kulc/ir validados
+    **idênticos** ao `arules::interestMeasure`. Sem mudança no R (já tinha tudo).
+  - **RuleFilter agora é `DalTransform`** nos dois repos (`.transform`/`.action`; R via
+    `transform.pat_rule_filter`). `.apply()` foi removido no Python.
 
 ## Princípios do port (valem sempre)
 
@@ -68,46 +78,53 @@ References. Remoção de dependência vai na MENSAGEM DE COMMIT, não no docstri
 - **Uploads externos (PyPI, push de daltoolbox) podem ser bloqueados pelo auto-mode** —
   deixar pronto e pedir pro Eduardo.
 
-## Tarefa do 0.11.0 (step 1.8b) — RuleFilterInterest + thresholds
+## Tarefa do 0.12.0 (step 1.9) — mineração de sequências
 
-Fontes R (`c:\Git\dal\daltoolbox\R\`): `pat_rule_filter.R`, `pat_threshold.R`.
+Fonte R (`c:\Git\dal\daltoolbox\R\`): `pat_cspade.R` (usa `arulesSequences::cspade`, dep de
+nicho). Roadmap (§2b.1): Python **nativo PrefixSpan** (sem dep nova), pois não há equivalente
+no mlxtend/sklearn. É o **fim do Ciclo 1**.
 
-- **`RuleFilterInterest`** (`pat_rule_filter.R`, `pat_rule_filter_interest`): filtra regras
-  por medidas clássicas de interesse — lift, Kulczynski (`kulc`), imbalance ratio (`ir`),
-  support, confidence, count. Herdar de `RuleFilter` (base já existe) e encaixar no
-  `PatApriori(rule_filter=...)`. Precisa calcular kulc/ir/count a partir das regras do
-  mlxtend (o `association_rules` já traz lift; kulc = (conf(A→B)+conf(B→A))/2; ir e count
-  derivam dos suportes/antecedent-consequent supports — ver `pat_rules_tidy`/`interestMeasure`).
-- **Thresholds** (`pat_threshold.R`): `pat_support_threshold` (estratégia "curvature", usando
-  `FitCurvatureMax` já portado) e `pat_confidence_threshold` — habilitam a auto-estimação
-  `supp=0`/`conf=0` no `fit()` do `PatApriori` (hoje exige `supp>0`).
-- Registrar nos `__init__`. Testes pytest. Notebook `notebooks/pattern/03-rule-filters.md` →
-  `python tools/build_examples.py pattern`.
+- **`PatCspade`** (ou `PatSequence`): minerador de padrões sequenciais frequentes seguindo o
+  contrato `PatternMiner` (`fit`→schema, `action`→`discover`, `evaluate`). Entrada =
+  **sequências de transações** (lista de sequências, cada uma lista de eventos/itemsets) — o R
+  usa o formato `read_baskets` (sequenceID/eventID/itens). Definir a representação Python
+  (ex.: lista de listas de listas, ou DataFrame sequenceID/eventID + itens) e **confirmar com
+  o Eduardo**.
+- **PrefixSpan nativo**: crescimento por prefixo com bancos projetados (Pei et al. 2001).
+  Suportar `support` (mín), `maxlen` (nº de eventos), `maxsize`, `mingap`/`maxgap` como no R.
+- `supp=0` → auto-estimar via `SupportThreshold` (já portado). `quality_filter` + métricas
+  (reusar `PatUtils`).
+- **Back-implementation?** PrefixSpan é clássico (não ++), mas remove a dep de nicho
+  `arulesSequences` — é **posse de dependência**. Se nativo no Python e o Eduardo topar,
+  backport p/ o R trocando `arulesSequences::cspade` por PrefixSpan nativo (decidir com ele).
+- Registrar nos `__init__`. Testes pytest (sequências conhecidas; comparar com o R/cspade).
+  Notebook `notebooks/pattern/04-sequences.md` → `python tools/build_examples.py pattern`.
+- ⚠️ Se o PrefixSpan se mostrar inviável no prazo, documentar e levar ao Ciclo 2 (o roadmap
+  já prevê isso).
 
-> **Já pronto (não refazer):** base `RuleFilter`/`RuleFilterNone`/`RuleFilterDara`, `dara()`,
-> `dara_score()`, e o slot `PatApriori(rule_filter=...)` (só `target='rules'`, pula itemsets).
+> **Já pronto (não refazer):** todo o resto de patterns — base, `PatApriori` (itemsets+regras,
+> auto-thresholds), rule filters (None/Interest/Dara, todos `DalTransform`), DARA.
 
-Confirme o desenho com o Eduardo antes de implementar (sobretudo a forma das estratégias de
-threshold e se `RuleFilterInterest` é embrulho de medidas do mlxtend ou cálculo próprio).
+Confirme o desenho com o Eduardo antes de implementar (sobretudo a representação das
+sequências e se o PrefixSpan nativo vira backport no R).
 
-## Checklist de release 0.11.0
+## Checklist de release 0.12.0
 
 1. `pip install -e .[patterns]` (o Python local pode ter o build do PyPI em cache).
 2. Implementar as classes + registrar nos `__init__`.
 3. Docstrings com Teoria + References + Porting (respeitando o ⛔ PROIBIDO acima).
-4. `python -m pytest -q` (hoje 155 verdes) e `ruff check src tests` (limpo).
-5. Backport/ajuste no R (branch), testar via `Rscript` de arquivo, `devtools::document()`.
-6. Bump de versão para `0.11.0` em `pyproject.toml` e `src/pydaltoolbox/__init__.py`.
-7. Atualizar `README.md` e `develop/planejamento.md` (marcar 1.8b ✅).
-8. `python tools/build_examples.py pattern` (confirmar render). ⚠️ `pip install mlxtend`
-   pode subir numpy/sklearn — se re-renderizar outros exemplos por drift de versão, reverter
-   os não relacionados e commitar só os de padrões.
-9. Commit em `main` nos dois repos ("Release 0.11.0 — ..."), terminando com a linha
+4. `python -m pytest -q` (hoje 175 verdes) e `ruff check src tests` (limpo).
+5. (Se backport) ajuste no R (branch), testar via `Rscript` de arquivo, `devtools::document()`.
+6. Bump de versão para `0.12.0` em `pyproject.toml` e `src/pydaltoolbox/__init__.py`.
+7. Atualizar `README.md` e `develop/planejamento.md` (marcar 1.9 ✅ = fim do Ciclo 1).
+8. `python tools/build_examples.py pattern` (confirmar render). ⚠️ exemplos com frozenset
+   podem re-renderizar por ordem de exibição (mesmos valores) — reverter o churn cosmético.
+9. Commit em `main` nos dois repos ("Release 0.12.0 — ..."), terminando com a linha
    `Co-Authored-By:` que o ambiente indicar.
 10. Build/publicar: `rm -rf dist build *.egg-info src/*.egg-info` → `python -m build` →
     `python -m twine check dist/*` → conferir `develop/` fora do sdist →
     `python -m twine upload dist/*` (pode ser bloqueado → Eduardo publica). Verificar em
-    `https://pypi.org/pypi/pydaltoolbox/0.11.0/json`.
+    `https://pypi.org/pypi/pydaltoolbox/0.12.0/json`.
 11. `git push origin main` nos dois repos. Atualizar a memória `[[pydaltoolbox-port]]`.
 
 ## Observações

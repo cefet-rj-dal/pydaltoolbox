@@ -42,12 +42,15 @@ from .clustering import (
     ClusterPam,
 )
 from .pattern import (
+    ConfidenceThreshold,
     PatApriori,
     PatternMiner,
     PatUtils,
     RuleFilter,
     RuleFilterDara,
+    RuleFilterInterest,
     RuleFilterNone,
+    SupportThreshold,
     dara,
     dara_score,
 )
@@ -102,7 +105,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.10.0"
+__version__ = "0.11.0"
 
 __all__ = [
     "Aggregation",
@@ -134,6 +137,7 @@ __all__ = [
     "ClusterKmeans",
     "ClusterPam",
     "Clusterer",
+    "ConfidenceThreshold",
     "DalBase",
     "DalLearner",
     "DalTransform",
@@ -171,6 +175,7 @@ __all__ = [
     "Regression",
     "RuleFilter",
     "RuleFilterDara",
+    "RuleFilterInterest",
     "RuleFilterNone",
     "SampleBalance",
     "SampleGroups",
@@ -184,6 +189,7 @@ __all__ = [
     "SmoothingFreq",
     "SmoothingInter",
     "SmoothingQuantization",
+    "SupportThreshold",
     "ZScore",
     "adjust_class_label",
     "adjust_dataframe",

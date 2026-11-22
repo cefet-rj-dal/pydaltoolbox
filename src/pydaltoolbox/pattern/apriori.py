@@ -22,6 +22,7 @@ from .base import (
     pattern_length,
 )
 from .rule_filter import RuleFilter, RuleFilterNone
+from .threshold import ConfidenceThreshold, SupportThreshold
 
 __all__ = ["PatApriori"]
 
@@ -45,12 +46,15 @@ class PatApriori(PatternMiner):
     ``target='rules'``, a ``rule_filter`` (e.g. :class:`~pydaltoolbox.RuleFilterDara`)
     applies a post-mining interestingness filter to the discovered rules.
 
+    When ``supp`` (or, for rules, ``conf``) is ``0``, the threshold is estimated during
+    ``fit`` from the data using ``support_strategy`` /  ``confidence_strategy``
+    (see :class:`~pydaltoolbox.SupportThreshold` and
+    :class:`~pydaltoolbox.ConfidenceThreshold`); a positive value is used as given.
+
     Porting:
         Mirrors ``pat_apriori.R``. Fidelity: approximate.
         - Wraps ``mlxtend`` (``apriori``/``association_rules``) rather than ``arules``;
           the two engines report the same support, confidence and lift.
-        - Support auto-estimation (``supp=0`` with a support strategy) and rule filters are
-          deferred to a later step; ``supp`` (and ``conf`` for rules) are used as given.
         - ``minlen`` and the ``lhs``/``rhs`` appearance constraints are applied as a
           post-filter over the mined patterns.
 
@@ -63,8 +67,8 @@ class PatApriori(PatternMiner):
     def __init__(
         self,
         target: str = "rules",
-        supp: float = 0.1,
-        conf: float = 0.8,
+        supp: float = 0.0,
+        conf: float = 0.0,
         minlen: int = 1,
         maxlen: int = 10,
         lhs: Iterable | None = None,
@@ -73,12 +77,14 @@ class PatApriori(PatternMiner):
         exclude: Iterable | None = None,
         quality_filter: dict | None = None,
         rule_filter: RuleFilter | None = None,
+        support_strategy: SupportThreshold | None = None,
+        confidence_strategy: ConfidenceThreshold | None = None,
     ) -> None:
         super().__init__()
         if target not in ("rules", "frequent itemsets"):
             raise ValueError("PatApriori: target must be 'rules' or 'frequent itemsets'.")
-        if supp <= 0:
-            raise ValueError("PatApriori: supp must be > 0 (support auto-estimation is deferred).")
+        if supp < 0 or conf < 0:
+            raise ValueError("PatApriori: supp and conf must be >= 0 (0 = estimate in fit).")
         if rule_filter is None:
             rule_filter = RuleFilterNone()
         elif not isinstance(rule_filter, RuleFilter):
@@ -96,6 +102,10 @@ class PatApriori(PatternMiner):
         self.exclude = exclude
         self.quality_filter = quality_filter
         self.rule_filter = rule_filter
+        self.support_strategy = support_strategy or SupportThreshold()
+        self.confidence_strategy = confidence_strategy or ConfidenceThreshold()
+        self._supp_resolved: float | None = None
+        self._conf_resolved: float | None = None
         self.pattern_kind = "rules" if target == "rules" else "itemsets"
         if target == "rules":
             self.eval_metrics = [
@@ -113,6 +123,24 @@ class PatApriori(PatternMiner):
                 metric_mean_length,
                 metric_retained_ratio,
             ]
+
+    def fit(self, data, **kwargs) -> PatApriori:
+        data = self._as_onehot(data)
+        super().fit(data)
+        # resolve thresholds: an explicit (> 0) value wins; 0 triggers estimation
+        self._supp_resolved = (
+            self.supp if self.supp and self.supp > 0 else self.support_strategy.resolve(data)
+        )
+        if self.target == "rules":
+            self._conf_resolved = (
+                self.conf if self.conf and self.conf > 0
+                else self.confidence_strategy.resolve(
+                    data, rhs=self.rhs, support=self._supp_resolved
+                )
+            )
+        else:
+            self._conf_resolved = None
+        return self
 
     def _apply_appearance(self, rules: pd.DataFrame) -> pd.DataFrame:
         if self.lhs is None and self.rhs is None:
@@ -132,14 +160,15 @@ class PatApriori(PatternMiner):
         data = self._as_onehot(data)
         self._validate_schema(data)
 
-        itemsets = fp.apriori(data, min_support=self.supp, use_colnames=True, max_len=self.maxlen)
+        supp = self._supp_resolved if self._supp_resolved is not None else self.supp
+        itemsets = fp.apriori(data, min_support=supp, use_colnames=True, max_len=self.maxlen)
 
         if self.target == "rules":
             # association_rules needs the full itemset table (including singletons) to
             # resolve antecedent/consequent supports; minlen is a post-filter on rules.
             if len(itemsets):
                 patterns = fp.association_rules(
-                    itemsets, metric="confidence", min_threshold=self.conf
+                    itemsets, metric="confidence", min_threshold=self._conf_resolved
                 )
             else:
                 patterns = itemsets.iloc[0:0]
@@ -152,16 +181,20 @@ class PatApriori(PatternMiner):
                 patterns = patterns[pattern_length(patterns) >= self.minlen]
 
         total = len(patterns)
+        n_transactions = len(data)
         patterns = self._apply_item_filter(patterns)
         patterns = self._apply_quality_filter(patterns)
 
         ranking = None
         if self.target == "rules":
+            # expose the transaction count so a rule filter can derive absolute counts
+            patterns.attrs["n_transactions"] = n_transactions
             patterns = self.rule_filter.action(patterns)
             ranking = patterns.attrs.get("dara_ranking")
 
         patterns = patterns.reset_index(drop=True)
         patterns.attrs["filtered_from"] = total
+        patterns.attrs["n_transactions"] = n_transactions
         if ranking is not None:
             patterns.attrs["dara_ranking"] = ranking
         return patterns

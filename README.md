@@ -116,8 +116,10 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
   - curvature helpers: `FitCurvatureMin`, `FitCurvatureMax`
 - **Pattern mining:** `PatternMiner` base + `PatUtils` + `PatApriori` (frequent
   itemsets and association rules) *(0.9.0)*; rule filters `RuleFilter` / `RuleFilterNone` /
-  `RuleFilterDara` + the `dara` divergent-association ranking *(0.10.0)*. Needs the optional
-  `[patterns]` extra (`pip install pydaltoolbox[patterns]`, brings `mlxtend`).
+  `RuleFilterDara` + the `dara` divergent-association ranking *(0.10.0)*; `RuleFilterInterest`
+  and support/confidence auto-estimation `SupportThreshold` / `ConfidenceThreshold`
+  *(0.11.0)*. Needs the optional `[patterns]` extra (`pip install pydaltoolbox[patterns]`,
+  brings `mlxtend`).
 - **Tuning:** `DalTune` base + `ClaTune`, `RegTune`, `CluTune`.
 - **Autoencoder bases:** `AutoencBaseE`, `AutoencBaseEd` (identity, for extension).
 - **Reference datasets:** `datasets.iris()`, `datasets.diabetes()`, `datasets.boston()`.

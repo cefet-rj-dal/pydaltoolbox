@@ -118,7 +118,7 @@ def test_invalid_params():
     with pytest.raises(ValueError):
         PatApriori(target="nonsense", supp=0.4)
     with pytest.raises(ValueError):
-        PatApriori(supp=0.0)
+        PatApriori(supp=-0.1)  # negative invalid; supp=0 means auto-estimate
 
 
 def test_action_dispatches_to_discover(transactions):

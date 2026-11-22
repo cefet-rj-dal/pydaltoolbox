@@ -354,7 +354,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.6b | `0.8.0` ✅ | **Consolidação ++/posse** (FastPAM, ReliefF, Borderline/ADASYN, c-means nstart; remove cluster/leaps/caret do R) |
 | 1.7 | `0.9.0` ✅ | Padrões: base + itemsets + regras (`PatApriori` via mlxtend `[patterns]`; eclat removido dos dois repos) |
 | 1.8a | `0.10.0` ✅ | Padrões: rule filters base (`RuleFilter`/`None`/`Dara`) + DARA (`dara`, divergent association rules) |
-| 1.8b | `0.11.0` | Padrões: `RuleFilterInterest` + thresholds (`support`/`confidence`, auto `supp=0`) |
+| 1.8b | `0.11.0` ✅ | Padrões: `RuleFilterInterest` + thresholds (`SupportThreshold`/`ConfidenceThreshold`, auto `supp=0`/`conf=0`) |
 | 1.9 | `0.12.0` | Padrões: sequências (PrefixSpan) |
 | 2.1 | `0.13.0` | `ClaXgboost` `[xgboost]` |
 | 2.2 | `0.14.0` | `ClusterLouvainGraph` `[graph]` |
@@ -473,11 +473,18 @@ com logistic/linear do sklearn. Sem dependência nova. Relief é ReliefF nativo 
 > divergência validado contra a Tabela 1 do artigo e contra o `pat_dara` do R (idênticos).
 > Entrada = regras do `PatApriori` sobre itens `atributo=valor` (one-hot `prefix_sep='='`).
 
-#### 1.8b — Mineração de padrões: rule filters de interesse + thresholds → `0.11.0`
+#### ✅ 1.8b — Mineração de padrões: rule filters de interesse + thresholds → `0.11.0` (publicado)
 | Classe/função | Backend | Arquivo R |
 |---|---|---|
-| `RuleFilterInterest` (lift/kulc/ir/support/confidence/count) | numpy/pandas | `pat_rule_filter.R` |
-| thresholds (`pat_support_threshold`, `pat_confidence_threshold`; auto `supp=0`/`conf=0`) | numpy | `pat_threshold.R` |
+| `RuleFilterInterest` (lift/kulc/ir/support/confidence/count) | mlxtend measures | `pat_rule_filter.R` |
+| `SupportThreshold` (curvature/min_count/sqrt/quantile/density) | numpy + `FitCurvatureMax` | `pat_threshold.R` |
+| `ConfidenceThreshold` (rhs_baseline/support_adaptive/fixed) | numpy | `pat_threshold.R` |
+| `PatApriori`: `supp=0`/`conf=0` auto-estimados no `fit()` via estratégias | — | `pat_apriori.R` |
+
+> Medidas de interesse (lift/kulc/ir) validadas **idênticas** ao `arules::interestMeasure`.
+> `kulc`=kulczynski, `ir`=imbalance derivados das colunas do mlxtend; `count`=support×n (n em
+> `rules.attrs['n_transactions']`). ⚠️ Delta pré-existente: o `association_rules` do mlxtend
+> gera regras com consequente de vários itens que o `arules::apriori` não emite por padrão.
 
 #### 1.9 — Mineração de padrões: sequências → `0.12.0`
 | Classe | Backend nativo | Arquivo R |
