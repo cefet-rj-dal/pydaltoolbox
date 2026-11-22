@@ -110,6 +110,20 @@ observe/References). **71 notebooks Python** (todos buildam verdes):
   `examples/` regenerada (144/144, zero falhas).
 - Dev-only nos dois lados (notebooks/examples fora do pacote): sem release PyPI.
 
+### Exemplos 1:1 R↔Python — gráficos + tutorial (0.22.0, 2026-11-22)
+Fecha a iniciativa de exemplos 1:1. **36 notebooks Python** (todos buildam verdes):
+- **graphics(23)**: `comparison/` (bar, bar-with-error, grouped-bar, stacked-bar, lollipop, pie,
+  radar) + `distribution/` (histogram, density, boxplot, boxplot-by-class, density-by-class,
+  scatter, points, correlation, parallel, pixel, dendrogram, time-series lines/basic/forecast,
+  export-save pdf/jpg) — um por `plot_*`, retornando `Axes` (figura embutida via `ax.figure`).
+- **tutorial(13)**: first-experiment, sampling-strategy, data-quality-and-cleaning,
+  preprocessing-basics, baseline-classification, metrics-and-evaluation, model-comparison,
+  tuning-workflow, end-to-end-classification-pipeline, regression-workflow (diabetes),
+  clustering-workflow, visual-analysis-and-reporting, custom-extension.
+- **Paridade final: 107 notebooks Python = 107 notebooks R**, família por família
+  (classification 15, regression 7, clustering 8, transf 30, patterns 4, custom 7, graphics 23,
+  tutorial 13). Dev-only: sem release PyPI.
+
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.19.0** (PyPI). daltoolbox sem `GGally`; API de padrões
   simplificada (sem `pat_dara_rules`). Curso com `codes/`.

@@ -4,26 +4,18 @@ Somente o que vem a seguir. O que já foi feito está em `historico.md`; a corre
 de classes R↔Python em `mapeamento.md`. Ao concluir um passo, mover o relato para
 `historico.md` e atualizar este arquivo.
 
-**Estado de partida:** última release pydaltoolbox **0.19.0**. Passos de documentação **0.20.0 e
-0.21.0 feitos** (ver `historico.md`): daltoolbox `notebooks/`→`examples/` sem docx; e **exemplos
-1:1 R↔Python** para ML+transf+patterns+custom (71 notebooks Python, um por classe, espelhando a
-árvore do R) + dataset do R trocado p/ Diabetes. Núcleo numpy/pandas/scikit-learn; extras
-`[patterns]`, `[xgboost]`, `[viz]`. 218 testes verdes, ruff limpo.
+**Estado de partida:** última release pydaltoolbox **0.19.0**. Passos de documentação **0.20.0,
+0.21.0 e 0.22.0 feitos** (ver `historico.md`): daltoolbox `notebooks/`→`examples/` sem docx; e
+**exemplos 1:1 R↔Python COMPLETOS** — **107 notebooks Python = 107 R**, família por família
+(classification/regression/clustering/transf/patterns/custom/graphics/tutorial), um por classe,
+espelhando a árvore e a didática do R; dataset do R trocado p/ Diabetes. Núcleo
+numpy/pandas/scikit-learn; extras `[patterns]`, `[xgboost]`, `[viz]`. 218 testes verdes, ruff limpo.
 
 **Rumo ao 1.0.0:** os passos abaixo são de **qualidade**. Vamos planejando e testando; **o 1.0.0
 (estabilização/freeze) só acontece quando o Eduardo disser que está satisfeito.** (Os passos de
 exemplos/doc são dev-only — sem release PyPI, pois não mudam código do pacote.)
 
 ---
-
-## 0.22.0 — Exemplos 1:1: gráficos + tutorial
-Fecha a iniciativa de exemplos 1:1 (ver `historico.md` p/ as famílias já feitas).
-- **graphics**: um notebook por `plot_*` (≈21), no agrupamento do R (`comparison/` + `distribution/`),
-  espelhando `daltoolbox/notebooks/graphics/**` (inclui bar-with-error, export-save, etc.).
-- **tutorial**: 13 tutoriais com a didática do R (`daltoolbox/notebooks/tutorial/**`): first-experiment,
-  sampling, data-quality, preprocessing, baseline/metrics/comparison/tuning, end-to-end pipelines,
-  regression/clustering workflows, visual analysis, custom extension.
-- Regenerar `examples/` (Py `build_examples.py`) e conferir paridade final de cobertura.
 
 ## 0.23.0 — Testes pareados R↔Python
 Objetivo: confiança de que o Python reproduz o R, caso a caso.
