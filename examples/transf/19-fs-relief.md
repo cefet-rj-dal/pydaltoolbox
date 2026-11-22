@@ -26,10 +26,10 @@ fs.ranking
 
 
             feature     score
-    0   petal_width  0.158333
-    1  petal_length  0.124746
-    2   sepal_width  0.101667
-    3  sepal_length  0.058889
+    0   petal_width  0.229667
+    1  petal_length  0.194034
+    2   sepal_width  0.141500
+    3  sepal_length  0.046611
 
 
 

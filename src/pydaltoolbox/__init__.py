@@ -92,7 +92,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 __all__ = [
     "Aggregation",

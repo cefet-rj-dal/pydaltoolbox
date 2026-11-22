@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pydaltoolbox"
-version = "0.7.0"
+version = "0.8.0"
 description = "Leveraging Experiment Lines for Data Analytics (Python port of the R daltoolbox framework)"
 readme = "README.md"
 requires-python = ">=3.9"

@@ -351,14 +351,15 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.4 | `0.5.0` ✅ | Amostragem restante |
 | 1.5 | `0.6.0` ✅ | Clustering nativo (Pam, Cmeans) |
 | 1.6 | `0.7.0` ✅ | Seleção de atributos (Relief + fss/stepwise) |
-| 1.7 | `0.8.0` | Padrões: base + itemsets |
-| 1.8 | `0.9.0` | Padrões: regras e thresholds |
-| 1.9 | `0.10.0` | Padrões: sequências (PrefixSpan) |
-| 2.1 | `0.11.0` | `ClaXgboost` `[xgboost]` |
-| 2.2 | `0.12.0` | `ClusterLouvainGraph` `[graph]` |
-| 2.3 | `0.13.0` | Gráficos: base + distribuição + comparação `[viz]` |
-| 2.4 | `0.14.0` | Gráficos: relação + temporais + estrutura `[viz]` |
-| 2.5 | `0.15.0` | *(opcional)* Padrões: backend `mlxtend` `[patterns]` |
+| 1.6b | `0.8.0` ✅ | **Consolidação ++/posse** (FastPAM, ReliefF, Borderline/ADASYN, c-means nstart; remove cluster/leaps/caret do R) |
+| 1.7 | `0.9.0` | Padrões: base + itemsets |
+| 1.8 | `0.10.0` | Padrões: regras e thresholds |
+| 1.9 | `0.11.0` | Padrões: sequências (PrefixSpan) |
+| 2.1 | `0.12.0` | `ClaXgboost` `[xgboost]` |
+| 2.2 | `0.13.0` | `ClusterLouvainGraph` `[graph]` |
+| 2.3 | `0.14.0` | Gráficos: base + distribuição + comparação `[viz]` |
+| 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura `[viz]` |
+| 2.5 | `0.16.0` | *(opcional)* Padrões: backend `mlxtend` `[patterns]` |
 | — | `1.0.0` | Estabilização (cobertura completa, API congelada, beta→estável) |
 
 *(`0.10.0` > `0.9.0` é válido em semver/PyPI — comparação numérica. Se o passo 2.5 for
