@@ -124,10 +124,26 @@ Fecha a iniciativa de exemplos 1:1. **36 notebooks Python** (todos buildam verde
   (classification 15, regression 7, clustering 8, transf 30, patterns 4, custom 7, graphics 23,
   tutorial 13). Dev-only: sem release PyPI.
 
+### Testes pareados R↔Python + fix de qualidade (0.23.0, 2026-11-22)
+Primeira passada de **testes pareados** (regressão). Exportado o split idêntico (diabetes,
+`SampleRandom(seed=1)`) para CSV e rodados os mesmos modelos nos dois lados sobre as MESMAS
+linhas (scripts em `daltoolbox/develop/parity/`). Resultado: **paridade excelente** em quase
+tudo (RegLm 0.433=0.433, RegKnn 0.319=0.319, RegRf 0.351=0.351, RegSvm def 0.099≈0.100,
+RegMlp 0.339 vs 0.290) — **exceto RegDtree**: Python overfitava para R2 **−0.003** enquanto o
+R `tree::tree` generalizava (**0.238**).
+- **Fix (pydaltoolbox 0.23.0, publicado):** `RegDtree` agora usa
+  `min_impurity_decrease = mindev * var(y)` (`mindev=0.01`), o equivalente fiel do `mindev` do
+  `tree::tree` → R2 **0.238**, idêntico ao R. Novo parâmetro `mindev`. Adicionado
+  `tests/test_quality_regression.py` (guarda: RegDtree R2>0.15; ML regressores R2>0). 220 testes.
+- Nota: em diabetes (dataset quase-linear, usado por Efron p/ métodos lineares) o modelo linear
+  lidera legitimamente; o `reg_svm(cost=40)` do exemplo overfita nos DOIS (fiel), mantido.
+- O "R parecia melhor em tudo" com splits diferentes era **variância do split** — na mesma
+  partição a paridade é boa (menos o bug do dtree, agora corrigido).
+
 ## Estado atual (base para o `planejamento.md`)
-- Última release: **pydaltoolbox 0.19.0** (PyPI). daltoolbox sem `GGally`; API de padrões
-  simplificada (sem `pat_dara_rules`). Curso com `codes/`.
-- Cobertura: **todo o daltoolbox portado** (Pendências de porte zeradas — ver `mapeamento.md`).
-  218 testes verdes + ruff limpos; notebooks de gráficos renderizam.
+- Última release: **pydaltoolbox 0.23.0** (PyPI) — fix de qualidade do `RegDtree`. daltoolbox
+  sem `GGally`; API de padrões simplificada; exemplos 1:1 (107=107); dataset do R = Diabetes.
+- Cobertura: **todo o daltoolbox portado** (Pendências zeradas). **220 testes verdes** + ruff
+  limpos; notebooks renderizam. Testes pareados: regressão feita (parity ok).
 - Extras opcionais: `[patterns]` (mlxtend), `[xgboost]`, `[viz]` (matplotlib). Núcleo:
   numpy/pandas/scikit-learn.

@@ -1,4 +1,4 @@
-# Kickoff — pydaltoolbox, próximo passo 0.23.0 (testes pareados R↔Python)
+# Kickoff — pydaltoolbox, próximo passo: continuar testes pareados (classificação/clustering/transf) + 0.24.0 auditoria de doc
 
 Cole numa conversa limpa para continuar. Brief curto; o detalhe está nos arquivos abaixo.
 

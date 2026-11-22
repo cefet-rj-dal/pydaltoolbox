@@ -17,13 +17,16 @@ exemplos/doc são dev-only — sem release PyPI, pois não mudam código do paco
 
 ---
 
-## 0.23.0 — Testes pareados R↔Python
-Objetivo: confiança de que o Python reproduz o R, caso a caso.
-- Para cada família (começar por classificação e regressão), rodar o mesmo exemplo nos dois
-  (`Rscript` + pytest) e comparar o resultado conceitual (predição/seleção/partição). Registrar
-  em `tests/parity/` (Python) + scripts R em `develop/parity/`.
-- Estender às demais famílias (transforms, clustering, padrões, gráficos por tipo de retorno).
-- Fechar com o checklist de release padrão.
+## 0.23.x — Testes pareados R↔Python (em andamento)
+Objetivo: confiança de que o Python reproduz o R, caso a caso. **Método que funcionou:**
+exportar o MESMO split para CSV e rodar os dois lados sobre as mesmas linhas (senão a variância
+do split engana). Scripts em `daltoolbox/develop/parity/`; guardas em `tests/`.
+- ✅ **Regressão (diabetes):** paridade ok em tudo; **bug achado e corrigido** — `RegDtree`
+  overfit (R2 −0.003 vs R 0.238) → `mindev`/`min_impurity_decrease`; **0.23.0 publicado**.
+- **A fazer:** estender às demais famílias (classificação em dataset mais difícil que iris;
+  clustering; feature-selection; padrões). Em cada uma, se o linear/baseline bater o ML por
+  defaults fracos, corrigir o adaptador (quality-faithful) e adicionar guarda em `tests/`.
+- Fechar cada lote com o checklist de release (só há release quando há mudança de código).
 
 ## 0.24.0 — Auditoria de documentação justa (crédito + inovação)
 Objetivo: garantir documentação **justa com as obras originais** e que **apresenta a inovação**.
