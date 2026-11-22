@@ -1,7 +1,7 @@
-# Kickoff — pydaltoolbox step 1.6 → release 0.7.0 (feature selection)
+# Kickoff — pydaltoolbox step 1.8 → release 0.10.0 (mineração de padrões: rule filters + thresholds)
 
-Cole este prompt numa conversa limpa para continuar o port. Ele é auto-contido; o
-resto do contexto está na memória e no `develop/planejamento.md`.
+Cole este prompt numa conversa limpa para continuar o port. É auto-contido; o resto do
+contexto está na memória e em `develop/planejamento.md`.
 
 ---
 
@@ -9,126 +9,101 @@ resto do contexto está na memória e no `develop/planejamento.md`.
 
 - Repo: `c:\Git\dal\pydaltoolbox` — port Python do pacote R **daltoolbox**
   (`c:\Git\dal\daltoolbox`), liderado por Eduardo Ogasawara (CEFET/RJ, lab DAL).
-- Leia a memória do projeto: `[[pydaltoolbox-port]]`, `[[docstring-theory-and-references]]`,
-  `[[fix-bugs-in-both-r-and-python]]` (bug no port OU no R deve ser corrigido nos dois —
-  **peça antes de editar o R**).
-- Estado: **0.6.0 publicado no PyPI** (2026-11-21) e em `origin/main`. Árvore limpa.
-  Cycle 1 do roadmap: passos 1.1–1.5 concluídos. **Este é o passo 1.6.**
-- Plano completo: `develop/planejamento.md` (§8 = roadmap; §1.6 = este passo).
+- Leia a memória do projeto: `[[pydaltoolbox-port]]`, `[[back-implementation-initiative]]`,
+  `[[docstring-theory-and-references]]`, `[[fix-bugs-in-both-r-and-python]]`.
+- Estado: **0.9.0 é a última release** (step 1.7, pattern mining base + itemsets + regras).
+  Confirme que `https://pypi.org/pypi/pydaltoolbox/0.9.0/json` está no ar — se o upload ao
+  PyPI tiver ficado pendente (o classificador de auto-mode bloqueia `twine upload`), os
+  artefatos já estão em `dist/` e o Eduardo publica (token em `C:\Users\eduar\.pypirc`,
+  seção `[pypi]`).
+- Plano completo: `develop/planejamento.md` (§8 = roadmap; §2b/§2b.1 = back-implementation).
+
+## O que já foi feito (não refazer)
+
+- **Bloco A / v1** e **Cycle 1 passos 1.1–1.6** concluídos e publicados (0.1.0 → 0.7.0).
+- **Ciclo de consolidação (0.8.0)** concluído nos dois repos (PAM/fss/Relief/SMOTE/caret/c-means).
+- **1.7 (0.9.0)** concluído: subpacote `src/pydaltoolbox/pattern/` com `PatternMiner` base +
+  `PatUtils` (filtros `quality_min`/`quality_max` + métricas) + `PatApriori`.
+  - **Backend = `mlxtend`** como **extra opcional `[patterns]`** (embrulho fino, import
+    lazy), NÃO nativo — decisão do Eduardo (antecipou o antigo passo 2.5).
+  - `PatApriori` faz **itemsets E regras** (`target='frequent itemsets'` → `mlxtend.apriori`;
+    `target='rules'` → `association_rules`, com confidence/lift, lhs/rhs, include/exclude,
+    quality_filter). Entrada = **DataFrame one-hot booleano** (colunas = itens).
+  - **ECLAT removido dos dois repos**: `arules` e `mlxtend` só compartilham `apriori` (arules
+    não tem fpgrowth sem o nicho não-CRAN `fim4r`; mlxtend não tem eclat). `pat_eclat.R` +
+    man/examples saíram do R; `devtools::document()` rodado.
 
 ## Princípios do port (valem sempre)
 
-- **Não reimplementar algoritmos clássicos** — envolver scikit-learn/numpy/pandas/scipy
-  com a interface uniforme da Linha de Experimento (adaptadores finos). Implementação
-  **nativa** só quando evita uma dependência niche (é o caso do ReliefF).
-- **Mapeamento fiel de qualidade**: reproduzir o comportamento/DEFAULTS do backend R,
-  não só chamar sklearn ingenuamente. Comparar resultado vs R.
-- API idiomática Python: métodos de instância, `fit` retorna `self` (encadeável);
-  nomes em **PascalCase**; dados em pandas DataFrame.
-- Dependências centrais ficam em numpy/pandas/scikit-learn (sem novas no Cycle 1).
+- **Envolver** scikit-learn/numpy/pandas/scipy/mlxtend com a interface da Linha de
+  Experimento (adaptadores finos). Implementação **nativa** só para dep de nicho ou ganho
+  real (++), decidido **caso a caso com o Eduardo** (`[[back-implementation-initiative]]`).
+- API idiomática Python: métodos de instância, `fit` retorna `self`; **PascalCase**; pandas.
+- Core deps = numpy/pandas/scikit-learn. `mlxtend` é o primeiro extra opcional (`[patterns]`).
 
-## Princípio estendido — ++ & redução de dependência (2026-11-21)
+## Convenções de docstring (OBRIGATÓRIAS — `[[docstring-theory-and-references]]`)
 
-Eduardo estendeu a iniciativa de back-implementation (ver memória
-`[[back-implementation-initiative]]`) para **todo o stack DAL, incluindo este
-pacote**. Vale a partir de agora, em paralelo ao "não reimplementar — envolver":
+Toda classe nova: **(1) Teoria**; **(2) `References:`** (citações acadêmicas verbatim);
+**(3) `Porting:`** auditável (`Mirrors <arquivo_r>.R. Fidelity: exact|approximate|adapted`
++ bullets das adaptações). **⛔ PROIBIDO** no docstring: "native implementation", "not a
+wrapper of X", "no external/extra dependency", "no longer uses/depends on X", ou qualquer
+alfinetada no pacote substituído. Dizer só: o que o algoritmo faz + "inspired by X" +
+References. Remoção de dependência vai na MENSAGEM DE COMMIT, não no docstring.
 
-1. **Incrementar métodos para "++"** quando fizer sentido: avanço algorítmico real,
-   gate da **Ação 1++** = prever/selecionar/agrupar a verdade **tão bem ou melhor**
-   que a referência (não mera paridade). **Não é regra cega** — decidido caso a caso
-   com o Eduardo; libs canônicas/estáveis (scikit-learn/scipy) continuam embrulhadas.
-2. **Reduzir a pegada de dependências** back-implementando deps **atípicas/niche**
-   nativamente (Python = releitura canônica / R = backport 100%-compatível).
-   pydaltoolbox é a **fundação** — lar natural dos algoritmos-base nativos que
-   pyharbinger e pytspredit reusam.
+## Fluxo de trabalho (importante)
 
-**TODO antes de escolher o próximo marco** (não é o 0.7.0, que já está decidido):
-fazer a **auditoria de imports** deste pacote e montar a **lista priorizada de
-candidatos ++ / redução de dep** numa seção do `develop/planejamento.md`. O 0.7.0
-(ReliefF nativo + avaliar stepwise sem statsmodels) **já encarna o princípio** — não
-precisa mudar de escopo.
+- **R roda neste ambiente** (`C:\R\R-4.5.0`). Rodar R de **arquivo `.R`**
+  (`Rscript --vanilla script.R`), não `-e` inline (segfaults); repetir em segfault.
+  `devtools::document()` regenera NAMESPACE/man.
+- **Bug em qualquer lado → corrigir nos dois** (`[[fix-bugs-in-both-r-and-python]]`),
+  pedindo antes de editar o R.
+- **Uploads externos (PyPI, push de daltoolbox) podem ser bloqueados pelo auto-mode** —
+  deixar pronto e pedir pro Eduardo.
 
-## Tarefa do 0.7.0 (step 1.6)
+## Tarefa do 0.10.0 (step 1.8) — rule filters + thresholds
 
-Portar seleção de atributos restante e **reconciliar `fss` × `stepwise`**. Arquivos R:
-`trans_feature_selection_relief.R`, `trans_feature_selection_fss.R`,
-`trans_feature_selection_stepwise.R` (em `c:\Git\dal\daltoolbox\R\`).
+Fontes R (`c:\Git\dal\daltoolbox\R\`): `pat_rule_filter.R`, `pat_threshold.R`, `pat_dara.R`.
 
-Situação atual no Python (`src/pydaltoolbox/transform/feature_selection.py`): existe
-`FeatureSelectionStepwise`, mas ele **na verdade implementa o `fss`** (busca forward
-mantendo o maior R² ajustado — o análogo de `leaps::regsubsets`). O nome está trocado.
+- **Rule filters** (`pat_rule_filter.R`): `RuleFilterNone` / `RuleFilterInterest`
+  (filtra por lift/confidence/support mínimos) / `RuleFilterDara`, + `filter_rules` /
+  `rules_tidy`. Encaixar no `PatApriori` (o slot `rule_filter`, hoje ausente no Python) —
+  aplicado só quando `target='rules'`.
+- **Thresholds** (`pat_threshold.R`): `pat_support_threshold` (ex.: estratégia "curvature",
+  usando `FitCurvatureMax` já portado) e `pat_confidence_threshold` — habilitam a
+  auto-estimação `supp=0`/`conf=0` no `fit()` (hoje o Python exige `supp>0`).
+- **`PatDara`** (+ `dara_rules`, `pat_dara.R`): ranking de regras por divergência. Avaliar
+  se é back-implementation (posse/++) ou embrulho — decidir com o Eduardo.
+- **⚠️ Quirk R conhecido (resolver aqui):** `pat_apriori(target='frequent itemsets')` no R
+  dá erro no `rule_filter` default — ao portar os rule filters, garantir que o caminho de
+  itemsets **pule** o rule_filter nos dois lados (bug a corrigir no R também, com o Eduardo).
+- Registrar nos `__init__`. Testes pytest. Notebooks em `notebooks/pattern/*.md` →
+  `python tools/build_examples.py`.
 
-Entregar três classes distintas, alinhadas ao R:
+Confirme o desenho com o Eduardo antes de implementar (especialmente PatDara nativo vs
+embrulho, e a forma das estratégias de threshold).
 
-1. **`FeatureSelectionFss`** — renomear/mover o atual `FeatureSelectionStepwise` para cá
-   (busca forward por R² ajustado; alvo numérico / regressão). Fonte R:
-   `trans_feature_selection_fss.R`.
-   - Manter `FeatureSelectionStepwise` como alias **temporário deprecado** apontando para
-     a nova classe `stepwise`? NÃO — ver item 2. Decidir com cuidado para não quebrar
-     `__init__`/README/notebooks que hoje exportam `FeatureSelectionStepwise`.
-2. **`FeatureSelectionStepwise`** (novo, comportamento correto) — mirror de
-   `stats::step`: direção forward/backward/both, família GLM (default binomial →
-   classificação binária). Backend: statsmodels GLM + stepwise por AIC, OU sklearn +
-   seleção por AIC/validação. **Avaliar se dá para fazer nativo sem nova dependência**
-   (preferível); se exigir statsmodels, tratar como extra opcional e confirmar com Eduardo.
-3. **`FeatureSelectionRelief`** — ReliefF **nativo** em numpy (para cada instância
-   amostrada, compara vizinhos nearest-hit/nearest-miss e atualiza pesos dos atributos;
-   params do R: `attribute`, `features`, `top`, `cutoff`, `m=50`). Fonte R:
-   `trans_feature_selection_relief.R`. Sem dependência nova (não usar skrebate).
+## Checklist de release 0.10.0
 
-Confirme o desenho das 3 classes com Eduardo antes de implementar (especialmente o
-destino do nome `FeatureSelectionStepwise` e se `stepwise` pode ser nativo).
-
-## Convenções de docstring (OBRIGATÓRIas — ver [[docstring-theory-and-references]])
-
-Toda classe nova precisa, no docstring:
-1. **Teoria**: como o algoritmo funciona + base teórica (o `@details` do R).
-2. **`References:`**: citações acadêmicas (o `@references` do R; copiar verbatim; se o R
-   não tiver, usar a referência canônica do algoritmo — ex.: Kira & Rendell 1992 /
-   Kononenko 1994 para Relief/ReliefF).
-3. **`Porting:`** auditável, formato exato:
-   ```
-   Porting:
-       Mirrors ``<arquivo_r>.R``. Fidelity: exact|approximate|adapted.
-       - <cada adaptação/ajuste deliberado e o porquê>   # só quando approximate/adapted
-   ```
-   **Só o nome do arquivo R** — sem versão, sem "daltoolbox". Fidelity: `exact` (igual),
-   `approximate` (mesmo algoritmo, diferença por backend/solver/RNG), `adapted` (mudança
-   deliberada, reimplementação nativa ou correção de bug).
-
-## Testes e docs (espelham o R)
-
-- Testes unitários em `tests/` (pytest). Adicionar casos para as 3 classes
-  (recuperação de atributos informativos no iris; ranking; top/cutoff; relief distingue
-  atributos relevantes de ruído).
-- Notebooks executáveis em `notebooks/transf/*.md` (jupytext) → renderizados para
-  `examples/` por `python tools/build_examples.py` (demora; roda todos os notebooks).
-  Criar/atualizar o notebook de feature selection.
-
-## Checklist de release 0.7.0
-
-1. `pip install -e .` (o Python local pode ter o build do PyPI em cache).
-2. Implementar as 3 classes + registrar em `src/pydaltoolbox/transform/__init__.py` e
-   em `src/pydaltoolbox/__init__.py` (`__all__`).
-3. Docstrings com Teoria + References + Porting.
-4. Testes: `python -m pytest -q` (hoje 113 verdes) e `ruff check src tests` (limpo).
-5. Bump de versão para `0.7.0` em `pyproject.toml` e `src/pydaltoolbox/__init__.py`.
-6. Atualizar `README.md` (lista de feature selection) e `develop/planejamento.md`
-   (marcar 1.6 ✅ no mapa da §8; ajustar §1.6 conforme a decisão fss/stepwise).
-7. `python tools/build_examples.py` (confirmar que todos os exemplos renderizam).
-8. Commit em `main` (padrão das releases 0.2.0–0.6.0 = commit direto em main), mensagem
-   "Release 0.7.0 — ...". Terminar a mensagem com:
-   `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`
-9. Publicar (Eduardo autoriza por release): `rm -rf dist build *.egg-info src/*.egg-info`
-   → `python -m build` → `python -m twine check dist/*` → conferir que `develop/` NÃO
-   está no sdist → `python -m twine upload dist/*` (token no `C:\Users\eduar\.pypirc`,
-   seção `[pypi]`). Verificar no endpoint versão-específico
-   `https://pypi.org/pypi/pydaltoolbox/0.7.0/json` (o agregado fica em cache logo após).
-10. `git push origin main`. Atualizar a memória `[[pydaltoolbox-port]]` marcando 0.7.0
-    publicado e o próximo passo (1.7 → 0.8.0: mineração de padrões base + itemsets).
+1. `pip install -e .[patterns]` (o Python local pode ter o build do PyPI em cache).
+2. Implementar as classes + registrar nos `__init__`.
+3. Docstrings com Teoria + References + Porting (respeitando o ⛔ PROIBIDO acima).
+4. `python -m pytest -q` (hoje 141 verdes) e `ruff check src tests` (limpo).
+5. Backport/ajuste no R (branch), testar via `Rscript` de arquivo, `devtools::document()`.
+6. Bump de versão para `0.10.0` em `pyproject.toml` e `src/pydaltoolbox/__init__.py`.
+7. Atualizar `README.md` e `develop/planejamento.md` (marcar 1.8 ✅).
+8. `python tools/build_examples.py pattern` (confirmar render). ⚠️ `pip install mlxtend`
+   pode subir numpy/sklearn — se re-renderizar outros exemplos por drift de versão, reverter
+   os não relacionados e commitar só os de padrões.
+9. Commit em `main` nos dois repos ("Release 0.10.0 — ..."), terminando com a linha
+   `Co-Authored-By:` que o ambiente indicar.
+10. Build/publicar: `rm -rf dist build *.egg-info src/*.egg-info` → `python -m build` →
+    `python -m twine check dist/*` → conferir `develop/` fora do sdist →
+    `python -m twine upload dist/*` (pode ser bloqueado → Eduardo publica). Verificar em
+    `https://pypi.org/pypi/pydaltoolbox/0.10.0/json`.
+11. `git push origin main` nos dois repos. Atualizar a memória `[[pydaltoolbox-port]]`.
 
 ## Observações
 
-- `gh` CLI não está instalado; operações de git via linha de comando.
+- `gh` CLI não está instalado; git via linha de comando.
 - Shell primário é PowerShell; a ferramenta Bash também está disponível (sintaxe POSIX).
-- Confirmar cada decisão de design com Eduardo antes de implementar.
+- Confirmar cada decisão de design com o Eduardo antes de implementar.

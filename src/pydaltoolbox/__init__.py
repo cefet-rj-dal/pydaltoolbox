@@ -41,6 +41,7 @@ from .clustering import (
     ClusterKmeans,
     ClusterPam,
 )
+from .pattern import PatApriori, PatternMiner, PatUtils
 from .regression import (
     RegDtree,
     RegKnn,
@@ -92,7 +93,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 __all__ = [
     "Aggregation",
@@ -147,6 +148,9 @@ __all__ = [
     "NaRemoval",
     "OutliersBoxplot",
     "OutliersGaussian",
+    "PatApriori",
+    "PatUtils",
+    "PatternMiner",
     "Predictor",
     "RegDtree",
     "RegKnn",

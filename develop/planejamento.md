@@ -352,8 +352,8 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.5 | `0.6.0` ✅ | Clustering nativo (Pam, Cmeans) |
 | 1.6 | `0.7.0` ✅ | Seleção de atributos (Relief + fss/stepwise) |
 | 1.6b | `0.8.0` ✅ | **Consolidação ++/posse** (FastPAM, ReliefF, Borderline/ADASYN, c-means nstart; remove cluster/leaps/caret do R) |
-| 1.7 | `0.9.0` | Padrões: base + itemsets |
-| 1.8 | `0.10.0` | Padrões: regras e thresholds |
+| 1.7 | `0.9.0` ✅ | Padrões: base + itemsets + regras (`PatApriori` via mlxtend `[patterns]`; eclat removido dos dois repos) |
+| 1.8 | `0.10.0` | Padrões: rule filters e thresholds |
 | 1.9 | `0.11.0` | Padrões: sequências (PrefixSpan) |
 | 2.1 | `0.12.0` | `ClaXgboost` `[xgboost]` |
 | 2.2 | `0.13.0` | `ClusterLouvainGraph` `[graph]` |
@@ -441,22 +441,32 @@ ou gaussian, seleção por AIC). **Backend nativo, sem statsmodels** — AIC = `
 com logistic/linear do sklearn. Sem dependência nova. Relief é ReliefF nativo em numpy
 (sem `skrebate`).
 
-#### 1.7 — Mineração de padrões: base + itemsets → `0.8.0`
-| Classe | Backend nativo | Arquivo R |
+#### ✅ 1.7 — Mineração de padrões: base + itemsets + regras → `0.9.0` (publicado)
+| Classe | Backend | Arquivo R |
 |---|---|---|
 | `PatternMiner` (base, + `discover`) | — | `pat_pattern_miner.R` |
-| `patutils` (utilitários) | — | `pat_utils.R` |
-| `PatApriori` | apriori nativo | `pat_apriori.R` |
-| `PatEclat` | eclat nativo | `pat_eclat.R` |
+| `PatUtils` (utilitários: filtros + métricas) | — | `pat_utils.R` |
+| `PatApriori` (itemsets **e** regras) | `mlxtend` → extra `[patterns]` | `pat_apriori.R` |
 
-#### 1.8 — Mineração de padrões: regras e thresholds → `0.9.0`
+> **Decisões 1.7 (com Eduardo):** backend = **mlxtend** como extra opcional `[patterns]`
+> (embrulho fino), não nativo; o antecipamos do passo 2.5. Entrada = **DataFrame one-hot**
+> (colunas = itens). Escopo = itemsets **+ regras** (confidence/lift, lhs/rhs, include/
+> exclude, quality_filter) já no 1.7 — só a auto-estimação de thresholds (`supp=0`) e os
+> rule filters do `pat_rule_filter.R` ficam p/ 1.8.
+> **ECLAT removido dos dois repos:** `arules` e `mlxtend` só compartilham o `apriori`
+> (arules tem eclat mas não fpgrowth sem o nicho não-CRAN `fim4r`; mlxtend tem fpgrowth mas
+> não eclat). Em vez de um "Eclat" com motor fpgrowth (nome enganoso) ou de puxar `fim4r`,
+> ficamos **só com apriori nos dois**; o `pat_eclat.R` saiu do R. Desempenho de itemsets
+> grandes: revisitar no futuro se virar gargalo.
+
+#### 1.8 — Mineração de padrões: rule filters e thresholds → `0.10.0`
 | Classe/função | Backend nativo | Arquivo R |
 |---|---|---|
 | filtros de regras (`RuleFilterNone/Interest/Dara`, `filter_rules`, `rules_tidy`) | numpy/pandas | `pat_rule_filter.R` |
 | thresholds (`pat_support_threshold`, `pat_confidence_threshold`) | numpy | `pat_threshold.R` |
 | `PatDara` (+ `dara_rules`) | nativo | `pat_dara.R` |
 
-#### 1.9 — Mineração de padrões: sequências → `0.10.0`
+#### 1.9 — Mineração de padrões: sequências → `0.11.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `PatCspade` | PrefixSpan nativo | `pat_cspade.R` |
@@ -517,9 +527,9 @@ Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessí
 | `plot_ts_pred` | temporal | `grf_ts_pred.R` |
 | `plot_dendrogram` | estrutura | `grf_dendrogram.R` |
 
-#### 2.5 — (opcional) Padrões: backend alternativo → `[patterns]` · `0.15.0`
-Sem classes novas: trocar/aumentar o backend de `PatApriori`/`PatEclat` para `mlxtend`
-**somente** se o nativo do Ciclo 1 precisar de mais eficiência. Decidir junto.
+#### ~~2.5 — (opcional) Padrões: backend alternativo → `[patterns]` · `0.15.0`~~ (antecipado p/ 1.7)
+Antecipado: o `PatApriori` já nasceu sobre `mlxtend` no extra `[patterns]` (1.7/`0.9.0`),
+em vez de nativo. Não há passo 2.5 separado.
 
 > **Resumo do Ciclo 2:** `ClaXgboost`, `ClusterLouvainGraph`, `GraphicsDalGraphics` + 22
 > `plot_*`. Extras introduzidos: `[xgboost]`, `[graph]` (networkx), `[viz]` (matplotlib),
