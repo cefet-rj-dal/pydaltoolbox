@@ -1,10 +1,9 @@
 """PAM -- Partitioning Around Medoids (``clu_pam.R`` analog).
 
 PAM clusters around representative data points (medoids) instead of centroids, which
-makes it more robust to outliers than k-means. This is a native numpy implementation of
-PAM with the **FastPAM1** swap (Schubert & Rousseeuw, 2019): it reaches the same local
-optimum as classic PAM but evaluates all candidate swaps in one vectorized pass, with no
-external clustering dependency.
+makes it more robust to outliers than k-means. It uses the **FastPAM1** swap
+(Schubert & Rousseeuw, 2019): it reaches the same local optimum as classic PAM but
+evaluates all candidate swaps in one vectorized pass.
 """
 from __future__ import annotations
 
@@ -90,7 +89,7 @@ def _pam(d: np.ndarray, k: int, max_iter: int) -> np.ndarray:
 
 
 class ClusterPam(Clusterer):
-    """PAM (Partitioning Around Medoids) clustering (native implementation).
+    """PAM (Partitioning Around Medoids) clustering.
 
     PAM groups the data around ``k`` representative observations called *medoids*,
     minimizing the total distance of each point to its nearest medoid. Because a medoid
@@ -109,9 +108,7 @@ class ClusterPam(Clusterer):
     Porting:
         Canonical implementation; the R ``clu_pam.R`` is a backport of this. Fidelity:
         adapted.
-        - Native implementation of PAM (BUILD + FastPAM1 SWAP), inspired by the classic
-          PAM and evolved with the FastPAM1 swap (see References); dependency footprint
-          stays numpy (no external clustering package).
+        - Inspired by the classic PAM and evolved with the FastPAM1 swap (see References).
         - Innovation (++): the FastPAM1 swap reaches the same local optimum as classic PAM
           (identical medoids) while being asymptotically cheaper -- O(n^2 k) vs O(n^2 k^2)
           per iteration -- measured ~4x/20x/64x faster at k=10/20/30 on synthetic data.

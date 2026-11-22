@@ -111,16 +111,18 @@ documentação inverte o sentido:
 **Template de doc "++" (aprovado 2026-11-21)** — toda componente back-implementada
 documenta **original + inovação**, com atribuição invertida:
 - Python `Porting:` → `Canonical implementation; the R <file>.R is a backport of this.
-  Fidelity: adapted.` + bullet *"Native implementation written from the references (no
-  external dependency)"* + bullet `Innovation (++): <o que melhora> ... measured
-  <evidência>` (números concretos quando houver, ex.: "~20x faster at k=20, identical result").
-- **Nunca escrever "not a wrapper of pkg"** (Eduardo 2026-11-21): pressupõe que copiamos e
-  estamos nos defendendo. **"inspired by pkg" é ok** — sinaliza que evoluímos a partir dali.
-  Também ok um "no external dependency" neutro; o que não vale é a **negação defensiva**
-  ("not a wrapper"). Citar o artigo nas References de qualquer modo.
-- R roxygen `@details` → *"independent reimplementation … no external dependency"* + a
-  inovação + evidência; `@references` inclui os artigos. Primeiro aplicado ao **PAM**;
-  reusar em fss, kNN, caret, Relief, SMOTE, cmeans.
+  Fidelity: adapted.` + bullet `Inspired by <X> and evolved with/to <Y> (see References).`
+  + bullet `Innovation (++): <o que melhora> ... measured <evidência>` (números concretos
+  quando houver, ex.: "~20x faster at k=20, identical result"). **Descrever o algoritmo, só.**
+- R roxygen `@details` → `Inspired by <X> and evolved with/to <Y> (see references).` + a
+  inovação + evidência; `@references` inclui os artigos.
+- **PROIBIDO (Eduardo repetiu várias vezes — PARAR de reintroduzir):** nunca escrever
+  "not a wrapper of X", "native implementation" / "native numpy", "no external/extra
+  dependency", "no longer calls/uses/depends on X", "carries no dependency", "X runs a
+  single start", nem qualquer alfinetada no que o pacote substituído faz. Tudo isso
+  pressupõe cópia e é ruído auto-justificativo. Dizer SÓ: o que o algoritmo faz + "inspired
+  by X" (isso sinaliza evolução, e é desejado) + References. O fato de ter removido uma
+  dependência vai na **mensagem de commit**, não no docstring.
 - **Citar só o artigo-base, não o pacote substituído (Eduardo 2026-11-21)** — porém apenas
   após **conferir que o nosso código difere da fonte do pacote** (outra linguagem / outra
   mecânica), para ser implementação-a-partir-da-literatura, não cópia. Conferido no fss: o

@@ -1,5 +1,6 @@
 """Unit tests for DBSCAN, GMM, hierarchical, PAM and fuzzy c-means clustering."""
 import numpy as np
+import pandas as pd
 import pytest
 
 from pydaltoolbox import (
@@ -128,6 +129,19 @@ def test_cmeans_membership_and_withinerror():
     metrics = model.evaluate(labels, species)["metrics"]
     assert "withinerror" in set(metrics["metric"])
     assert model.withinerror > 0
+
+
+def test_cmeans_nstart_is_not_worse_on_hard_data():
+    """Robust init: nstart restarts reach a within-error no worse than single-start."""
+    rng = np.random.default_rng(0)
+    centers = rng.uniform(-6, 6, (8, 2))
+    x = pd.DataFrame(
+        np.vstack([rng.normal(c, 1.6, (60, 2)) for c in centers]), columns=["x1", "x2"]
+    )
+    seeds = range(8)
+    mean1 = np.mean([ClusterCmeans(centers=8, m=2, nstart=1, seed=s).fit(x).withinerror for s in seeds])
+    mean10 = np.mean([ClusterCmeans(centers=8, m=2, nstart=10, seed=s).fit(x).withinerror for s in seeds])
+    assert mean10 <= mean1 + 1e-6  # best-of-restarts never worse on average
 
 
 def test_cmeans_rejects_new_data():

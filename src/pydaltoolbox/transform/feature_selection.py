@@ -64,10 +64,9 @@ class FeatureSelectionCorr(DalTransform):
     Porting:
         Canonical implementation; the R ``trans_feature_selection_corr.R`` is a backport of
         this. Fidelity: approximate.
-        - Native heuristic (inspired by ``caret::findCorrelation``): for each pair above the
-          cutoff it drops the member with the larger mean absolute correlation to the rest.
-          Verified to match ``caret::findCorrelation`` on iris; the R package no longer
-          depends on ``caret``.
+        - Inspired by ``caret::findCorrelation``: for each pair above the cutoff it drops the
+          member with the larger mean absolute correlation to the rest. Verified to match
+          ``caret::findCorrelation`` on iris.
 
     References:
         Hall, M. A. (1999). Correlation-based Feature Selection for Machine Learning.
@@ -169,8 +168,8 @@ class FeatureSelectionInfoGain(DalTransform):
 
     Porting:
         Mirrors ``trans_feature_selection_info_gain.R``. Fidelity: adapted.
-        - Native entropy computation instead of R ``FSelector``; numeric features are
-          quantile-binned (``bins``) before the gain is computed.
+        - Entropy-based information gain; numeric features are quantile-binned (``bins``)
+          before the gain is computed.
 
     References:
         Quinlan, J. R. (1986). Induction of Decision Trees. Machine Learning, 1(1):81-106.
@@ -254,12 +253,9 @@ class FeatureSelectionFss(DalTransform):
     Porting:
         Canonical implementation; the R ``trans_feature_selection_fss.R`` is a backport of
         this. Fidelity: approximate.
-        - Independent native greedy forward selection written from the subset-selection
-          literature (see References): at each step it adds the variable that most improves
-          the adjusted R-squared (refit with ``LinearRegression``) and keeps the
-          best-scoring size. Shares no source with any third-party package.
-        - Dependency-ownership change (not a ++): the R backport no longer needs an
-          external feature-selection package; numeric ties may differ by backend.
+        - Greedy forward selection (see References): at each step it adds the variable that
+          most improves the adjusted R-squared (refit with ``LinearRegression``) and keeps
+          the best-scoring size. Numeric ties may differ by backend.
 
     References:
         Hocking, R. R. (1976). The Analysis and Selection of Variables in Linear
@@ -336,10 +332,9 @@ class FeatureSelectionStepwise(DalTransform):
 
     Porting:
         Mirrors ``trans_feature_selection_stepwise.R``. Fidelity: adapted.
-        - Native implementation: the GLM is fit with scikit-learn
-          (``LogisticRegression(penalty=None)`` for ``binomial``, ``LinearRegression``
-          for ``gaussian``) and the AIC is computed directly from the log-likelihood,
-          instead of R ``stats::glm`` + ``stats::step``. Avoids a statsmodels dependency.
+        - The GLM is fit with scikit-learn (``LogisticRegression(penalty=None)`` for
+          ``binomial``, ``LinearRegression`` for ``gaussian``) and the AIC is computed
+          directly from the log-likelihood.
         - Only the ``binomial`` and ``gaussian`` families are supported (the two the R
           default and examples use).
 
@@ -493,8 +488,6 @@ class FeatureSelectionRelief(DalTransform):
     Porting:
         Canonical implementation; the R ``trans_feature_selection_relief.R`` is a backport
         of this. Fidelity: adapted.
-        - Native numpy implementation written from the references (no ``skrebate`` /
-          CORElearn dependency).
         - Innovation (++): evolves the earlier simplified Relief (a single nearest
           hit/miss) into full ReliefF -- ``k`` nearest neighbours per class plus
           class-prior weighting for multi-class targets -- which Kononenko (1994) shows is
