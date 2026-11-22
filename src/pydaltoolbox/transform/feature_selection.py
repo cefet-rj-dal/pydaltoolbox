@@ -62,9 +62,12 @@ class FeatureSelectionCorr(DalTransform):
     without consulting the target.
 
     Porting:
-        Mirrors ``trans_feature_selection_corr.R``. Fidelity: approximate.
-        - Approximates R ``caret::findCorrelation``: for each highly correlated pair it
-          drops the member with the larger mean absolute correlation to the rest.
+        Canonical implementation; the R ``trans_feature_selection_corr.R`` is a backport of
+        this. Fidelity: approximate.
+        - Native heuristic (inspired by ``caret::findCorrelation``): for each pair above the
+          cutoff it drops the member with the larger mean absolute correlation to the rest.
+          Verified to match ``caret::findCorrelation`` on iris; the R package no longer
+          depends on ``caret``.
 
     References:
         Hall, M. A. (1999). Correlation-based Feature Selection for Machine Learning.
