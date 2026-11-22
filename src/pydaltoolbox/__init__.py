@@ -30,6 +30,7 @@ from .classification import (
     ClaRpart,
     Classification,
     ClaSvm,
+    ClaXgboost,
     SklearnClassification,
 )
 from .clustering import (
@@ -106,7 +107,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.12.0"
+__version__ = "0.13.0"
 
 __all__ = [
     "Aggregation",
@@ -129,6 +130,7 @@ __all__ = [
     "ClaRpart",
     "ClaSvm",
     "ClaTune",
+    "ClaXgboost",
     "Classification",
     "CluTune",
     "ClusterCmeans",

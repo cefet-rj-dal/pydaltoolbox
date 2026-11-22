@@ -356,7 +356,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.8a | `0.10.0` ✅ | Padrões: rule filters base (`RuleFilter`/`None`/`Dara`) + DARA (`dara`, divergent association rules) |
 | 1.8b | `0.11.0` ✅ | Padrões: `RuleFilterInterest` + thresholds (`SupportThreshold`/`ConfidenceThreshold`, auto `supp=0`/`conf=0`) |
 | 1.9 | `0.12.0` ✅ | Padrões: sequências (`PatPrefixSpan`, PrefixSpan nativo; fim do Ciclo 1) |
-| 2.1 | `0.13.0` | `ClaXgboost` `[xgboost]` |
+| 2.1 | `0.13.0` ✅ | `ClaXgboost` `[xgboost]` (wrapper `XGBClassifier`; paridade R no iris) |
 | ~~2.2~~ | — | ~~`ClusterLouvainGraph` `[graph]`~~ **REMOVIDO** (má encaixe tabular; `clu_louvain`+`igraph` tirados do R também) |
 | 2.3 | `0.14.0` | Gráficos: base + distribuição + comparação `[viz]` |
 | 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura `[viz]` |

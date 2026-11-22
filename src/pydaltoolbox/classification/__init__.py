@@ -8,6 +8,7 @@ from .linear import ClaGlm, ClaGlmnet, ClaMultinom
 from .naive_bayes import ClaNb
 from .neural import ClaMlp
 from .svm import ClaSvm
+from .xgboost import ClaXgboost
 
 __all__ = [
     "ClaBagging",
@@ -23,6 +24,7 @@ __all__ = [
     "ClaRf",
     "ClaRpart",
     "ClaSvm",
+    "ClaXgboost",
     "Classification",
     "SklearnClassification",
 ]

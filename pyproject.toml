@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pydaltoolbox"
-version = "0.12.0"
+version = "0.13.0"
 description = "Leveraging Experiment Lines for Data Analytics (Python port of the R daltoolbox framework)"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -28,6 +28,7 @@ dependencies = [
 
 [project.optional-dependencies]
 patterns = ["mlxtend>=0.21"]
+xgboost = ["xgboost>=1.7"]
 dev = ["pytest>=7", "ruff>=0.1", "build", "twine"]
 docs = ["jupytext>=1.16", "nbconvert>=7", "nbclient>=0.9", "ipykernel>=6"]
 

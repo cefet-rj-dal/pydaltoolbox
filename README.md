@@ -98,7 +98,8 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
   `train_test_from_folds`.
 - **Classification:** `Classification` base + `ClaDtree`, `ClaRpart`, `ClaKnn`,
   `ClaNb`, `ClaRf`, `ClaBagging`, `ClaBoosting`, `ClaSvm`, `ClaMlp`, `ClaGlm`,
-  `ClaMultinom`, `ClaGlmnet`, `ClaMajority`.
+  `ClaMultinom`, `ClaGlmnet`, `ClaMajority`; `ClaXgboost` (gradient boosting) needs
+  the optional `[xgboost]` extra (`pip install pydaltoolbox[xgboost]`) *(0.13.0)*.
 - **Regression:** `Regression` base + `RegLm`, `RegDtree`, `RegKnn`, `RegRf`,
   `RegSvm`, `RegMlp`.
 - **Clustering:** `Clusterer` base + metrics + `ClusterKmeans`, `ClusterDbscan`,
@@ -128,9 +129,9 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
 
 Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
 backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
-like `tree`/`rpart`). Pattern mining is complete (Cycle 1 done); see the
-[roadmap](develop/planejamento.md) for what is still coming — the dependency-gated extras
-(XGBoost and graphics).
+like `tree`/`rpart`). Pattern mining is complete (Cycle 1 done) and `ClaXgboost` adds the
+`[xgboost]` extra; see the [roadmap](develop/planejamento.md) for what is still coming — the
+remaining dependency-gated extra (graphics `[viz]`).
 
 ---
 

@@ -88,3 +88,39 @@ def test_majority_predicts_single_class():
     # every row maps to the same (most frequent) class
     hard = pred.to_numpy().argmax(axis=1)
     assert len(set(hard)) == 1
+
+
+def test_xgboost_multiclass_fit_predict(split):
+    pytest.importorskip("xgboost")
+    from pydaltoolbox import ClaXgboost
+
+    (tt, slevels) = split
+    model = ClaXgboost("Species", slevels, nrounds=20, random_state=1)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        model.fit(tt["train"])
+        pred = model.predict(tt["test"].drop(columns="Species"))
+    assert isinstance(pred, pd.DataFrame)
+    assert list(pred.columns) == [str(s) for s in slevels]
+    assert len(pred) == len(tt["test"])
+    # class probabilities sum to 1 for every row
+    assert (pred.sum(axis=1).round(6) == 1.0).all()
+    ev = model.evaluate(tt["test"]["Species"], pred)
+    assert ev["metrics"].iloc[0]["accuracy"] >= 0.8
+
+
+def test_xgboost_binary_fit_predict():
+    pytest.importorskip("xgboost")
+    from pydaltoolbox import ClaXgboost
+
+    iris = datasets.iris()
+    binary = iris[iris["Species"].isin(["setosa", "versicolor"])].copy()
+    binary["Species"] = binary["Species"].cat.remove_unused_categories()
+    slevels = list(binary["Species"].cat.categories)
+    tt = SampleStratified("Species", seed=42).train_test(binary)
+    model = ClaXgboost("Species", slevels, random_state=1).fit(tt["train"])
+    pred = model.predict(tt["test"].drop(columns="Species"))
+    assert list(pred.columns) == [str(s) for s in slevels]
+    assert (pred.sum(axis=1).round(6) == 1.0).all()
+    ev = model.evaluate(tt["test"]["Species"], pred)
+    assert ev["metrics"].iloc[0]["accuracy"] >= 0.8
