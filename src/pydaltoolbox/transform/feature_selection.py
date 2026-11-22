@@ -332,7 +332,7 @@ class FeatureSelectionStepwise(DalTransform):
 
     Porting:
         Mirrors ``trans_feature_selection_stepwise.R``. Fidelity: adapted.
-        - The GLM is fit with scikit-learn (``LogisticRegression(penalty=None)`` for
+        - The GLM is fit with scikit-learn (unpenalized ``LogisticRegression(C=inf)`` for
           ``binomial``, ``LinearRegression`` for ``gaussian``) and the AIC is computed
           directly from the log-likelihood.
         - Only the ``binomial`` and ``gaussian`` families are supported (the two the R
@@ -374,7 +374,9 @@ class FeatureSelectionStepwise(DalTransform):
             # k = intercept + one coefficient per feature
             k = len(feats) + 1
             if feats:
-                model = LogisticRegression(penalty=None, max_iter=1000)
+                # C=inf disables regularization (equivalent to an unpenalized GLM);
+                # it matches ``penalty=None`` without the scikit-learn 1.8+ deprecation.
+                model = LogisticRegression(C=np.inf, max_iter=1000)
                 model.fit(x, y)
                 p = model.predict_proba(x)[:, 1]
             else:

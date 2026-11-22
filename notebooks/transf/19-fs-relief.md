@@ -29,12 +29,12 @@ iris = dal.datasets.iris()
 iris = iris.assign(label=(iris["Species"] == "versicolor").astype(int))
 iris = iris.drop(columns=["Species"])
 
-fs = dal.FeatureSelectionRelief("label", m=50).fit(iris)
+fs = dal.FeatureSelectionRelief("label", m=50, seed=42).fit(iris)
 fs.ranking
 ```
 
 ```python
-fs = dal.FeatureSelectionRelief("label", top=2).fit(iris)
+fs = dal.FeatureSelectionRelief("label", top=2, seed=42).fit(iris)
 print("selected:", fs.selected)
 fs.transform(iris).head()
 ```

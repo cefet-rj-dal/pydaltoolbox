@@ -18,7 +18,7 @@ iris = dal.datasets.iris()
 iris = iris.assign(label=(iris["Species"] == "versicolor").astype(int))
 iris = iris.drop(columns=["Species"])
 
-fs = dal.FeatureSelectionRelief("label", m=50).fit(iris)
+fs = dal.FeatureSelectionRelief("label", m=50, seed=42).fit(iris)
 fs.ranking
 ```
 
@@ -26,16 +26,16 @@ fs.ranking
 
 
             feature     score
-    0   petal_width  0.229667
-    1  petal_length  0.194034
-    2   sepal_width  0.141500
-    3  sepal_length  0.046611
+    0   petal_width  0.197583
+    1  petal_length  0.160610
+    2   sepal_width  0.066250
+    3  sepal_length  0.036833
 
 
 
 
 ```python
-fs = dal.FeatureSelectionRelief("label", top=2).fit(iris)
+fs = dal.FeatureSelectionRelief("label", top=2, seed=42).fit(iris)
 print("selected:", fs.selected)
 fs.transform(iris).head()
 ```
