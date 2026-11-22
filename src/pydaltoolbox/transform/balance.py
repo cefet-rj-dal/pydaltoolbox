@@ -3,8 +3,7 @@
 Python counterparts of ``trans_sample_balance.R``, ``trans_sample_oversampling.R``
 and ``trans_sample_subsampling.R``. They rebalance the class distribution of a
 categorical target by up/down sampling or by generating synthetic minority examples
-(SMOTE family -- classic SMOTE, Borderline-SMOTE and ADASYN -- native, no extra
-dependency).
+(SMOTE family -- classic SMOTE, Borderline-SMOTE and ADASYN).
 """
 from __future__ import annotations
 
@@ -127,8 +126,6 @@ class BalOversampling(DalTransform):
     Porting:
         Canonical implementation; the R ``trans_sample_oversampling.R`` is a backport of
         this. Fidelity: adapted.
-        - Native implementation written from the references (no imbalanced-learn / extra
-          dependency).
         - Innovation (++): adds Borderline-SMOTE and ADASYN (boundary-focused synthesis)
           and proper SMOTE-NC categorical handling (majority vote among neighbours instead
           of a two-point coin flip), evolving the earlier plain-SMOTE-only version. On a

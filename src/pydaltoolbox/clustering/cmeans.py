@@ -1,10 +1,9 @@
 """Fuzzy c-means clustering (``clu_cmeans.R`` analog).
 
-Fuzzy c-means produces a soft membership of each point to every cluster. This is a native
-numpy implementation with an optional robust initialization (``nstart`` restarts keeping
-the lowest-error run), so no external clustering dependency is needed. The hard assignment
-(argmax of the membership) is returned by ``cluster``; the full membership matrix is kept
-in the ``membership_`` attribute.
+Fuzzy c-means produces a soft membership of each point to every cluster, with an optional
+robust initialization (``nstart`` restarts keeping the lowest-error run). The hard
+assignment (argmax of the membership) is returned by ``cluster``; the full membership
+matrix is kept in the ``membership_`` attribute.
 """
 from __future__ import annotations
 
@@ -31,7 +30,7 @@ def _distance(x: np.ndarray, centers: np.ndarray, dist: str) -> np.ndarray:
 
 
 class ClusterCmeans(Clusterer):
-    """Fuzzy c-means clustering (native implementation).
+    """Fuzzy c-means clustering.
 
     Fuzzy c-means is a soft-partition method: rather than assigning each point to a
     single cluster, it gives every point a graded membership in each of the ``centers``
@@ -50,13 +49,11 @@ class ClusterCmeans(Clusterer):
     Porting:
         Canonical implementation; the R ``clu_cmeans.R`` is a backport of this. Fidelity:
         adapted.
-        - Native numpy fuzzy c-means written from the references; the R backport no longer
-          calls ``e1071::cmeans`` for this clusterer (``e1071`` stays for SVM/naive Bayes).
         - Innovation (++): optional robust initialization via ``nstart`` restarts, keeping
           the run with the lowest within-cluster fuzzy error, reducing the sensitivity of
-          fuzzy c-means to its random start (``e1071::cmeans`` runs a single start). Measured
-          on 8 overlapping blobs: single-start error varied (mean 769.5, std 6.2) while
-          ``nstart=15`` reached the best optimum every time (765.4, std 0.0).
+          fuzzy c-means to its random start. Measured on 8 overlapping blobs: single-start
+          error varied (mean 769.5, std 6.2) while ``nstart=15`` reached the best optimum
+          every time (765.4, std 0.0).
         - Does not support clustering new data after fit (as in R).
 
     References:
