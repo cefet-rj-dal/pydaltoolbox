@@ -72,9 +72,20 @@ roadmap e do R (mau encaixe tabular).
   **20 `plot_*`**.
 - Limpeza extra no R: `graphics_dal_graphics.R` (página de overview sem código) removido.
 
+### Limpezas / simplificação da API de padrões (0.19.0, 2026-11-22)
+- **`pat_dara_rules` removido** do daltoolbox (atalho que agrupava minerar+redundância+tidy;
+  redundante com `pat_apriori(target="rules") + pat_rules_tidy` e os rule filters). Com ele saiu
+  o único uso de `arules::is.redundant`. Mantidos `pat_dara()` (ranqueamento DARA) e
+  `pat_rules_tidy()`. Exemplos/tutorial do DARA reescritos para o fluxo apriori+tidy.
+- **`pat_rules_tidy` portado para o Python** (`pydaltoolbox.pat_rules_tidy`): achata as regras do
+  `PatApriori(target="rules")` em `lhs ⇒ rhs` + support/confidence/lift/count/kulc/ir, com parse
+  opcional de `attribute=value` por coluna.
+- Resultado: **Pendências de porte zeradas** (`mapeamento.md`). pydaltoolbox **0.19.0**.
+
 ## Estado atual (base para o `planejamento.md`)
-- Última release: **pydaltoolbox 0.16.0** (PyPI). daltoolbox sem `GGally`. Curso com `codes/`.
-- Cobertura: todo o daltoolbox portado, exceto conveniências de regras (ver `mapeamento.md`
-  §Pendências). Testes verdes (216) + ruff limpos; notebooks de gráficos renderizam.
+- Última release: **pydaltoolbox 0.19.0** (PyPI). daltoolbox sem `GGally`; API de padrões
+  simplificada (sem `pat_dara_rules`). Curso com `codes/`.
+- Cobertura: **todo o daltoolbox portado** (Pendências de porte zeradas — ver `mapeamento.md`).
+  218 testes verdes + ruff limpos; notebooks de gráficos renderizam.
 - Extras opcionais: `[patterns]` (mlxtend), `[xgboost]`, `[viz]` (matplotlib). Núcleo:
   numpy/pandas/scikit-learn.

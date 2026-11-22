@@ -83,9 +83,7 @@ Correspondência entre a API pública do pacote R **daltoolbox** e o port Python
 | `pat_dara.R` (`pat_dara`) | `dara`, `dara_score` | ✅ |
 | `pat_rule_filter.R` (`pat_rule_filter_none/_dara/_interest`, `pat_filter_rules`, `transform.pat_rule_filter`) | `RuleFilter`, `RuleFilterNone`, `RuleFilterDara`, `RuleFilterInterest` | ✅ |
 | `pat_threshold.R` (`pat_support_threshold`, `pat_confidence_threshold`) | `SupportThreshold`, `ConfidenceThreshold` | ✅ |
-| `pat_dara.R` (`pat_rules_tidy`) | — (planejado p/ Python, 0.19.0) | ⬜ |
-| `pat_dara.R` (`pat_dara_rules`) | — (atalho redundante; candidato a remoção no R) | ⬜ |
-| remoção de redundância (`arules::is.redundant`) | — | ⬜ |
+| `pat_dara.R` (`pat_rules_tidy`) | `pat_rules_tidy` | ✅ |
 
 ## Autoencoders
 | R | Python | Status |
@@ -106,18 +104,16 @@ Correspondência entre a API pública do pacote R **daltoolbox** e o port Python
 > `graphics_dal_graphics.R` (página de overview sem código) também foi removido do R.
 
 ## Pendências de porte (⬜)
-Itens R sem equivalente Python ainda — candidatos para 0.19.0:
-1. **`pat_rules_tidy`** — formata regras de associação num DataFrame legível (lhs ⇒ rhs +
-   métricas). **Portar para o Python** (fácil; mlxtend já devolve DataFrame tidy).
-2. **`pat_dara_rules`** — atalho que, numa chamada, minera regras p/ um `rhs` fixo, remove
-   redundância e tida. **NÃO portar** — é redundante com o fluxo `PatApriori(target='rules',
-   rule_filter=RuleFilterDara(...))`. No R é candidato a **remoção** (simplifica a API).
-3. **Remoção de redundância de regras** (`arules::is.redundant`) — o Python não tem; avaliar.
+**Nenhuma** — a lista foi zerada no 0.19.0:
+- `pat_rules_tidy` **portado** para o Python.
+- `pat_dara_rules` **removido** do daltoolbox (atalho redundante; o fluxo é
+  `PatApriori(target='rules', rule_filter=RuleFilterDara(...))` + `pat_rules_tidy`). Com ele saiu
+  o único uso de `arules::is.redundant`, então não há mais essa lacuna.
 
 **Importante (não confundir):** `pat_dara()` (o *ranqueamento* DARA, Baroni et al. 2020 — a
-contribuição autoral do grupo) **está portado** como `dara`/`dara_score` e **não sai do R** — o
-filtro `RuleFilterDara` depende dele. O `patutils`/`PatUtils` também **fica**: fornece as
-métricas do `evaluate()` do `PatternMiner` (usado por apriori/prefix_span), não é dispensável.
+contribuição autoral do grupo) **está portado** como `dara`/`dara_score` e **permanece** nos dois
+— o filtro `RuleFilterDara` depende dele. O `patutils`/`PatUtils` também **permanece**: fornece as
+métricas do `evaluate()` do `PatternMiner` (usado por apriori/prefix_span).
 
 (Diferença menor de superfície de API: as métricas de cluster do R são expostas como o
 objeto `cluutils`; no Python são funções `metric_*` usadas via `Clusterer.evaluate` — mesma

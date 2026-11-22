@@ -125,3 +125,35 @@ def test_action_dispatches_to_discover(transactions):
     ap = PatApriori(target="frequent itemsets", supp=0.4).fit(transactions)
     assert isinstance(ap, PatternMiner)
     pd.testing.assert_frame_equal(ap.action(transactions), ap.discover(transactions))
+
+
+def test_pat_rules_tidy(transactions):
+    import numpy as np
+
+    from pydaltoolbox import pat_rules_tidy
+
+    miner = PatApriori(target="rules", supp=0.4, conf=0.5).fit(transactions)
+    rules = miner.discover(transactions)
+    tidy = pat_rules_tidy(rules)
+    # one tidy row per rule, readable lhs/rhs strings and standard measures
+    assert len(tidy) == len(rules)
+    assert {"lhs", "rhs", "support", "confidence", "lift", "count", "kulc", "ir"} <= set(tidy.columns)
+    assert tidy["lhs"].apply(lambda s: isinstance(s, str)).all()
+    # count == round(support * n_transactions)
+    n = rules.attrs["n_transactions"]
+    assert (tidy["count"] == np.round(tidy["support"] * n).astype(int)).all()
+
+
+def test_pat_rules_tidy_item_columns():
+    import pandas as pd
+
+    from pydaltoolbox import pat_rules_tidy
+
+    onehot = pd.get_dummies(
+        pd.DataFrame({"color": ["red", "red", "blue", "blue"], "size": ["s", "l", "s", "l"]}),
+        prefix_sep="=",
+    )
+    miner = PatApriori(target="rules", supp=0.25, conf=0.5).fit(onehot)
+    rules = miner.discover(onehot)
+    tidy = pat_rules_tidy(rules, item_columns=["color", "size"])
+    assert "color" in tidy.columns and "size" in tidy.columns

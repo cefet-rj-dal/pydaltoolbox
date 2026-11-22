@@ -55,6 +55,7 @@ from .pattern import (
     SupportThreshold,
     dara,
     dara_score,
+    pat_rules_tidy,
 )
 from .regression import (
     RegDtree,
@@ -107,7 +108,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.16.0"
+__version__ = "0.19.0"
 
 # Visualization helpers live in the optional ``[viz]`` extra (matplotlib). They
 # are resolved lazily (PEP 562) so importing pydaltoolbox never requires
@@ -245,6 +246,7 @@ __all__ = [
     "dara",
     "dara_score",
     "datasets",
+    "pat_rules_tidy",
     "plot_bar",
     "plot_boxplot",
     "plot_boxplot_class",

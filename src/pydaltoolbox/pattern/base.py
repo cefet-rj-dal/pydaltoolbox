@@ -16,11 +16,18 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
+import numpy as np
 import pandas as pd
 
 from ..base import DalLearner
 
-__all__ = ["PatUtils", "PatternMiner", "pattern_items", "pattern_length"]
+__all__ = [
+    "PatUtils",
+    "PatternMiner",
+    "pat_rules_tidy",
+    "pattern_items",
+    "pattern_length",
+]
 
 
 def _require_mlxtend():
@@ -49,6 +56,83 @@ def pattern_items(patterns: pd.DataFrame) -> pd.Series:
 def pattern_length(patterns: pd.DataFrame) -> pd.Series:
     """Number of items in each pattern."""
     return pattern_items(patterns).apply(len)
+
+
+def _join_items(items) -> str:
+    try:
+        return ", ".join(sorted(str(i) for i in items))
+    except TypeError:
+        return str(items)
+
+
+def pat_rules_tidy(rules, n_transactions=None, item_columns=None) -> pd.DataFrame:
+    """Turn association rules into a readable table.
+
+    Theory:
+        Association rules are most useful when presented as a flat table whose rows
+        read as ``antecedent => consequent`` together with their interest measures.
+        This helper flattens the item sets into ``lhs``/``rhs`` strings and keeps the
+        standard measures (support, confidence, lift) plus the absolute ``count``,
+        Kulczynski (``kulc``) and imbalance ratio (``ir``).
+
+    ``rules`` is the DataFrame returned by :class:`~pydaltoolbox.PatApriori` with
+    ``target='rules'`` (mlxtend columns: ``antecedents``/``consequents`` and the
+    support measures). ``n_transactions`` (defaulting to ``rules.attrs``) scales
+    support into an absolute ``count``. ``item_columns`` optionally parses
+    ``attribute=value`` antecedent items into one column per attribute.
+
+    References:
+        Tan, P.-N., Steinbach, M., & Kumar, V. (2005). Introduction to Data Mining.
+        Addison-Wesley.
+
+    Porting:
+        Mirrors ``pat_rules_tidy`` from ``pat_dara.R``. Fidelity: approximate.
+        - Reads mlxtend rule columns instead of an ``arules`` rules object.
+    """
+    orig_attrs = dict(getattr(rules, "attrs", {}) or {})
+    rules = pd.DataFrame(rules)
+    if n_transactions is None:
+        n_transactions = orig_attrs.get("n_transactions")
+
+    if "antecedents" in rules.columns and "consequents" in rules.columns:
+        lhs = rules["antecedents"].apply(_join_items)
+        rhs = rules["consequents"].apply(_join_items)
+    else:
+        lhs = rules.get("lhs", pd.Series([""] * len(rules)))
+        rhs = rules.get("rhs", pd.Series([""] * len(rules)))
+
+    out = pd.DataFrame({"lhs": list(lhs), "rhs": list(rhs)})
+    for col in ("support", "confidence", "lift"):
+        if col in rules.columns:
+            out[col] = rules[col].to_numpy()
+    if n_transactions and "support" in rules.columns:
+        out["count"] = (rules["support"].to_numpy() * n_transactions).round().astype(int)
+
+    asup = rules.get("antecedent support")
+    csup = rules.get("consequent support")
+    sup = rules.get("support")
+    if asup is not None and csup is not None and sup is not None:
+        asup, csup, sup = asup.to_numpy(), csup.to_numpy(), sup.to_numpy()
+        with np.errstate(divide="ignore", invalid="ignore"):
+            out["kulc"] = 0.5 * (np.divide(sup, asup) + np.divide(sup, csup))
+            denom = asup + csup - sup
+            out["ir"] = np.where(denom > 0, np.abs(asup - csup) / denom, 0.0)
+
+    if item_columns is not None:
+        for name in item_columns:
+            out[name] = pd.NA
+        for i, label in enumerate(out["lhs"]):
+            for part in str(label).split(","):
+                part = part.strip()
+                if "=" in part:
+                    key, value = part.split("=", 1)
+                    key = key.strip()
+                    if key in item_columns:
+                        out.iat[i, out.columns.get_loc(key)] = value.strip()
+
+    out.attrs["n_transactions"] = n_transactions
+    out.attrs["filtered_from"] = orig_attrs.get("filtered_from", len(rules))
+    return out
 
 
 def _metric(metric: str, value, type_: str = "intrinsic") -> dict:

@@ -1,6 +1,6 @@
 """Pattern mining family (frequent itemsets, association rules, and rule filters)."""
 from .apriori import PatApriori
-from .base import PatternMiner, PatUtils
+from .base import PatternMiner, PatUtils, pat_rules_tidy
 from .dara import dara, dara_score
 from .prefixspan import PatPrefixSpan
 from .rule_filter import RuleFilter, RuleFilterDara, RuleFilterInterest, RuleFilterNone
@@ -19,4 +19,5 @@ __all__ = [
     "SupportThreshold",
     "dara",
     "dara_score",
+    "pat_rules_tidy",
 ]
