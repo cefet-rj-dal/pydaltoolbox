@@ -1,4 +1,4 @@
-# Kickoff — pydaltoolbox, próximo passo 0.21.0 (melhoria dos exemplos)
+# Kickoff — pydaltoolbox, próximo passo 0.22.0 (exemplos 1:1: gráficos + tutorial)
 
 Cole numa conversa limpa para continuar. Brief curto; o detalhe está nos arquivos abaixo.
 

@@ -90,7 +90,25 @@ roadmap e do R (mau encaixe tabular).
 - **`examples/` regenerada do zero** com o pacote local instalado (reflete o código atual: sem
   `plot_pair`/`plot_pair_adv`/`pat_dara_rules`/GGally; `plot_parallel` nativo). Mantidos os ativos
   não-gerados: `seed.R`, `slides/`, `videos/`, `wine.RData`. **144/144 renderizados, zero falhas.**
-- Sem release do pydaltoolbox (passo só-R; a versão Python segue 0.19.0 até o 0.21.0).
+- Sem release do pydaltoolbox (passo só-R; a versão Python segue 0.19.0).
+
+### Exemplos 1:1 R↔Python — ML, transf, patterns, custom (0.21.0, 2026-11-22)
+Reorganização dos exemplos Python para **um arquivo por classe**, espelhando a árvore de
+subpastas e a didática do R (seções About/Didactic goal/setup/load/split/fit/eval/What to
+observe/References). **71 notebooks Python** (todos buildam verdes):
+- classification(15): fundamentals, knn, probabilistic, svm, neural-networks, linear-models,
+  ensemble, model-selection; regression(7): linear, beyond-linear, ensemble, flexible,
+  model-selection; clustering(8): partitional, density, advanced-views, model-selection;
+  transf(30): sampling, scaling, cleaning, encoding, feature-selection, dimensionality,
+  smoothing, balancing, aggregation; patterns(4): apriori-rules, apriori-itemsets,
+  prefixspan-sequences, divergent-association-ranking; custom(7): transformation,
+  classification, regression, clustering, autoencoder encoder / encoder-decoder, pattern-miner.
+- `tuning/` dissolvido em `*/model-selection/`; `90-comparing-*` removidos; pasta `pattern/`→`patterns/`.
+- **R (daltoolbox):** adicionado `data/Diabetes.RData` (= `datasets.diabetes()`, 442x11), e trocado
+  **Boston→Diabetes / medv→target** em regressão, transf feature-selection (stepwise/lasso/fss),
+  custom/20 e tutorial/21. Exemplos `patterns` renomeados: eclat→apriori-itemsets, cspade→prefixspan.
+  `examples/` regenerada (144/144, zero falhas).
+- Dev-only nos dois lados (notebooks/examples fora do pacote): sem release PyPI.
 
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.19.0** (PyPI). daltoolbox sem `GGally`; API de padrões
