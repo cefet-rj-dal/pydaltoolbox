@@ -107,7 +107,41 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.13.0"
+__version__ = "0.14.0"
+
+# Visualization helpers live in the optional ``[viz]`` extra (matplotlib). They
+# are resolved lazily (PEP 562) so importing pydaltoolbox never requires
+# matplotlib; a clear ImportError surfaces only when a ``plot_*`` is first used.
+_VIZ_EXPORTS = (
+    "plot_bar",
+    "plot_boxplot",
+    "plot_boxplot_class",
+    "plot_density",
+    "plot_density_class",
+    "plot_groupedbar",
+    "plot_hist",
+    "plot_lollipop",
+    "plot_pieplot",
+    "plot_radar",
+    "plot_stackedbar",
+)
+
+
+def __getattr__(name: str):
+    if name in _VIZ_EXPORTS:
+        try:
+            from . import viz
+        except ImportError as exc:  # pragma: no cover - exercised without matplotlib
+            raise ImportError(
+                f"{name!r} requires the optional 'viz' extra. "
+                "Install it with: pip install pydaltoolbox[viz]"
+            ) from exc
+        return getattr(viz, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    return sorted(list(globals()) + list(_VIZ_EXPORTS))
 
 __all__ = [
     "Aggregation",
@@ -202,5 +236,16 @@ __all__ = [
     "dara",
     "dara_score",
     "datasets",
+    "plot_bar",
+    "plot_boxplot",
+    "plot_boxplot_class",
+    "plot_density",
+    "plot_density_class",
+    "plot_groupedbar",
+    "plot_hist",
+    "plot_lollipop",
+    "plot_pieplot",
+    "plot_radar",
+    "plot_stackedbar",
     "train_test_from_folds",
 ]

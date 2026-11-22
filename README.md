@@ -123,15 +123,20 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
   `PatApriori` and the rule filters need the optional `[patterns]` extra
   (`pip install pydaltoolbox[patterns]`, brings `mlxtend`); `PatPrefixSpan` is pure
   numpy/pandas.
+- **Visualization:** `plot_hist`, `plot_density`, `plot_density_class`, `plot_boxplot`,
+  `plot_boxplot_class`, `plot_bar`, `plot_groupedbar`, `plot_stackedbar`, `plot_lollipop`,
+  `plot_pieplot`, `plot_radar` *(0.14.0)* — `plot_*` functions returning a matplotlib
+  `Axes`; need the optional `[viz]` extra (`pip install pydaltoolbox[viz]`, brings
+  `matplotlib`).
 - **Tuning:** `DalTune` base + `ClaTune`, `RegTune`, `CluTune`.
 - **Autoencoder bases:** `AutoencBaseE`, `AutoencBaseEd` (identity, for extension).
 - **Reference datasets:** `datasets.iris()`, `datasets.diabetes()`, `datasets.boston()`.
 
 Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
 backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
-like `tree`/`rpart`). Pattern mining is complete (Cycle 1 done) and `ClaXgboost` adds the
-`[xgboost]` extra; see the [roadmap](develop/planejamento.md) for what is still coming — the
-remaining dependency-gated extra (graphics `[viz]`).
+like `tree`/`rpart`). Pattern mining is complete (Cycle 1 done), `ClaXgboost` adds the
+`[xgboost]` extra, and the first graphics (`plot_*`, `[viz]`) landed in 0.14.0; see the
+[roadmap](develop/planejamento.md) for the remaining graphics (step 2.4).
 
 ---
 

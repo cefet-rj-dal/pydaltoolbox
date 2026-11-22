@@ -358,7 +358,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.9 | `0.12.0` ✅ | Padrões: sequências (`PatPrefixSpan`, PrefixSpan nativo; fim do Ciclo 1) |
 | 2.1 | `0.13.0` ✅ | `ClaXgboost` `[xgboost]` (wrapper `XGBClassifier`; paridade R no iris) |
 | ~~2.2~~ | — | ~~`ClusterLouvainGraph` `[graph]`~~ **REMOVIDO** (má encaixe tabular; `clu_louvain`+`igraph` tirados do R também) |
-| 2.3 | `0.14.0` | Gráficos: distribuição + comparação (11 `plot_*`, matplotlib `[viz]`) |
+| 2.3 | `0.14.0` ✅ | Gráficos: distribuição + comparação (11 `plot_*`, matplotlib `[viz]`) |
 | 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura (10 `plot_*`; `plot_pair_adv` movido p/ curso) |
 | ~~2.5~~ | — | ~~*(opcional)* Padrões: backend `mlxtend` `[patterns]`~~ (já antecipado no 1.7) |
 | — | `1.0.0` | Estabilização (cobertura completa, API congelada, beta→estável) |
@@ -545,8 +545,11 @@ a jusante (tspredit/harbinger não usam clusterer), e seria só um embrulho de d
 `clu_louvain.R` + `igraph` foram tirados **do R** também. Grafos podem virar extensão dedicada
 no futuro, se vierem a ser modalidade de primeira classe.
 
-#### 2.3 — Gráficos: distribuição + comparação → `[viz]` (`matplotlib`) · `0.14.0`
-11 gráficos (funções `plot_*` → `Figure`/`Axes`). Segue a skill `dataviz`.
+#### 2.3 — Gráficos: distribuição + comparação → `[viz]` (`matplotlib`) · `0.14.0` ✅
+11 gráficos (funções `plot_*` → **`Axes`**). Segue a skill `dataviz` (paleta CVD-safe de
+8 hues quando `colors=None`). Subpacote `src/pydaltoolbox/viz/` (`_helpers` + `distribution`
++ `comparison`); exportados lazy (PEP 562) no `__init__` principal para não exigir matplotlib
+no core. Decidido com o Eduardo: retorno `Axes`, paleta validada da skill `dataviz`.
 | Função | Tipo | Arquivo R | Backend matplotlib |
 |---|---|---|---|
 | `plot_hist` | distribuição | `grf_hist.R` | `ax.hist` |
