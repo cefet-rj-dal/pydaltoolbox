@@ -128,9 +128,9 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
 
 Wrappers are thin adapters over scikit-learn / numpy / pandas, each reproducing the R
 backend's default behavior (e.g. SVM standardizes inputs like `e1071`, trees pre-prune
-like `tree`/`rpart`). See the [roadmap](develop/planejamento.md) for what is still coming —
-pattern-mining rules filters and sequences, and the dependency-gated extras (XGBoost,
-graph clustering, graphics).
+like `tree`/`rpart`). Pattern mining is complete (Cycle 1 done); see the
+[roadmap](develop/planejamento.md) for what is still coming — the dependency-gated extras
+(XGBoost and graphics).
 
 ---
 

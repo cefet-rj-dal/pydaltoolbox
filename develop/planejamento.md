@@ -38,7 +38,7 @@ pode ser **ampla** sem custo de implementação alto.
 **Depois da v1 — dois ciclos temáticos até a 1.0.0:** **Ciclo 1** passa por cada tema só
 com o que é **nativo** (sem dep nova) — entrega a largura do framework barato; **Ciclo 2**
 volta em cada tema e acrescenta as classes de **maior dependência** como extras opcionais
-(`[graph]`, `[xgboost]`, `[viz]`...). Releases podem ser bem pequenos (muitos ciclos são
+(`[xgboost]`, `[viz]`...). Releases podem ser bem pequenos (muitos ciclos são
 bem-vindos). O roadmap detalhado, com a tabela de decisão *dependência vs. nativo*, está
 na seção 8 (Bloco B). O Ciclo 2 será refinado em conjunto.
 
@@ -331,7 +331,7 @@ Cobrir **todas** as classes do `daltoolbox` (R) em **duas rodadas** temáticas:
   framework barato: ao fim do ciclo, todos os temas têm cobertura, menos as classes que
   exigem lib pesada.
 - **Ciclo 2 — completar (maior dependência):** voltar em cada tema e acrescentar as
-  classes que precisam de **extra opcional** (`[graph]`, `[xgboost]`, `[viz]`, ...).
+  classes que precisam de **extra opcional** (`[xgboost]`, `[viz]`, ...).
   **Este ciclo será refinado em conjunto** (escopo e ordem a decidir com o Eduardo).
 
 Releases podem ser **tão pequenos quanto fizer sentido** (um tema, ou até um sub-bloco,
@@ -357,10 +357,10 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.8b | `0.11.0` ✅ | Padrões: `RuleFilterInterest` + thresholds (`SupportThreshold`/`ConfidenceThreshold`, auto `supp=0`/`conf=0`) |
 | 1.9 | `0.12.0` ✅ | Padrões: sequências (`PatPrefixSpan`, PrefixSpan nativo; fim do Ciclo 1) |
 | 2.1 | `0.13.0` | `ClaXgboost` `[xgboost]` |
-| 2.2 | `0.14.0` | `ClusterLouvainGraph` `[graph]` |
-| 2.3 | `0.15.0` | Gráficos: base + distribuição + comparação `[viz]` |
-| 2.4 | `0.16.0` | Gráficos: relação + temporais + estrutura `[viz]` |
-| 2.5 | `0.17.0` | *(opcional)* Padrões: backend `mlxtend` `[patterns]` |
+| ~~2.2~~ | — | ~~`ClusterLouvainGraph` `[graph]`~~ **REMOVIDO** (má encaixe tabular; `clu_louvain`+`igraph` tirados do R também) |
+| 2.3 | `0.14.0` | Gráficos: base + distribuição + comparação `[viz]` |
+| 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura `[viz]` |
+| ~~2.5~~ | — | ~~*(opcional)* Padrões: backend `mlxtend` `[patterns]`~~ (já antecipado no 1.7) |
 | — | `1.0.0` | Estabilização (cobertura completa, API congelada, beta→estável) |
 
 *(`0.10.0` > `0.9.0` é válido em semver/PyPI — comparação numérica. Se o passo 2.5 for
@@ -380,7 +380,7 @@ quando é complexo/padronizado e existe lib leve e bem mantida. Decisões por co
 | `ClusterCmeans` (fuzzy) | `skfuzzy` | fuzzy c-means (~40 linhas) | **nativo** | 1 |
 | `PatApriori`/`PatEclat` + regras | `mlxtend` (puxa matplotlib) | apriori/eclat (médio) | **nativo** | 1 |
 | `PatCspade` (sequências) | `prefixspan` / SPMF (Java) | PrefixSpan (médio) | **nativo** | 1 |
-| `ClusterLouvainGraph` | `networkx` (Louvain embutido) | Louvain (complexo) | **dep → `[graph]`** | 2 |
+| ~~`ClusterLouvainGraph`~~ | ~~`networkx`~~ | ~~Louvain~~ | **REMOVIDO** (má encaixe tabular; tirado do R também — 2026-11-22) | — |
 | `ClaXgboost` | `xgboost` (binário) | — (não reimplementar) | **dep → `[xgboost]`** | 2 |
 | Gráficos (`plot_*`, ~23) | `matplotlib` | — | **dep → `[viz]`** | 2 |
 
@@ -499,10 +499,10 @@ com logistic/linear do sklearn. Sem dependência nova. Relief é ReliefF nativo 
 > maxgap=5 → 11; maxgap=10 → 17; mingap=10 → 12 (projeção por conjunto de posições, não
 > primeira-ocorrência, para não perder co-ocorrências de itens em elementos posteriores).
 
-> ✅ **Fim do Ciclo 1 (0.12.0): todo o daltoolbox coberto, exceto Louvain, XGBoost e
-> gráficos** (que são o Ciclo 2), com o pacote instalável só com o núcleo (PrefixSpan é
-> numpy/pandas puro; `mlxtend` só p/ apriori/regras). PrefixSpan (1.9) entregue e validado
-> idêntico ao cSPADE.
+> ✅ **Fim do Ciclo 1 (0.12.0): todo o daltoolbox coberto, exceto XGBoost e gráficos**
+> (que são o Ciclo 2), com o pacote instalável só com o núcleo (PrefixSpan é numpy/pandas
+> puro; `mlxtend` só p/ apriori/regras). PrefixSpan (1.9) entregue e validado idêntico ao
+> cSPADE. (Louvain/`ClusterLouvainGraph` foi **removido** da família — ver §2b.1.)
 
 ---
 
@@ -513,17 +513,19 @@ Pré-distribuição com **todas as classes/funções** a migrar no Ciclo 2 (25 u
 (granularidade ajustável; ordem/escopo a refinar com o Eduardo). Cada arquivo R está
 indicado para rastreabilidade.
 
-#### 2.1 — Classificação extra → `[xgboost]` · `0.11.0`
+#### 2.1 — Classificação extra → `[xgboost]` · `0.13.0`
 | Classe | Backend | Arquivo R |
 |---|---|---|
 | `ClaXgboost` | `xgboost` | `cla_xgboost.R` |
 
-#### 2.2 — Clustering extra → `[graph]` · `0.12.0`
-| Classe | Backend | Arquivo R |
-|---|---|---|
-| `ClusterLouvainGraph` | `networkx` (Louvain) | `clu_louvain.R` |
+#### ~~2.2 — Clustering extra → `[graph]`~~ **REMOVIDO**
+`ClusterLouvainGraph` (Louvain via networkx/igraph) foi **descartado** da família (2026-11-22):
+má encaixe na Linha de Experimento tabular (opera sobre grafo, não DataFrame), não é consumido
+a jusante (tspredit/harbinger não usam clusterer), e seria só um embrulho de dep de nicho. O
+`clu_louvain.R` + `igraph` foram tirados **do R** também. Grafos podem virar extensão dedicada
+no futuro, se vierem a ser modalidade de primeira classe.
 
-#### 2.3 — Gráficos: base + distribuição + comparação → `[viz]` (`matplotlib`) · `0.13.0`
+#### 2.3 — Gráficos: base + distribuição + comparação → `[viz]` (`matplotlib`) · `0.14.0`
 Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessível).
 | Função/base | Tipo | Arquivo R |
 |---|---|---|
@@ -540,7 +542,7 @@ Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessí
 | `plot_pieplot` | comparação | `grf_pieplot.R` |
 | `plot_radar` | comparação | `grf_radar.R` |
 
-#### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]` · `0.14.0`
+#### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]` · `0.15.0`
 11 gráficos.
 | Função | Tipo | Arquivo R |
 |---|---|---|
@@ -560,9 +562,9 @@ Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessí
 Antecipado: o `PatApriori` já nasceu sobre `mlxtend` no extra `[patterns]` (1.7/`0.9.0`),
 em vez de nativo. Não há passo 2.5 separado.
 
-> **Resumo do Ciclo 2:** `ClaXgboost`, `ClusterLouvainGraph`, `GraphicsDalGraphics` + 22
-> `plot_*`. Extras introduzidos: `[xgboost]`, `[graph]` (networkx), `[viz]` (matplotlib),
-> e opcionalmente `[patterns]` (mlxtend).
+> **Resumo do Ciclo 2:** `ClaXgboost`, `GraphicsDalGraphics` + 22 `plot_*`. Extras
+> introduzidos: `[xgboost]`, `[viz]` (matplotlib). (`ClusterLouvainGraph`/`[graph]` foi
+> removido; `[patterns]`/mlxtend já foi antecipado no 1.7.)
 >
 > **Autoencoders reais** (backend de deep learning) permanecem **fora** do pydaltoolbox:
 > as bases identidade bastam; a implementação real fica num pacote companheiro, como no R.
@@ -575,8 +577,8 @@ em vez de nativo. Não há passo 2.5 separado.
 - Site de documentação (equivalente ao pkgdown); paridade com os tutoriais do R.
 - Passada de performance/qualidade; **promover de beta para estável**.
 
-> **Extras opcionais previstos:** `[graph]` (networkx), `[xgboost]`, `[viz]` (matplotlib),
-> e, se adotado, `[patterns]` (mlxtend). Núcleo enxuto (numpy/pandas/scikit-learn) até a 1.0.0.
+> **Extras opcionais previstos:** `[xgboost]`, `[viz]` (matplotlib), e `[patterns]` (mlxtend,
+> já no 1.7). Núcleo enxuto (numpy/pandas/scikit-learn) até a 1.0.0.
 
 ---
 
