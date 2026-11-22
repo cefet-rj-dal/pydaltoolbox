@@ -1,114 +1,71 @@
-# Kickoff — pydaltoolbox step 2.4 → release 0.15.0 (gráficos: relação + temporais + estrutura, extra `[viz]`)
+# Kickoff — fechamento do Ciclo 2: ajustes no daltoolbox (R) + rumo ao 1.0.0
 
-Cole este prompt numa conversa limpa para continuar o port. É auto-contido; o resto do
-contexto está na memória e em `develop/planejamento.md`.
+Cole este prompt numa conversa limpa para continuar. É auto-contido; o resto do contexto
+está na memória e em `develop/planejamento.md`.
 
 ---
 
 ## Contexto (leia primeiro)
 
-- Repo: `c:\Git\dal\pydaltoolbox` — port Python do pacote R **daltoolbox**
-  (`c:\Git\dal\daltoolbox`), liderado por Eduardo Ogasawara (CEFET/RJ, lab DAL).
-- Leia a memória do projeto: `[[pydaltoolbox-port]]`, `[[back-implementation-initiative]]`,
+- Repos: `c:\Git\dal\pydaltoolbox` (port Python) e `c:\Git\dal\daltoolbox` (original R),
+  liderados por Eduardo Ogasawara (CEFET/RJ, lab DAL). Curso: `C:\Git\eogasawara\datamining`.
+- Leia a memória: `[[pydaltoolbox-port]]`, `[[back-implementation-initiative]]`,
   `[[docstring-theory-and-references]]`, `[[fix-bugs-in-both-r-and-python]]`.
-- Estado: **0.14.0 é a última release** (step 2.3 ✅: 11 `plot_*` de distribuição +
-  comparação, extra `[viz]` = matplotlib). O **Ciclo 1 está COMPLETO**, **2.1 e 2.3 também**.
-  Falta só o **2.4** (este passo) para fechar o Ciclo 2 de gráficos. Confirme que
-  `https://pypi.org/pypi/pydaltoolbox/0.14.0/json` está no ar — senão os artefatos ficam em
-  `dist/` e o Eduardo publica (o upload do 0.14.0 foi **bloqueado pelo auto-mode**; token em
-  `C:\Users\eduar\.pypirc`, seção `[pypi]`).
-- Plano completo: `develop/planejamento.md` (§8 = roadmap; seção "Decisões de desenho dos
-  gráficos" no Ciclo 2 + o detalhe "#### 2.4").
+- Estado: **0.15.0 é a última release** — a **família de gráficos está COMPLETA no Python**
+  (21 `plot_*`, extra `[viz]`). Ciclo 1 e Ciclo 2 (lado Python) concluídos. Confirme
+  `https://pypi.org/pypi/pydaltoolbox/0.15.0/json` no ar.
 
-## Decisões de desenho JÁ FECHADAS com o Eduardo (não reabrir — valem do 2.3)
+## Tarefa 1 (combinada com o Eduardo) — ajustes no daltoolbox (R)
 
-- **Backend = `matplotlib`** (extra opcional `[viz]`, já criado em `pyproject.toml`).
-- **API = funções `plot_*` retornando um `matplotlib.axes.Axes`** (não Figure; a figura é
-  `ax.figure`). Sem classe/estado. Utilitários comuns já em `src/pydaltoolbox/viz/_helpers.py`
-  (paleta CVD-safe de 8 hues quando `colors=None`, tema `theme_bw`-like claro, `new_axes`,
-  `resolve_colors`, `apply_theme`). **Reaproveitar `_helpers` — não duplicar.**
-- Nomes R preservados (snake_case, são funções). Exports **lazy (PEP 562)** no `__init__`
-  principal (bloco `_VIZ_EXPORTS` + `__getattr__`) para não exigir matplotlib no core —
-  **adicione os 10 novos nomes lá E em `viz/__init__.py` E nos dois `__all__`**.
-- Seguir a skill **`dataviz`** ANTES de escrever qualquer gráfico. Carregar no começo.
+Metade pendente do step 2.4: **remover `plot_pair_adv` do daltoolbox R** e **portá-lo para o
+curso**. (`plot_pair_adv` = `GGally::ggpairs` com painéis mistos densidade+correlação+cor-por
+-classe; sem correspondência limpa no matplotlib → não entra no port, vira extensão de curso,
+mesmo padrão de Louvain/eclat/arulesViz.)
 
-## Princípios do port (valem sempre)
+Passos (⚠️ **R muda → pedir OK ao Eduardo antes de editar**, `[[fix-bugs-in-both-r-and-python]]`):
+1. No `c:\Git\dal\daltoolbox`: remover `R/grf_pair_adv.R`, o man page (`man/plot_pair_adv.Rd`),
+   e qualquer exemplo/Rmd que use `plot_pair_adv`. Conferir se `GGally` fica órfão como dep
+   (ainda é usado por `grf_pair.R`/`grf_parallel.R`? → `plot_pair` usa `GGally::ggpairs`,
+   `plot_parallel` usa `GGally::ggparcoord`; então **GGally continua Suggests, NÃO remover**).
+2. `C:\R\R-4.5.0\bin\Rscript --vanilla` de arquivo `.R` (não `-e` inline): rodar
+   `devtools::document()` (regenera NAMESPACE/man) e `devtools::load_all(".")` p/ validar.
+   Segfaults intermitentes em carga pesada → reexecutar/isolar.
+3. Portar `plot_pair_adv` para `C:\Git\eogasawara\datamining` (tutorial `03-DataVisualization`)
+   como extensão de curso. **Confirmar o formato/escopo disso com o Eduardo** (pode ser função
+   R no material do curso, ou célula de notebook). Ler como o curso organiza os tutoriais antes.
+4. Commit em cada repo. Push ao `daltoolbox origin/main` costuma ser **bloqueado pelo
+   auto-mode** (pacote CRAN sensível) → mergear local e pedir ao Eduardo empurrar.
+5. Atualizar `develop/planejamento.md` (tirar o "PENDENTE" do 2.4) e a memória
+   `[[pydaltoolbox-port]]`.
 
-- **Envolver** matplotlib/pandas/scipy com adaptadores finos; reproduzir o DEFAULT do R
-  (quality-faithful). Não precisa pixel-perfect — mesma figura conceitual.
-- Docstrings OBRIGATÓRIAS (`[[docstring-theory-and-references]]`): Teoria + `References:` +
-  `Porting:` (`Mirrors grf_<nome>.R. Fidelity: approximate|adapted`). ⛔ PROIBIDO "native
-  implementation", "not a wrapper of X", alfinetadas no pacote substituído.
-- **Bug em qualquer lado → corrigir nos dois** (`[[fix-bugs-in-both-r-and-python]]`), pedindo
-  antes de editar o R. **Neste passo O R MUDA** (remoção do `plot_pair_adv` — ver abaixo).
-- **Branches:** trabalhar em `main`; sem branches órfãs. Upload PyPI é bloqueado pelo
-  auto-mode → deixar `dist/` pronto e pedir pro Eduardo. Push ao `daltoolbox origin/main`
-  também costuma ser bloqueado (pacote CRAN) → mergear local e pedir pro Eduardo empurrar.
+> **Auditoria oportuna:** aproveitar p/ conferir se há outros `grf_*` no R sem par no Python
+> que deveriam sair (ou entrar). O Python tem 21 `plot_*`; o R tinha ~23 `grf_*` (um deles era
+> `plot_pair_adv`; o outro delta provável é algum agregador/`graphics_dal_graphics.R`).
 
-## Tarefa do 0.15.0 (step 2.4) — 10 gráficos de relação + temporais + estrutura
+## Tarefa 2 — rumo ao 1.0.0 (estabilização)
 
-Fontes R em `c:\Git\dal\daltoolbox\R\grf_*.R`. Adicionar ao subpacote `src/pydaltoolbox/viz/`
-(ex.: módulos `relation.py`, `temporal.py`, `structure.py`), exportando as 10 funções.
-
-| Função | Tipo | Arquivo R | Backend matplotlib |
-|---|---|---|---|
-| `plot_scatter` | relação | `grf_scatter.R` | `ax.scatter` (cor por classe opcional) |
-| `plot_points` | relação | `grf_points.R` | `ax.plot`/`scatter` |
-| `plot_correlation` | relação | `grf_correlation.R` | `imshow` + anotação; `reorder="hclust"` via scipy linkage; `scale_fill_gradient2` → diverging azul↔vermelho, midpoint 0, limites [-1,1] |
-| `plot_pair` | relação | `grf_pair.R` | `pandas.plotting.scatter_matrix` (R usa GGally::ggpairs, mas é matriz simples) |
-| `plot_parallel` | relação | `grf_parallel.R` | `pandas.plotting.parallel_coordinates` |
-| `plot_pixel` | relação | `grf_pixel.R` | `imshow`/`pcolormesh` |
-| `plot_series` | temporal | `grf_series.R` | `ax.plot` multi-série |
-| `plot_ts` | temporal | `grf_ts.R` | `ax.plot` |
-| `plot_ts_pred` | temporal | `grf_ts_pred.R` | `ax.plot` sobreposto (real vs previsto) |
-| `plot_dendrogram` | estrutura | `grf_dendrogram.R` | `scipy.cluster.hierarchy.dendrogram` |
-
-Notas de porte:
-- Ler cada `grf_*.R` e espelhar assinatura + defaults (igual fiz no 2.3). `colors=None` →
-  `resolve_colors` do `_helpers`.
-- `plot_correlation` tem muitos params (method/triangle/reorder/digits/show_diag/title) —
-  portar fielmente; é o gráfico sequencial/diverging, cuidar da paleta conforme a skill.
-- Entrada = **pandas DataFrame**.
-
-## ⚠️ Enxugamento OBRIGATÓRIO deste passo: remover `plot_pair_adv` (R) + portar p/ o curso
-
-- `plot_pair_adv` (`grf_pair_adv.R`, `GGally::ggpairs` com painéis mistos densidade+correlação
-  +cor-por-classe) **NÃO tem correspondência limpa no matplotlib** → **sai do daltoolbox** e
-  vira extensão do curso. Mesmo padrão de Louvain/eclat/arulesViz.
-- No **R** (pedir ao Eduardo antes de editar): remover `R/grf_pair_adv.R` + `man/` + exemplos,
-  rodar `devtools::document()` (NAMESPACE/man limpos), testar `devtools::load_all(".")`. Merge
-  local, pedir push ao Eduardo (origin/main bloqueado p/ CRAN).
-- Portar `plot_pair_adv` para `C:\Git\eogasawara\datamining` (tutorial `03-DataVisualization`)
-  como extensão de curso. Confirmar o escopo disso com o Eduardo.
-
-## Checklist de release 0.15.0
-
-1. `pip install -e .[viz]` (reinstalar editable; o local pode ter o build do PyPI em cache).
-2. Adicionar os 10 `plot_*` a `src/pydaltoolbox/viz/` (reusando `_helpers`). Registrar em
-   `viz/__init__.py`, no `_VIZ_EXPORTS`/`__getattr__` e nos dois `__all__`.
-3. Docstrings (Teoria + References + Porting, respeitando o ⛔). Ref comum: Wickham (2016).
-4. `python -m pytest -q` (hoje **202 verdes**; backend `Agg` + `pytest.importorskip("matplotlib")`,
-   assertar tipo `Axes` + nº de artistas). `ruff check src tests` (limpo).
-5. **R muda:** remover `plot_pair_adv` + `devtools::document()` (pedir ao Eduardo). Portar p/
-   o `datamining`.
-6. Bump de versão para `0.15.0` em `pyproject.toml` e `src/pydaltoolbox/__init__.py`.
-7. Atualizar `README.md` (listar os 10 novos) e `develop/planejamento.md` (marcar 2.4 ✅).
-8. Notebooks `notebooks/graphics/03-relation.md` + `04-temporal.md` (ou por gráfico) →
-   `python tools/build_examples.py graphics`. **Não** ponha `matplotlib.use("Agg")` no
-   notebook (suprime a captura PNG inline — aprendizado do 2.3); o build usa ipykernel inline.
-9. Commit em `main`, terminando com a linha `Co-Authored-By:` do ambiente.
-10. Build/publicar: `rm -rf dist build *.egg-info src/*.egg-info` → `python -m build` →
-    `python -m twine check dist/*` → conferir `viz/` no wheel e `develop/` fora do sdist →
-    `python -m twine upload dist/*` (vai bloquear → Eduardo). Verificar em
-    `https://pypi.org/pypi/pydaltoolbox/0.15.0/json`.
-11. `git push origin main` + atualizar a memória `[[pydaltoolbox-port]]`.
+Depois do fechamento acima, o próximo e último marco é **1.0.0**:
+- **API freeze:** revisar os símbolos públicos (`__all__`), nomes, assinaturas. Hoje ~85
+  símbolos + 21 `plot_*`. Garantir consistência (PascalCase classes, snake_case funções).
+- **Cobertura:** rodar `python -m pytest -q` (hoje **218 verdes**), `ruff check src tests`,
+  e `python tools/build_examples.py` (todos os notebooks) — reverter churn cosmético (PIDs de
+  ipykernel, bytes de PNG) se aparecer.
+- **Docs:** README completo; conferir que todo componente tem docstring Theory+References+
+  Porting (`[[docstring-theory-and-references]]`).
+- **Classifier:** mudar `Development Status :: 3 - Alpha` → `5 - Production/Stable` (ou
+  `4 - Beta`) no `pyproject.toml`, conforme o Eduardo decidir.
+- Bump p/ `1.0.0` em `pyproject.toml` E `src/pydaltoolbox/__init__.py` (os dois! lição do
+  0.15.0: esqueci o pyproject e o build saiu 0.14.0). Build + twine check + upload (vai pedir
+  confirmação; o user autoriza). Verificar `https://pypi.org/pypi/pydaltoolbox/1.0.0/json`.
+- Confirmar o escopo do 1.0.0 COM o Eduardo (o que congela, o que fica fora — autoencoders
+  reais seguem fora, em pacote companheiro).
 
 ## Observações
 
-- `gh` CLI não está instalado; git via linha de comando.
-- Shell primário é PowerShell; a ferramenta Bash também está disponível (sintaxe POSIX).
-- R roda aqui (`C:\R\R-4.5.0`), de arquivo `.R` via `Rscript --vanilla` (não `-e` inline);
-  segfaults intermitentes em cargas pesadas → reexecutar/isolar.
-
-> **Depois do 2.4:** **Ciclo 2 COMPLETO** (21 `plot_*` + `ClaXgboost`). Próximo e último
-> marco: **1.0.0** (estabilização — cobertura completa, API congelada, beta→estável).
+- `gh` CLI não instalado; git via linha de comando. Shell primário PowerShell; Bash também.
+- **Upload PyPI:** o `twine upload` foi bloqueado 1x pelo auto-mode mas passou quando o user
+  re-pediu explicitamente na sessão — se bloquear, tentar de novo após o OK do user.
+- Bump de versão: **mexer nos DOIS arquivos** (`pyproject.toml` + `__init__.py`).
+- Convenções de gráficos (fechadas com Eduardo): retorno `Axes` (exceto `plot_pair` → grade
+  ndarray de Axes), paleta CVD-safe de `viz/_helpers.py` quando `colors=None`, exports lazy
+  PEP 562, docstrings com Porting Fidelity approximate.
