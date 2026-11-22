@@ -355,7 +355,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.7 | `0.9.0` ✅ | Padrões: base + itemsets + regras (`PatApriori` via mlxtend `[patterns]`; eclat removido dos dois repos) |
 | 1.8a | `0.10.0` ✅ | Padrões: rule filters base (`RuleFilter`/`None`/`Dara`) + DARA (`dara`, divergent association rules) |
 | 1.8b | `0.11.0` ✅ | Padrões: `RuleFilterInterest` + thresholds (`SupportThreshold`/`ConfidenceThreshold`, auto `supp=0`/`conf=0`) |
-| 1.9 | `0.12.0` | Padrões: sequências (PrefixSpan) |
+| 1.9 | `0.12.0` ✅ | Padrões: sequências (`PatPrefixSpan`, PrefixSpan nativo; fim do Ciclo 1) |
 | 2.1 | `0.13.0` | `ClaXgboost` `[xgboost]` |
 | 2.2 | `0.14.0` | `ClusterLouvainGraph` `[graph]` |
 | 2.3 | `0.15.0` | Gráficos: base + distribuição + comparação `[viz]` |
@@ -486,14 +486,23 @@ com logistic/linear do sklearn. Sem dependência nova. Relief é ReliefF nativo 
 > `rules.attrs['n_transactions']`). ⚠️ Delta pré-existente: o `association_rules` do mlxtend
 > gera regras com consequente de vários itens que o `arules::apriori` não emite por padrão.
 
-#### 1.9 — Mineração de padrões: sequências → `0.12.0`
-| Classe | Backend nativo | Arquivo R |
+#### ✅ 1.9 — Mineração de padrões: sequências → `0.12.0` (publicado · fim do Ciclo 1)
+| Classe | Backend | Arquivo R |
 |---|---|---|
-| `PatCspade` | PrefixSpan nativo | `pat_cspade.R` |
+| `PatPrefixSpan` | PrefixSpan nativo (numpy/pandas) | `pat_prefix_span.R` |
 
-> ✅ Fim do Ciclo 1: **todo o daltoolbox coberto, exceto Louvain, XGBoost e gráficos**
-> (que são o Ciclo 2), com o pacote ainda instalável só com o núcleo. Se o PrefixSpan
-> (1.9) se mostrar inviável no prazo, documentar e levar ao Ciclo 2.
+> **Back-implementation por posse de dependência:** PrefixSpan nativo (Pei et al., 2001) nos
+> **dois** repos; o R deixou de depender de `arulesSequences` (`pat_cspade.R` removido,
+> `arulesSequences` fora do DESCRIPTION). Entrada = sequências de itemsets (lista) ou
+> DataFrame `sequenceID`/`eventID`/`item` (como `read_baskets`). Validado **idêntico ao
+> `arulesSequences::cspade`** no exemplo clássico de Zaki: support=0.5 → 18 padrões;
+> maxgap=5 → 11; maxgap=10 → 17; mingap=10 → 12 (projeção por conjunto de posições, não
+> primeira-ocorrência, para não perder co-ocorrências de itens em elementos posteriores).
+
+> ✅ **Fim do Ciclo 1 (0.12.0): todo o daltoolbox coberto, exceto Louvain, XGBoost e
+> gráficos** (que são o Ciclo 2), com o pacote instalável só com o núcleo (PrefixSpan é
+> numpy/pandas puro; `mlxtend` só p/ apriori/regras). PrefixSpan (1.9) entregue e validado
+> idêntico ao cSPADE.
 
 ---
 

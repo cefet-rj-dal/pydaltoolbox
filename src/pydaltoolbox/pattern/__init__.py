@@ -2,12 +2,14 @@
 from .apriori import PatApriori
 from .base import PatternMiner, PatUtils
 from .dara import dara, dara_score
+from .prefixspan import PatPrefixSpan
 from .rule_filter import RuleFilter, RuleFilterDara, RuleFilterInterest, RuleFilterNone
 from .threshold import ConfidenceThreshold, SupportThreshold
 
 __all__ = [
     "ConfidenceThreshold",
     "PatApriori",
+    "PatPrefixSpan",
     "PatUtils",
     "PatternMiner",
     "RuleFilter",

@@ -118,8 +118,10 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
   itemsets and association rules) *(0.9.0)*; rule filters `RuleFilter` / `RuleFilterNone` /
   `RuleFilterDara` + the `dara` divergent-association ranking *(0.10.0)*; `RuleFilterInterest`
   and support/confidence auto-estimation `SupportThreshold` / `ConfidenceThreshold`
-  *(0.11.0)*. Needs the optional `[patterns]` extra (`pip install pydaltoolbox[patterns]`,
-  brings `mlxtend`).
+  *(0.11.0)*; `PatPrefixSpan` sequential pattern mining (native PrefixSpan) *(0.12.0)*.
+  `PatApriori` and the rule filters need the optional `[patterns]` extra
+  (`pip install pydaltoolbox[patterns]`, brings `mlxtend`); `PatPrefixSpan` is pure
+  numpy/pandas.
 - **Tuning:** `DalTune` base + `ClaTune`, `RegTune`, `CluTune`.
 - **Autoencoder bases:** `AutoencBaseE`, `AutoencBaseEd` (identity, for extension).
 - **Reference datasets:** `datasets.iris()`, `datasets.diabetes()`, `datasets.boston()`.
