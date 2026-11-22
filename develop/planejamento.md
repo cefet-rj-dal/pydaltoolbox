@@ -359,7 +359,7 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 2.1 | `0.13.0` ✅ | `ClaXgboost` `[xgboost]` (wrapper `XGBClassifier`; paridade R no iris) |
 | ~~2.2~~ | — | ~~`ClusterLouvainGraph` `[graph]`~~ **REMOVIDO** (má encaixe tabular; `clu_louvain`+`igraph` tirados do R também) |
 | 2.3 | `0.14.0` ✅ | Gráficos: distribuição + comparação (11 `plot_*`, matplotlib `[viz]`) |
-| 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura (10 `plot_*`; `plot_pair_adv` movido p/ curso) |
+| 2.4 | `0.15.0` ✅ | Gráficos: relação + temporais + estrutura (10 `plot_*`). Python feito; **remoção do `plot_pair_adv` do R + porte p/ o curso PENDENTE** |
 | ~~2.5~~ | — | ~~*(opcional)* Padrões: backend `mlxtend` `[patterns]`~~ (já antecipado no 1.7) |
 | — | `1.0.0` | Estabilização (cobertura completa, API congelada, beta→estável) |
 
@@ -568,8 +568,13 @@ no core. Decidido com o Eduardo: retorno `Axes`, paleta validada da skill `datav
 > a portar; utilitários comuns (aplicação de paleta, tema) ficam num `_helpers` interno do
 > subpacote `viz/`. (O R `graphics.R`/`graphics_dal_graphics.R` é só agregador de `@include`.)
 
-#### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]` · `0.15.0`
-10 gráficos (o `plot_pair_adv` foi **removido** — ver abaixo).
+#### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]` · `0.15.0` ✅ (Python)
+10 gráficos (o `plot_pair_adv` foi **removido** — ver abaixo). Python feito: módulos
+`viz/relation.py` (scatter/points/correlation/pair/parallel/pixel) + `viz/temporal.py`
+(series/ts/ts_pred) + `viz/structure.py` (dendrogram); retorno `Axes` (exceto `plot_pair`,
+que devolve a grade de Axes do scatter-matrix); `plot_dendrogram` recebe uma linkage do SciPy.
+**PENDENTE (combinado com o Eduardo — fazer depois):** remover `plot_pair_adv` do R
+(`grf_pair_adv.R` + man/examples + `devtools::document()`) e portá-lo p/ o curso `datamining`.
 | Função | Tipo | Arquivo R | Backend matplotlib |
 |---|---|---|---|
 | `plot_scatter` | relação | `grf_scatter.R` | `ax.scatter` |
