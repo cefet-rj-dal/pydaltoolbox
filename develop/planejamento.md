@@ -4,25 +4,16 @@ Somente o que vem a seguir. O que já foi feito está em `historico.md`; a corre
 de classes R↔Python em `mapeamento.md`. Ao concluir um passo, mover o relato para
 `historico.md` e atualizar este arquivo.
 
-**Estado de partida:** última release **0.19.0** (limpezas: `pat_rules_tidy` portado p/ Python,
-`pat_dara_rules` removido do R — **Pendências de porte zeradas**, ver `mapeamento.md`). Núcleo
-numpy/pandas/scikit-learn; extras `[patterns]`, `[xgboost]`, `[viz]`. 218 testes verdes, ruff limpo.
+**Estado de partida:** última release pydaltoolbox **0.19.0** (Pendências de porte zeradas). O
+passo **0.20.0 (só-R) está feito**: daltoolbox com `Rmd/`→`notebooks/`, `conversor.R` sem docx
+(só md + R), `examples/` regenerada (144/144, zero falhas). Núcleo numpy/pandas/scikit-learn;
+extras `[patterns]`, `[xgboost]`, `[viz]`. 218 testes verdes, ruff limpo.
 
 **Rumo ao 1.0.0:** os passos abaixo são de **qualidade** — documentação, exemplos e paridade de
 testes com o R. Vamos planejando e testando; **o 1.0.0 (estabilização/freeze) só acontece quando
 o Eduardo disser que está satisfeito.**
 
 ---
-
-## 0.20.0 — Documentação: ajustar a organização no daltoolbox
-Objetivo: deixar a organização da documentação do pacote R coerente e enxuta, como base para
-melhorar os exemplos depois.
-- Revisar a estrutura de `examples/` e `Rmd/` do daltoolbox (numeração, agrupamento por tema,
-  índices/README por pasta), corrigir referências quebradas e regenerar os artefatos via o
-  `conversor.R` (reconstruir os `examples/**/*.md` e `r/*.R` que ficaram pendentes das limpezas).
-- Conferir que todo `plot_*`/classe tem exemplo e man page coerentes após as remoções recentes.
-- Fechar com o checklist de release padrão (lado Python sem mudança de código, só versão/docs se
-  necessário) — ou tratar como passo só-R, conforme o caso.
 
 ## 0.21.0 — Documentação: melhoria dos exemplos
 Objetivo: elevar a qualidade didática dos exemplos (R e notebooks Python).

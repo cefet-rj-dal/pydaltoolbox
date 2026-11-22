@@ -82,6 +82,16 @@ roadmap e do R (mau encaixe tabular).
   opcional de `attribute=value` por coluna.
 - Resultado: **Pendências de porte zeradas** (`mapeamento.md`). pydaltoolbox **0.19.0**.
 
+### Documentação — organização no daltoolbox (0.20.0, 2026-11-22, só-R)
+- **`Rmd/` renomeada para `notebooks/`** no daltoolbox (espelha o Python: `notebooks/` → `examples/`),
+  via `git mv` (com `conversor.R`, `README.Rmd` e subpastas). `.Rbuildignore`: `^Rmd$` → `^notebooks$`.
+- **`conversor.R` enxuto:** fonte agora `notebooks/`; **removida a geração de Word/.docx** (função
+  `convert_rmd_docx` + fase `rmd->docx`); gera só `.md` + `.R` puro.
+- **`examples/` regenerada do zero** com o pacote local instalado (reflete o código atual: sem
+  `plot_pair`/`plot_pair_adv`/`pat_dara_rules`/GGally; `plot_parallel` nativo). Mantidos os ativos
+  não-gerados: `seed.R`, `slides/`, `videos/`, `wine.RData`. **144/144 renderizados, zero falhas.**
+- Sem release do pydaltoolbox (passo só-R; a versão Python segue 0.19.0 até o 0.21.0).
+
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.19.0** (PyPI). daltoolbox sem `GGally`; API de padrões
   simplificada (sem `pat_dara_rules`). Curso com `codes/`.
