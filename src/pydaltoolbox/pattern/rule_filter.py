@@ -1,9 +1,10 @@
 """Association-rule filters (``pat_rule_filter.R`` analog).
 
-A rule filter is a small object with an :meth:`RuleFilter.apply` method that takes a rules
-:class:`pandas.DataFrame` (from :class:`~pydaltoolbox.PatApriori` with ``target='rules'``)
-and returns a subset of it. :class:`RuleFilterNone` keeps every rule; :class:`RuleFilterDara`
-keeps rules whose antecedent values are in divergence according to DARA.
+A rule filter is a :class:`~pydaltoolbox.base.DalTransform` over a rules
+:class:`pandas.DataFrame` (from :class:`~pydaltoolbox.PatApriori` with ``target='rules'``):
+``transform`` returns a subset of the rules, and ``action`` dispatches to it.
+:class:`RuleFilterNone` keeps every rule; :class:`RuleFilterDara` keeps rules whose
+antecedent values are in divergence according to DARA.
 """
 from __future__ import annotations
 
@@ -13,24 +14,28 @@ import numpy as np
 import pandas as pd
 
 from ..adjust import adjust_dataframe
+from ..base import DalTransform
 from .dara import dara, dara_score
 
 __all__ = ["RuleFilter", "RuleFilterDara", "RuleFilterNone"]
 
 
-class RuleFilter:
+class RuleFilter(DalTransform):
     """Base class for association-rule filters.
 
-    A filter maps a rules DataFrame to a subset of it, recording the pre-filter count in
-    ``result.attrs['filtered_from']`` so the retained ratio can be measured.
+    A filter is a transform over a rules DataFrame: :meth:`transform` returns a subset of
+    the rules (and ``action`` dispatches to it), recording the pre-filter count in
+    ``result.attrs['filtered_from']`` so the retained ratio can be measured. ``fit`` is a
+    no-op (filters are stateless or configured at construction).
 
     Porting:
         Mirrors ``pat_rule_filter.R``. Fidelity: adapted.
-        - Idiomatic-Python API: a class with an :meth:`apply` method over a rules
-          DataFrame, instead of S3 ``pat_filter_rules`` dispatch.
+        - A :class:`~pydaltoolbox.base.DalTransform` over a rules DataFrame; the R filters
+          are likewise ``dal_transform`` objects (``transform(filter, rules)``), with
+          ``pat_filter_rules`` kept as an equivalent entry point.
     """
 
-    def apply(self, rules: pd.DataFrame, data=None) -> pd.DataFrame:  # pragma: no cover
+    def transform(self, rules: pd.DataFrame, **kwargs) -> pd.DataFrame:  # pragma: no cover
         raise NotImplementedError
 
 
@@ -41,7 +46,7 @@ class RuleFilterNone(RuleFilter):
         Mirrors ``pat_rule_filter_none`` in ``pat_rule_filter.R``. Fidelity: adapted.
     """
 
-    def apply(self, rules: pd.DataFrame, data=None) -> pd.DataFrame:
+    def transform(self, rules: pd.DataFrame, **kwargs) -> pd.DataFrame:
         out = rules.copy()
         out.attrs["filtered_from"] = len(out)
         return out
@@ -102,7 +107,7 @@ class RuleFilterDara(RuleFilter):
         self.use_abs = use_abs
         self.rule_weight = rule_weight
 
-    def apply(self, rules: pd.DataFrame, data=None) -> pd.DataFrame:
+    def transform(self, rules: pd.DataFrame, **kwargs) -> pd.DataFrame:
         total = len(rules)
         ranking = dara(
             self.data, rules, rhs_attr=self.rhs_attr, rhs_value=self.rhs_value,

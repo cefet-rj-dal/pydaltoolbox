@@ -157,7 +157,7 @@ class PatApriori(PatternMiner):
 
         ranking = None
         if self.target == "rules":
-            patterns = self.rule_filter.apply(patterns, data=data)
+            patterns = self.rule_filter.action(patterns)
             ranking = patterns.attrs.get("dara_ranking")
 
         patterns = patterns.reset_index(drop=True)

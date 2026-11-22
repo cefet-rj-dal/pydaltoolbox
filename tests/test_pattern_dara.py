@@ -91,7 +91,7 @@ def test_dara_score_aggregations():
 def test_rule_filter_dara_keeps_high_score(divergent):
     raw, rules = divergent
     flt = RuleFilterDara(raw, rhs_attr="y", rhs_value="s", min_score=1)
-    out = flt.apply(rules)
+    out = flt.transform(rules)
     assert (out["dara_score"] >= 1).all()
     # only the three col=B rules score +1
     assert len(out) == 3
@@ -102,14 +102,25 @@ def test_rule_filter_dara_keeps_high_score(divergent):
 def test_rule_filter_dara_top(divergent):
     raw, rules = divergent
     flt = RuleFilterDara(raw, rhs_attr="y", rhs_value="s", min_score=-10, top=2)
-    assert len(flt.apply(rules)) == 2
+    assert len(flt.transform(rules)) == 2
 
 
 def test_rule_filter_none_is_noop(divergent):
     _, rules = divergent
-    out = RuleFilterNone().apply(rules)
+    out = RuleFilterNone().transform(rules)
     assert len(out) == len(rules)
     assert out.attrs["filtered_from"] == len(rules)
+
+
+def test_rule_filter_is_daltransform(divergent):
+    from pydaltoolbox import DalTransform
+
+    raw, rules = divergent
+    flt = RuleFilterDara(raw, rhs_attr="y", rhs_value="s", min_score=1)
+    assert isinstance(flt, DalTransform)
+    assert flt.fit(rules) is flt  # fit is a chainable no-op
+    # action dispatches to transform
+    pd.testing.assert_frame_equal(flt.action(rules), flt.transform(rules))
 
 
 def test_patapriori_end_to_end_with_dara():
