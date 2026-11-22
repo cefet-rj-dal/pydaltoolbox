@@ -41,7 +41,16 @@ from .clustering import (
     ClusterKmeans,
     ClusterPam,
 )
-from .pattern import PatApriori, PatternMiner, PatUtils
+from .pattern import (
+    PatApriori,
+    PatternMiner,
+    PatUtils,
+    RuleFilter,
+    RuleFilterDara,
+    RuleFilterNone,
+    dara,
+    dara_score,
+)
 from .regression import (
     RegDtree,
     RegKnn,
@@ -93,7 +102,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 __all__ = [
     "Aggregation",
@@ -160,6 +169,9 @@ __all__ = [
     "RegSvm",
     "RegTune",
     "Regression",
+    "RuleFilter",
+    "RuleFilterDara",
+    "RuleFilterNone",
     "SampleBalance",
     "SampleGroups",
     "SampleRandom",
@@ -177,6 +189,8 @@ __all__ = [
     "adjust_dataframe",
     "adjust_factor",
     "adjust_matrix",
+    "dara",
+    "dara_score",
     "datasets",
     "train_test_from_folds",
 ]

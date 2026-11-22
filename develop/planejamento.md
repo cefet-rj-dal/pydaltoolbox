@@ -353,13 +353,14 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.6 | `0.7.0` ✅ | Seleção de atributos (Relief + fss/stepwise) |
 | 1.6b | `0.8.0` ✅ | **Consolidação ++/posse** (FastPAM, ReliefF, Borderline/ADASYN, c-means nstart; remove cluster/leaps/caret do R) |
 | 1.7 | `0.9.0` ✅ | Padrões: base + itemsets + regras (`PatApriori` via mlxtend `[patterns]`; eclat removido dos dois repos) |
-| 1.8 | `0.10.0` | Padrões: rule filters e thresholds |
-| 1.9 | `0.11.0` | Padrões: sequências (PrefixSpan) |
-| 2.1 | `0.12.0` | `ClaXgboost` `[xgboost]` |
-| 2.2 | `0.13.0` | `ClusterLouvainGraph` `[graph]` |
-| 2.3 | `0.14.0` | Gráficos: base + distribuição + comparação `[viz]` |
-| 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura `[viz]` |
-| 2.5 | `0.16.0` | *(opcional)* Padrões: backend `mlxtend` `[patterns]` |
+| 1.8a | `0.10.0` ✅ | Padrões: rule filters base (`RuleFilter`/`None`/`Dara`) + DARA (`dara`, divergent association rules) |
+| 1.8b | `0.11.0` | Padrões: `RuleFilterInterest` + thresholds (`support`/`confidence`, auto `supp=0`) |
+| 1.9 | `0.12.0` | Padrões: sequências (PrefixSpan) |
+| 2.1 | `0.13.0` | `ClaXgboost` `[xgboost]` |
+| 2.2 | `0.14.0` | `ClusterLouvainGraph` `[graph]` |
+| 2.3 | `0.15.0` | Gráficos: base + distribuição + comparação `[viz]` |
+| 2.4 | `0.16.0` | Gráficos: relação + temporais + estrutura `[viz]` |
+| 2.5 | `0.17.0` | *(opcional)* Padrões: backend `mlxtend` `[patterns]` |
 | — | `1.0.0` | Estabilização (cobertura completa, API congelada, beta→estável) |
 
 *(`0.10.0` > `0.9.0` é válido em semver/PyPI — comparação numérica. Se o passo 2.5 for
@@ -459,14 +460,26 @@ com logistic/linear do sklearn. Sem dependência nova. Relief é ReliefF nativo 
 > ficamos **só com apriori nos dois**; o `pat_eclat.R` saiu do R. Desempenho de itemsets
 > grandes: revisitar no futuro se virar gargalo.
 
-#### 1.8 — Mineração de padrões: rule filters e thresholds → `0.10.0`
-| Classe/função | Backend nativo | Arquivo R |
+#### ✅ 1.8a — Mineração de padrões: rule filters base + DARA → `0.10.0` (publicado)
+| Classe/função | Backend | Arquivo R |
 |---|---|---|
-| filtros de regras (`RuleFilterNone/Interest/Dara`, `filter_rules`, `rules_tidy`) | numpy/pandas | `pat_rule_filter.R` |
-| thresholds (`pat_support_threshold`, `pat_confidence_threshold`) | numpy | `pat_threshold.R` |
-| `PatDara` (+ `dara_rules`) | nativo | `pat_dara.R` |
+| `RuleFilter` base + `RuleFilterNone` | pandas | `pat_rule_filter.R` |
+| `RuleFilterDara` + `dara()` + `dara_score()` (divergent association rules) | numpy/pandas | `pat_dara.R`, `pat_rule_filter.R` |
+| integração: `PatApriori(rule_filter=...)` (só `target='rules'`) | — | `pat_apriori.R` |
 
-#### 1.9 — Mineração de padrões: sequências → `0.11.0`
+> **DARA** (`[[back-implementation-initiative]]`): algoritmo **do grupo** (Baroni et al.,
+> 2020, *J. Biomedical Informatics* 108:103512). Back-implementation **canônica** — Python
+> vira a referência, R vira backport, atribuição cita o **paper** nos dois lados. Counter de
+> divergência validado contra a Tabela 1 do artigo e contra o `pat_dara` do R (idênticos).
+> Entrada = regras do `PatApriori` sobre itens `atributo=valor` (one-hot `prefix_sep='='`).
+
+#### 1.8b — Mineração de padrões: rule filters de interesse + thresholds → `0.11.0`
+| Classe/função | Backend | Arquivo R |
+|---|---|---|
+| `RuleFilterInterest` (lift/kulc/ir/support/confidence/count) | numpy/pandas | `pat_rule_filter.R` |
+| thresholds (`pat_support_threshold`, `pat_confidence_threshold`; auto `supp=0`/`conf=0`) | numpy | `pat_threshold.R` |
+
+#### 1.9 — Mineração de padrões: sequências → `0.12.0`
 | Classe | Backend nativo | Arquivo R |
 |---|---|---|
 | `PatCspade` | PrefixSpan nativo | `pat_cspade.R` |

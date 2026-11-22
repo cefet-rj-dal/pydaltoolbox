@@ -21,6 +21,7 @@ from .base import (
     metric_retained_ratio,
     pattern_length,
 )
+from .rule_filter import RuleFilter, RuleFilterNone
 
 __all__ = ["PatApriori"]
 
@@ -40,7 +41,9 @@ class PatApriori(PatternMiner):
     a :class:`pandas.DataFrame`. ``minlen``/``maxlen`` bound the itemset length,
     ``lhs``/``rhs`` constrain the items allowed on each side of a rule, ``include``/
     ``exclude`` constrain the items in any pattern, and ``quality_filter`` (from
-    :class:`~pydaltoolbox.pattern.PatUtils`) applies support/confidence/lift bounds.
+    :class:`~pydaltoolbox.pattern.PatUtils`) applies support/confidence/lift bounds. For
+    ``target='rules'``, a ``rule_filter`` (e.g. :class:`~pydaltoolbox.RuleFilterDara`)
+    applies a post-mining interestingness filter to the discovered rules.
 
     Porting:
         Mirrors ``pat_apriori.R``. Fidelity: approximate.
@@ -69,12 +72,19 @@ class PatApriori(PatternMiner):
         include: Iterable | None = None,
         exclude: Iterable | None = None,
         quality_filter: dict | None = None,
+        rule_filter: RuleFilter | None = None,
     ) -> None:
         super().__init__()
         if target not in ("rules", "frequent itemsets"):
             raise ValueError("PatApriori: target must be 'rules' or 'frequent itemsets'.")
         if supp <= 0:
             raise ValueError("PatApriori: supp must be > 0 (support auto-estimation is deferred).")
+        if rule_filter is None:
+            rule_filter = RuleFilterNone()
+        elif not isinstance(rule_filter, RuleFilter):
+            raise TypeError("PatApriori: rule_filter must be a RuleFilter instance.")
+        if target != "rules" and not isinstance(rule_filter, RuleFilterNone):
+            raise ValueError("PatApriori: a rule_filter can only be used with target='rules'.")
         self.target = target
         self.supp = supp
         self.conf = conf
@@ -85,6 +95,7 @@ class PatApriori(PatternMiner):
         self.include = include
         self.exclude = exclude
         self.quality_filter = quality_filter
+        self.rule_filter = rule_filter
         self.pattern_kind = "rules" if target == "rules" else "itemsets"
         if target == "rules":
             self.eval_metrics = [
@@ -143,6 +154,14 @@ class PatApriori(PatternMiner):
         total = len(patterns)
         patterns = self._apply_item_filter(patterns)
         patterns = self._apply_quality_filter(patterns)
+
+        ranking = None
+        if self.target == "rules":
+            patterns = self.rule_filter.apply(patterns, data=data)
+            ranking = patterns.attrs.get("dara_ranking")
+
         patterns = patterns.reset_index(drop=True)
         patterns.attrs["filtered_from"] = total
+        if ranking is not None:
+            patterns.attrs["dara_ranking"] = ranking
         return patterns

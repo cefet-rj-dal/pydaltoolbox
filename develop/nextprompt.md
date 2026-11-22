@@ -1,4 +1,4 @@
-# Kickoff — pydaltoolbox step 1.8 → release 0.10.0 (mineração de padrões: rule filters + thresholds)
+# Kickoff — pydaltoolbox step 1.8b → release 0.11.0 (mineração de padrões: RuleFilterInterest + thresholds)
 
 Cole este prompt numa conversa limpa para continuar o port. É auto-contido; o resto do
 contexto está na memória e em `develop/planejamento.md`.
@@ -11,8 +11,8 @@ contexto está na memória e em `develop/planejamento.md`.
   (`c:\Git\dal\daltoolbox`), liderado por Eduardo Ogasawara (CEFET/RJ, lab DAL).
 - Leia a memória do projeto: `[[pydaltoolbox-port]]`, `[[back-implementation-initiative]]`,
   `[[docstring-theory-and-references]]`, `[[fix-bugs-in-both-r-and-python]]`.
-- Estado: **0.9.0 é a última release** (step 1.7, pattern mining base + itemsets + regras).
-  Confirme que `https://pypi.org/pypi/pydaltoolbox/0.9.0/json` está no ar — se o upload ao
+- Estado: **0.10.0 é a última release** (step 1.8a, rule filters base + DARA).
+  Confirme que `https://pypi.org/pypi/pydaltoolbox/0.10.0/json` está no ar — se o upload ao
   PyPI tiver ficado pendente (o classificador de auto-mode bloqueia `twine upload`), os
   artefatos já estão em `dist/` e o Eduardo publica (token em `C:\Users\eduar\.pypirc`,
   seção `[pypi]`).
@@ -32,6 +32,14 @@ contexto está na memória e em `develop/planejamento.md`.
   - **ECLAT removido dos dois repos**: `arules` e `mlxtend` só compartilham `apriori` (arules
     não tem fpgrowth sem o nicho não-CRAN `fim4r`; mlxtend não tem eclat). `pat_eclat.R` +
     man/examples saíram do R; `devtools::document()` rodado.
+- **1.8a (0.10.0)** concluído: base de rule filters + DARA.
+  - `pattern/rule_filter.py`: `RuleFilter` base + `RuleFilterNone` (no-op) + `RuleFilterDara`.
+  - `pattern/dara.py`: `dara()` (ranking de divergência, Algoritmo 2 do paper) + `dara_score()`
+    + `parse_items()`. **Back-implementation canônica** (algoritmo do grupo, Baroni et al.
+    2020 JBI 108:103512): Python canônico, R backport, ambos citam o paper.
+  - `PatApriori` ganhou `rule_filter=` (default `RuleFilterNone`; só aplica em `target='rules'`,
+    pula itemsets). DARA opera sobre itens `atributo=valor` (one-hot `pd.get_dummies(prefix_sep='=')`).
+  - Validado: counter == Tabela 1 do paper e == `pat_dara` do R.
 
 ## Princípios do port (valem sempre)
 
@@ -60,47 +68,46 @@ References. Remoção de dependência vai na MENSAGEM DE COMMIT, não no docstri
 - **Uploads externos (PyPI, push de daltoolbox) podem ser bloqueados pelo auto-mode** —
   deixar pronto e pedir pro Eduardo.
 
-## Tarefa do 0.10.0 (step 1.8) — rule filters + thresholds
+## Tarefa do 0.11.0 (step 1.8b) — RuleFilterInterest + thresholds
 
-Fontes R (`c:\Git\dal\daltoolbox\R\`): `pat_rule_filter.R`, `pat_threshold.R`, `pat_dara.R`.
+Fontes R (`c:\Git\dal\daltoolbox\R\`): `pat_rule_filter.R`, `pat_threshold.R`.
 
-- **Rule filters** (`pat_rule_filter.R`): `RuleFilterNone` / `RuleFilterInterest`
-  (filtra por lift/confidence/support mínimos) / `RuleFilterDara`, + `filter_rules` /
-  `rules_tidy`. Encaixar no `PatApriori` (o slot `rule_filter`, hoje ausente no Python) —
-  aplicado só quando `target='rules'`.
-- **Thresholds** (`pat_threshold.R`): `pat_support_threshold` (ex.: estratégia "curvature",
-  usando `FitCurvatureMax` já portado) e `pat_confidence_threshold` — habilitam a
-  auto-estimação `supp=0`/`conf=0` no `fit()` (hoje o Python exige `supp>0`).
-- **`PatDara`** (+ `dara_rules`, `pat_dara.R`): ranking de regras por divergência. Avaliar
-  se é back-implementation (posse/++) ou embrulho — decidir com o Eduardo.
-- **⚠️ Rule filter + itemsets:** o R já foi corrigido (daltoolbox 79e229e: filtro `none` é
-  no-op para não-rules; filtro de interesse/DARA real sobre itemsets ainda dá erro). Ao
-  portar os rule filters para o Python, **espelhar**: o `rule_filter` só se aplica quando
-  `target='rules'`; para itemsets, pular (ou erro se um filtro real for pedido).
-- Registrar nos `__init__`. Testes pytest. Notebooks em `notebooks/pattern/*.md` →
-  `python tools/build_examples.py`.
+- **`RuleFilterInterest`** (`pat_rule_filter.R`, `pat_rule_filter_interest`): filtra regras
+  por medidas clássicas de interesse — lift, Kulczynski (`kulc`), imbalance ratio (`ir`),
+  support, confidence, count. Herdar de `RuleFilter` (base já existe) e encaixar no
+  `PatApriori(rule_filter=...)`. Precisa calcular kulc/ir/count a partir das regras do
+  mlxtend (o `association_rules` já traz lift; kulc = (conf(A→B)+conf(B→A))/2; ir e count
+  derivam dos suportes/antecedent-consequent supports — ver `pat_rules_tidy`/`interestMeasure`).
+- **Thresholds** (`pat_threshold.R`): `pat_support_threshold` (estratégia "curvature", usando
+  `FitCurvatureMax` já portado) e `pat_confidence_threshold` — habilitam a auto-estimação
+  `supp=0`/`conf=0` no `fit()` do `PatApriori` (hoje exige `supp>0`).
+- Registrar nos `__init__`. Testes pytest. Notebook `notebooks/pattern/03-rule-filters.md` →
+  `python tools/build_examples.py pattern`.
 
-Confirme o desenho com o Eduardo antes de implementar (especialmente PatDara nativo vs
-embrulho, e a forma das estratégias de threshold).
+> **Já pronto (não refazer):** base `RuleFilter`/`RuleFilterNone`/`RuleFilterDara`, `dara()`,
+> `dara_score()`, e o slot `PatApriori(rule_filter=...)` (só `target='rules'`, pula itemsets).
 
-## Checklist de release 0.10.0
+Confirme o desenho com o Eduardo antes de implementar (sobretudo a forma das estratégias de
+threshold e se `RuleFilterInterest` é embrulho de medidas do mlxtend ou cálculo próprio).
+
+## Checklist de release 0.11.0
 
 1. `pip install -e .[patterns]` (o Python local pode ter o build do PyPI em cache).
 2. Implementar as classes + registrar nos `__init__`.
 3. Docstrings com Teoria + References + Porting (respeitando o ⛔ PROIBIDO acima).
-4. `python -m pytest -q` (hoje 141 verdes) e `ruff check src tests` (limpo).
+4. `python -m pytest -q` (hoje 155 verdes) e `ruff check src tests` (limpo).
 5. Backport/ajuste no R (branch), testar via `Rscript` de arquivo, `devtools::document()`.
-6. Bump de versão para `0.10.0` em `pyproject.toml` e `src/pydaltoolbox/__init__.py`.
-7. Atualizar `README.md` e `develop/planejamento.md` (marcar 1.8 ✅).
+6. Bump de versão para `0.11.0` em `pyproject.toml` e `src/pydaltoolbox/__init__.py`.
+7. Atualizar `README.md` e `develop/planejamento.md` (marcar 1.8b ✅).
 8. `python tools/build_examples.py pattern` (confirmar render). ⚠️ `pip install mlxtend`
    pode subir numpy/sklearn — se re-renderizar outros exemplos por drift de versão, reverter
    os não relacionados e commitar só os de padrões.
-9. Commit em `main` nos dois repos ("Release 0.10.0 — ..."), terminando com a linha
+9. Commit em `main` nos dois repos ("Release 0.11.0 — ..."), terminando com a linha
    `Co-Authored-By:` que o ambiente indicar.
 10. Build/publicar: `rm -rf dist build *.egg-info src/*.egg-info` → `python -m build` →
     `python -m twine check dist/*` → conferir `develop/` fora do sdist →
     `python -m twine upload dist/*` (pode ser bloqueado → Eduardo publica). Verificar em
-    `https://pypi.org/pypi/pydaltoolbox/0.10.0/json`.
+    `https://pypi.org/pypi/pydaltoolbox/0.11.0/json`.
 11. `git push origin main` nos dois repos. Atualizar a memória `[[pydaltoolbox-port]]`.
 
 ## Observações
