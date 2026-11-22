@@ -73,9 +73,10 @@ Fontes R (`c:\Git\dal\daltoolbox\R\`): `pat_rule_filter.R`, `pat_threshold.R`, `
   auto-estimação `supp=0`/`conf=0` no `fit()` (hoje o Python exige `supp>0`).
 - **`PatDara`** (+ `dara_rules`, `pat_dara.R`): ranking de regras por divergência. Avaliar
   se é back-implementation (posse/++) ou embrulho — decidir com o Eduardo.
-- **⚠️ Quirk R conhecido (resolver aqui):** `pat_apriori(target='frequent itemsets')` no R
-  dá erro no `rule_filter` default — ao portar os rule filters, garantir que o caminho de
-  itemsets **pule** o rule_filter nos dois lados (bug a corrigir no R também, com o Eduardo).
+- **⚠️ Rule filter + itemsets:** o R já foi corrigido (daltoolbox 79e229e: filtro `none` é
+  no-op para não-rules; filtro de interesse/DARA real sobre itemsets ainda dá erro). Ao
+  portar os rule filters para o Python, **espelhar**: o `rule_filter` só se aplica quando
+  `target='rules'`; para itemsets, pular (ou erro se um filtro real for pedido).
 - Registrar nos `__init__`. Testes pytest. Notebooks em `notebooks/pattern/*.md` →
   `python tools/build_examples.py`.
 
