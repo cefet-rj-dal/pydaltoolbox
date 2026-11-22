@@ -64,7 +64,7 @@ model.evaluate(train["target"], train_pred)["metrics"]
 
 
                mse     smape        R2
-    0  1340.975483  0.204274  0.778526
+    0  2380.412054  0.284809  0.606854
 
 
 
@@ -80,7 +80,7 @@ model.evaluate(test["target"], test_pred)["metrics"]
 
 
                mse     smape        R2
-    0  5444.302157  0.432624 -0.002986
+    0  4136.019711  0.366772  0.238035
 
 
 

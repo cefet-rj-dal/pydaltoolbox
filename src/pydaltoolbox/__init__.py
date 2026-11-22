@@ -108,7 +108,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.19.0"
+__version__ = "0.23.0"
 
 # Visualization helpers live in the optional ``[viz]`` extra (matplotlib). They
 # are resolved lazily (PEP 562) so importing pydaltoolbox never requires
