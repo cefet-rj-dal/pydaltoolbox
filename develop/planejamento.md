@@ -37,11 +37,14 @@ inovação** quando há (regra em `historico.md` / convenção abaixo).
   DARA, PrefixSpan, PAM, Relief, etc.).
 - Fechar com o checklist de release padrão.
 
-## 0.19.0 — Portar pendências + fechar cobertura de testes
+## 0.19.0 — Portar pendências + simplificar a API de padrões + fechar testes
 Objetivo: zerar as lacunas do `mapeamento.md` e completar a paridade de testes.
-- Portar as conveniências de regras ainda só-R (decidir caso a caso com o Eduardo):
-  `pat_rules_tidy` (regras legíveis em DataFrame), `pat_dara_rules` (minera + ranqueia DARA
-  numa chamada), e avaliar remoção de redundância de regras (equivalente a `arules::is.redundant`).
+- **Python:** portar `pat_rules_tidy` (regras legíveis em DataFrame). Avaliar remoção de
+  redundância de regras (equivalente a `arules::is.redundant`).
+- **R (simplificação da API de padrões, com o Eduardo):** remover o atalho **`pat_dara_rules`**
+  (redundante com `PatApriori(target='rules', rule_filter=RuleFilterDara(...))`). **Manter**
+  `pat_dara()` (ranqueamento DARA — contribuição autoral; o `RuleFilterDara` depende dele) e
+  `patutils`/`PatUtils` (métricas do `evaluate`). `devtools::document()` + push.
 - Estender os testes pareados às demais famílias (transforms, clustering, padrões, gráficos —
   estes por tipo de retorno/artistas).
 - Fechar com o checklist de release padrão.

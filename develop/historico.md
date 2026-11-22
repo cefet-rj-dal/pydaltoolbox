@@ -70,6 +70,7 @@ roadmap e do R (mau encaixe tabular).
   `ggplot2` fica, é o backend canônico).
 - **0.16.0** — pydaltoolbox: `plot_pair` removido (→ curso), `plot_parallel` com z-score →
   **20 `plot_*`**.
+- Limpeza extra no R: `graphics_dal_graphics.R` (página de overview sem código) removido.
 
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.16.0** (PyPI). daltoolbox sem `GGally`. Curso com `codes/`.

@@ -83,8 +83,8 @@ Correspondência entre a API pública do pacote R **daltoolbox** e o port Python
 | `pat_dara.R` (`pat_dara`) | `dara`, `dara_score` | ✅ |
 | `pat_rule_filter.R` (`pat_rule_filter_none/_dara/_interest`, `pat_filter_rules`, `transform.pat_rule_filter`) | `RuleFilter`, `RuleFilterNone`, `RuleFilterDara`, `RuleFilterInterest` | ✅ |
 | `pat_threshold.R` (`pat_support_threshold`, `pat_confidence_threshold`) | `SupportThreshold`, `ConfidenceThreshold` | ✅ |
-| `pat_utils.R` (`pat_rules_tidy`) | — | ⬜ |
-| `pat_dara.R` (`pat_dara_rules`) | — | ⬜ |
+| `pat_dara.R` (`pat_rules_tidy`) | — (planejado p/ Python, 0.19.0) | ⬜ |
+| `pat_dara.R` (`pat_dara_rules`) | — (atalho redundante; candidato a remoção no R) | ⬜ |
 | remoção de redundância (`arules::is.redundant`) | — | ⬜ |
 
 ## Autoencoders
@@ -100,19 +100,24 @@ Correspondência entre a API pública do pacote R **daltoolbox** e o port Python
 | `grf_scatter/points/correlation/parallel/pixel` | `plot_scatter/points/correlation/parallel/pixel` | ✅ |
 | `grf_series/ts/ts_pred` | `plot_series/ts/ts_pred` | ✅ |
 | `grf_dendrogram` | `plot_dendrogram` | ✅ |
-| `grf_pair` (`GGally::ggpairs`) | `codes/plot_pair.R` + `plot_pair.py` (curso) | 🎓 |
-| `grf_pair_adv` (`GGally::ggpairs`) | `codes/plot_pair_adv.R` + `plot_pair_adv.py` (curso) | 🎓 |
-| `graphics_dal_graphics.R` | — (apenas agregador `@include`, sem símbolo) | n/a |
 
-> Observação: `plot_pair`/`plot_pair_adv` **não são lacunas** — foram removidos de ambos
-> os pacotes de propósito (dependência `GGally`) e vivem como extensões do curso
-> `datamining` (`codes/`), com versões R e Python.
+> Fora do escopo da biblioteca: `grf_pair`/`grf_pair_adv` (GGally) foram removidos de ambos
+> os pacotes e viraram extensões do curso `datamining` (`codes/`, R + Python). O
+> `graphics_dal_graphics.R` (página de overview sem código) também foi removido do R.
 
 ## Pendências de porte (⬜)
-Itens R sem equivalente Python ainda — candidatos para 0.18.0/0.19.0:
-1. **`pat_rules_tidy`** — formata regras de associação num data.frame legível (antecedente ⇒ consequente + métricas).
-2. **`pat_dara_rules`** — conveniência: minera regras e aplica o ranking DARA numa só chamada.
-3. **Remoção de redundância de regras** — o R usa `arules::is.redundant`; o Python não tem equivalente.
+Itens R sem equivalente Python ainda — candidatos para 0.19.0:
+1. **`pat_rules_tidy`** — formata regras de associação num DataFrame legível (lhs ⇒ rhs +
+   métricas). **Portar para o Python** (fácil; mlxtend já devolve DataFrame tidy).
+2. **`pat_dara_rules`** — atalho que, numa chamada, minera regras p/ um `rhs` fixo, remove
+   redundância e tida. **NÃO portar** — é redundante com o fluxo `PatApriori(target='rules',
+   rule_filter=RuleFilterDara(...))`. No R é candidato a **remoção** (simplifica a API).
+3. **Remoção de redundância de regras** (`arules::is.redundant`) — o Python não tem; avaliar.
+
+**Importante (não confundir):** `pat_dara()` (o *ranqueamento* DARA, Baroni et al. 2020 — a
+contribuição autoral do grupo) **está portado** como `dara`/`dara_score` e **não sai do R** — o
+filtro `RuleFilterDara` depende dele. O `patutils`/`PatUtils` também **fica**: fornece as
+métricas do `evaluate()` do `PatternMiner` (usado por apriori/prefix_span), não é dispensável.
 
 (Diferença menor de superfície de API: as métricas de cluster do R são expostas como o
 objeto `cluutils`; no Python são funções `metric_*` usadas via `Clusterer.evaluate` — mesma
