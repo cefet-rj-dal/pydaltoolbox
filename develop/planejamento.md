@@ -358,8 +358,8 @@ dos Ciclos 1 e 2 corresponde a um bump de minor.
 | 1.9 | `0.12.0` ✅ | Padrões: sequências (`PatPrefixSpan`, PrefixSpan nativo; fim do Ciclo 1) |
 | 2.1 | `0.13.0` ✅ | `ClaXgboost` `[xgboost]` (wrapper `XGBClassifier`; paridade R no iris) |
 | ~~2.2~~ | — | ~~`ClusterLouvainGraph` `[graph]`~~ **REMOVIDO** (má encaixe tabular; `clu_louvain`+`igraph` tirados do R também) |
-| 2.3 | `0.14.0` | Gráficos: base + distribuição + comparação `[viz]` |
-| 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura `[viz]` |
+| 2.3 | `0.14.0` | Gráficos: distribuição + comparação (11 `plot_*`, matplotlib `[viz]`) |
+| 2.4 | `0.15.0` | Gráficos: relação + temporais + estrutura (10 `plot_*`; `plot_pair_adv` movido p/ curso) |
 | ~~2.5~~ | — | ~~*(opcional)* Padrões: backend `mlxtend` `[patterns]`~~ (já antecipado no 1.7) |
 | — | `1.0.0` | Estabilização (cobertura completa, API congelada, beta→estável) |
 
@@ -508,12 +508,32 @@ com logistic/linear do sklearn. Sem dependência nova. Relief é ReliefF nativo 
 
 ### CICLO 2 — rodada temática completa (classes de maior dependência) · *a refinar juntos*
 
-Pré-distribuição com **todas as classes/funções** a migrar no Ciclo 2 (25 unidades:
-2 learners + base de gráficos + 22 `plot_*`). Agrupadas em sub-releases `0.x.0`
-(granularidade ajustável; ordem/escopo a refinar com o Eduardo). Cada arquivo R está
-indicado para rastreabilidade.
+Ciclo 2 restante = **gráficos `plot_*`** (classificação extra `ClaXgboost` já entregue em
+2.1/`0.13.0`). Cada arquivo R está indicado para rastreabilidade.
 
-#### 2.1 — Classificação extra → `[xgboost]` · `0.13.0`
+**Decisões de desenho dos gráficos (2026-11-22, com o Eduardo):**
+- **Backend = `matplotlib`** (único dep novo no extra `[viz]`). O R é ggplot2 de ponta a
+  ponta, mas a superfície de customização usada nos exemplos do daltoolbox é pequena e padrão
+  (`colors`, `alpha`, `label_x/label_y`, `title`, `bin`, etc.) → matplotlib cobre tudo. Os
+  casos "difíceis" têm backend matplotlib já no **core**: `pandas.plotting.scatter_matrix`
+  (pair), `pandas.plotting.parallel_coordinates` (parallel), `scipy.cluster.hierarchy.dendrogram`
+  (dendrogram), `imshow` (pixel/correlation), projeção `polar` (radar). Preferiu-se matplotlib
+  a `plotnine` (porta do ggplot2) para não puxar statsmodels/mizani/patsy sem necessidade.
+- **API = funções `plot_*` retornando o objeto do gráfico** (`Figure`/`Axes`), espelhando o R
+  (onde `grf_*` devolve um ggplot que o usuário imprime). Sem estado, sem classe `DalTransform`.
+- **Enxugamento (regra do Eduardo):** `plot_*` que **não é ggplot2 padrão E não tem
+  correspondência limpa no matplotlib** sai do daltoolbox e vira **extensão do curso de
+  mineração** em `C:\Git\eogasawara\datamining` (tutorial `03-DataVisualization`), deixando o
+  pacote mais leve — mesmo padrão de Louvain/eclat/arulesViz. **Único caso: `plot_pair_adv`**
+  (`GGally::ggpairs`, painéis mistos densidade+correlação+cor-por-classe; sem equivalente padrão
+  no matplotlib) → **remover de daltoolbox (R) + portar para o `datamining`**. `plot_pair`
+  (scatter_matrix básica) e `plot_radar` (polar) **ficam e são portados**.
+- A skill `dataviz` guia paleta/tema (claro/escuro, acessível) para coesão visual.
+
+#### 2.1 — Classificação extra → `[xgboost]` · `0.13.0` ✅ PUBLICADO
+`ClaXgboost` (wrapper `XGBClassifier`, extra `[xgboost]`, paridade R no iris). Ver memória.
+
+#### (histórico) 2.1 — mapeamento original
 | Classe | Backend | Arquivo R |
 |---|---|---|
 | `ClaXgboost` | `xgboost` | `cla_xgboost.R` |
@@ -525,46 +545,53 @@ a jusante (tspredit/harbinger não usam clusterer), e seria só um embrulho de d
 `clu_louvain.R` + `igraph` foram tirados **do R** também. Grafos podem virar extensão dedicada
 no futuro, se vierem a ser modalidade de primeira classe.
 
-#### 2.3 — Gráficos: base + distribuição + comparação → `[viz]` (`matplotlib`) · `0.14.0`
-Base + 11 gráficos. Segue a skill `dataviz` (temas claro/escuro, paleta acessível).
-| Função/base | Tipo | Arquivo R |
-|---|---|---|
-| `GraphicsDalGraphics` (base/utilitários) | base | `graphics_dal_graphics.R` |
-| `plot_hist` | distribuição | `grf_hist.R` |
-| `plot_density` | distribuição | `grf_density.R` |
-| `plot_density_class` | distribuição | `grf_density_class.R` |
-| `plot_boxplot` | distribuição | `grf_boxplot.R` |
-| `plot_boxplot_class` | distribuição | `grf_boxplot_class.R` |
-| `plot_bar` | comparação | `grf_bar.R` |
-| `plot_groupedbar` | comparação | `grf_groupedbar.R` |
-| `plot_stackedbar` | comparação | `grf_stackedbar.R` |
-| `plot_lollipop` | comparação | `grf_lollipop.R` |
-| `plot_pieplot` | comparação | `grf_pieplot.R` |
-| `plot_radar` | comparação | `grf_radar.R` |
+#### 2.3 — Gráficos: distribuição + comparação → `[viz]` (`matplotlib`) · `0.14.0`
+11 gráficos (funções `plot_*` → `Figure`/`Axes`). Segue a skill `dataviz`.
+| Função | Tipo | Arquivo R | Backend matplotlib |
+|---|---|---|---|
+| `plot_hist` | distribuição | `grf_hist.R` | `ax.hist` |
+| `plot_density` | distribuição | `grf_density.R` | `scipy.stats.gaussian_kde` + `fill` |
+| `plot_density_class` | distribuição | `grf_density_class.R` | kde por classe |
+| `plot_boxplot` | distribuição | `grf_boxplot.R` | `ax.boxplot` |
+| `plot_boxplot_class` | distribuição | `grf_boxplot_class.R` | boxplot agrupado |
+| `plot_bar` | comparação | `grf_bar.R` | `ax.bar` |
+| `plot_groupedbar` | comparação | `grf_groupedbar.R` | `ax.bar` deslocado |
+| `plot_stackedbar` | comparação | `grf_stackedbar.R` | `ax.bar(bottom=)` |
+| `plot_lollipop` | comparação | `grf_lollipop.R` | `ax.vlines` + `scatter` |
+| `plot_pieplot` | comparação | `grf_pieplot.R` | `ax.pie` |
+| `plot_radar` | comparação | `grf_radar.R` | projeção `polar` |
+
+> Como os `plot_*` são independentes (sem classe-base com estado), não há "base de gráficos"
+> a portar; utilitários comuns (aplicação de paleta, tema) ficam num `_helpers` interno do
+> subpacote `viz/`. (O R `graphics.R`/`graphics_dal_graphics.R` é só agregador de `@include`.)
 
 #### 2.4 — Gráficos: relação + temporais + estrutura → `[viz]` · `0.15.0`
-11 gráficos.
-| Função | Tipo | Arquivo R |
+10 gráficos (o `plot_pair_adv` foi **removido** — ver abaixo).
+| Função | Tipo | Arquivo R | Backend matplotlib |
+|---|---|---|---|
+| `plot_scatter` | relação | `grf_scatter.R` | `ax.scatter` |
+| `plot_points` | relação | `grf_points.R` | `ax.plot`/`scatter` |
+| `plot_correlation` | relação | `grf_correlation.R` | `imshow` + `scipy` linkage (`reorder="hclust"`) |
+| `plot_pair` | relação | `grf_pair.R` | `pandas.plotting.scatter_matrix` |
+| `plot_parallel` | relação | `grf_parallel.R` | `pandas.plotting.parallel_coordinates` |
+| `plot_pixel` | relação | `grf_pixel.R` | `imshow`/`pcolormesh` |
+| `plot_series` | temporal | `grf_series.R` | `ax.plot` multi-série |
+| `plot_ts` | temporal | `grf_ts.R` | `ax.plot` |
+| `plot_ts_pred` | temporal | `grf_ts_pred.R` | `ax.plot` sobreposto |
+| `plot_dendrogram` | estrutura | `grf_dendrogram.R` | `scipy.cluster.hierarchy.dendrogram` |
+
+#### Removido do daltoolbox → curso `datamining`
+| Função | Motivo | Destino |
 |---|---|---|
-| `plot_scatter` | relação | `grf_scatter.R` |
-| `plot_points` | relação | `grf_points.R` |
-| `plot_correlation` | relação | `grf_correlation.R` |
-| `plot_pair` | relação | `grf_pair.R` |
-| `plot_pair_adv` | relação | `grf_pair_adv.R` |
-| `plot_parallel` | relação | `grf_parallel.R` |
-| `plot_pixel` | relação | `grf_pixel.R` |
-| `plot_series` | temporal | `grf_series.R` |
-| `plot_ts` | temporal | `grf_ts.R` |
-| `plot_ts_pred` | temporal | `grf_ts_pred.R` |
-| `plot_dendrogram` | estrutura | `grf_dendrogram.R` |
+| `plot_pair_adv` | `GGally::ggpairs` (painéis mistos densidade+correlação+cor-por-classe); sem correspondência padrão no matplotlib | `C:\Git\eogasawara\datamining` (tutorial `03-DataVisualization`), como extensão de curso. Remover `grf_pair_adv.R` + man/examples do R e `devtools::document()`. |
 
 #### ~~2.5 — (opcional) Padrões: backend alternativo → `[patterns]` · `0.15.0`~~ (antecipado p/ 1.7)
 Antecipado: o `PatApriori` já nasceu sobre `mlxtend` no extra `[patterns]` (1.7/`0.9.0`),
 em vez de nativo. Não há passo 2.5 separado.
 
-> **Resumo do Ciclo 2:** `ClaXgboost`, `GraphicsDalGraphics` + 22 `plot_*`. Extras
-> introduzidos: `[xgboost]`, `[viz]` (matplotlib). (`ClusterLouvainGraph`/`[graph]` foi
-> removido; `[patterns]`/mlxtend já foi antecipado no 1.7.)
+> **Resumo do Ciclo 2:** `ClaXgboost` (2.1, feito) + **21** `plot_*` (matplotlib). Extras
+> introduzidos: `[xgboost]`, `[viz]` (matplotlib). (`ClusterLouvainGraph`/`[graph]` removido;
+> `plot_pair_adv` movido para o curso; `[patterns]`/mlxtend antecipado no 1.7.)
 >
 > **Autoencoders reais** (backend de deep learning) permanecem **fora** do pydaltoolbox:
 > as bases identidade bastam; a implementação real fica num pacote companheiro, como no R.
