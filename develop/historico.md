@@ -193,6 +193,35 @@ diabetes p/ regressão, breast_cancer p/ classificação; scripts `featsel*` em
   determinísticos vs R; lasso/stepwise-binomial checados frouxos). **231 testes verdes.**
 - Sem mudança de código (nos dois repos); só testes + scripts de paridade.
 
+### Testes pareados R↔Python — padrões + FECHAMENTO do ciclo (2026-11-22)
+Último lote de paridade. **Apriori (mlxtend vs arules) nas MESMAS transações** (basket
+conhecido; scripts `patterns_apriori*` em `daltoolbox/develop/parity/`):
+- **Itemsets frequentes: idênticos** (7 itemsets, mesmos supports).
+- **Regras: as 8 de consequente-único batem exatamente** (support/confidence/lift). Python
+  emite 1 regra a mais, `{butter}=>{bread,milk}` (consequente multi-item) — diferença
+  **estrutural** documentada (mlxtend gera multi-consequente; arules só single por padrão),
+  **não-bug**. Guarda `tests/test_quality_patterns.py` (itemsets exatos; regras single-conseq
+  idênticas; extras têm |consequente|>1).
+- Prefixspan (sequências) e DARA já haviam sido validados idênticos ao cSPADE (3-way) e ao
+  paper+R em sessões anteriores (`test_pattern_prefixspan`/`test_pattern_dara`).
+
+**CICLO DE PARIDADE COMPLETO** (regressão, classificação, clustering, feature-selection,
+padrões). **6 bugs reais achados e corrigidos** — 2 deles no PRÓPRIO R (cla_glm, kmeans
+nstart): RegDtree overfit, cla_glm inversão, kmeans nstart, dbscan eps off-by-one, curvatura
+Reinsch df=2, (+ o ripple do smoothing bins como ganho). As demais divergências explicadas
+como benignas com evidência (estocástica/numérica/estrutural). **233 testes verdes.**
+
+### Metodologia de paridade documentada — `develop/parity.md` (2026-11-22)
+A pedido do Eduardo, escrito `develop/parity.md`: metodologia reproduzível de verificação de
+paridade entre implementações em projetos de DS/IA, como base para um **artigo científico**.
+Estrutura: hazard central (congelar o input via CSV p/ eliminar variância de split);
+invariante por família (comparar DECISÕES, não representações); **taxonomia das divergências**
+(exata / benigna-estocástica / benigna-numérica-ou-solver / default-fraco-corrigível /
+estrutural / defeito real); localização de bug por bisecção + instrumentação do primitivo;
+guardas como contrato de regressão; ameaças à validade (dataset difícil, sorte de split,
+tolerância, "aproximado" como refúgio, referência não é verdade absoluta); protocolo condensado
+em 8 passos; tabela de resultados do port. (Escrito em inglês p/ alvo de publicação.)
+
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.23.0** (PyPI) — fix de qualidade do `RegDtree`. daltoolbox
   sem `GGally`; API de padrões simplificada; exemplos 1:1 (107=107); dataset do R = Diabetes.

@@ -17,7 +17,7 @@ exemplos/doc são dev-only — sem release PyPI, pois não mudam código do paco
 
 ---
 
-## 0.23.x — Testes pareados R↔Python (em andamento)
+## 0.23.x — Testes pareados R↔Python (CONCLUÍDO)
 Objetivo: confiança de que o Python reproduz o R, caso a caso. **Método que funcionou:**
 exportar o MESMO split para CSV e rodar os dois lados sobre as mesmas linhas (senão a variância
 do split engana). Scripts em `daltoolbox/develop/parity/`; guardas em `tests/`.
@@ -31,14 +31,14 @@ do split engana). Scripts em `daltoolbox/develop/parity/`; guardas em `tests/`.
 - ✅ **Feature-selection:** paridade **exata** em corr/fss/relief/info_gain/stepwise-gaussian;
   lasso e stepwise-binomial aproximados por natureza (CV-lambda / quase-separação), sem bug.
   Guarda `test_quality_feature_selection.py`. Nenhuma mudança de código.
-- **A fazer:** **padrões** — grande parte já validada historicamente (prefixspan 3-way idêntico
-  ao cSPADE; DARA idêntico ao paper+R); falta confirmar itemsets/regras do apriori
-  (mlxtend vs arules) nas mesmas transações. (E transf, se fizer sentido.)
-- Nota: as correções de clustering/classificação são **mudança de código** (Python + R) ainda
-  **sem bump de versão** — avaliar um release de qualidade ao fechar o ciclo de paridade.
-- Fechar cada lote com o checklist de release (só há release quando há mudança de código).
+- ✅ **Padrões:** apriori itemsets idênticos ao arules; regras single-consequente idênticas;
+  multi-consequente é diferença estrutural (mlxtend), não-bug; prefixspan/DARA já validados.
+  Guarda `test_quality_patterns.py`.
+- ✅ **CICLO DE PARIDADE COMPLETO.** Metodologia documentada em `develop/parity.md` (base p/ artigo).
+- Nota: as correções de clustering/classificação/regressão são **mudança de código** (Python + R)
+  ainda **sem bump de versão** — avaliar um release de qualidade (0.24.x) ao iniciar a auditoria.
 
-## 0.24.0 — Auditoria de documentação justa (crédito + inovação)
+## 0.24.0 — Auditoria de documentação justa (crédito + inovação) — PRÓXIMO
 Objetivo: garantir documentação **justa com as obras originais** e que **apresenta a inovação**.
 - Varrer todas as classes (Python + roxygen R): cada docstring com **Teoria + `References:` +
   `Porting:`**; referências ao **paper/autor original**; onde houve back-implementation com ganho,
