@@ -11,7 +11,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 
 from ..adjust import adjust_dataframe
 from ..base import DalTransform
@@ -29,9 +28,12 @@ class DtPca(DalTransform):
     retaining most of the information, which helps downstream models and visualization.
 
     Porting:
-        Mirrors ``trans_dt_pca.R``. Fidelity: approximate.
-        - scikit-learn ``PCA`` backend (with ``StandardScaler``) instead of R
-          ``prcomp(scale.=TRUE)``; component signs are arbitrary and may flip vs R.
+        Mirrors ``trans_dt_pca.R``. Fidelity: exact (scores match ``prcomp`` up to
+        float noise; component signs are arbitrary and may flip vs R).
+        - scikit-learn ``PCA`` backend. Features are standardized with the *sample*
+          standard deviation (``ddof=1``), replicating R ``prcomp(scale.=TRUE)``;
+          ``StandardScaler`` (population SD, ``ddof=0``) would scale the scores by
+          ``sqrt((n-1)/n)`` and no longer match R.
         - The number of components, when not given, is picked by a minimum-curvature
           elbow on the cumulative explained variance.
 
@@ -52,9 +54,14 @@ class DtPca(DalTransform):
     def __init__(self, attribute: str | None = None, components: int | None = None) -> None:
         self.attribute = attribute
         self.components = components
-        self.scaler: StandardScaler | None = None
+        self.mean_: np.ndarray | None = None
+        self.scale_: np.ndarray | None = None
         self.pca: PCA | None = None
         self.feature_names: list | None = None
+
+    def _standardize(self, data: pd.DataFrame) -> np.ndarray:
+        x = data[self.feature_names].to_numpy(dtype=float)
+        return (x - self.mean_) / self.scale_
 
     def _features(self, data: pd.DataFrame) -> list:
         cols = [
@@ -68,9 +75,11 @@ class DtPca(DalTransform):
     def fit(self, data, **kwargs) -> DtPca:
         data = adjust_dataframe(data)
         self.feature_names = self._features(data)
-        scaled = StandardScaler().fit(data[self.feature_names].to_numpy(dtype=float))
-        self.scaler = scaled
-        x = scaled.transform(data[self.feature_names].to_numpy(dtype=float))
+        raw = data[self.feature_names].to_numpy(dtype=float)
+        # sample SD (ddof=1) to replicate R prcomp(scale.=TRUE); ddof=0 would mismatch.
+        self.mean_ = raw.mean(axis=0)
+        self.scale_ = raw.std(axis=0, ddof=1)
+        x = self._standardize(data)
 
         if self.components is None:
             full = PCA().fit(x)
@@ -83,7 +92,7 @@ class DtPca(DalTransform):
 
     def transform(self, data, **kwargs) -> pd.DataFrame:
         data = adjust_dataframe(data).copy()
-        x = self.scaler.transform(data[self.feature_names].to_numpy(dtype=float))
+        x = self._standardize(data)
         comps = self.pca.transform(x)
         cols = [f"PC{i + 1}" for i in range(self.components)]
         out = pd.DataFrame(comps, columns=cols, index=data.index)

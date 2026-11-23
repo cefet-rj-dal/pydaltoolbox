@@ -73,6 +73,9 @@ sensitive to real behavior:
 | Feature selection     | the **set** of selected features                      |
 | Pattern mining        | the itemset/rule set with support/confidence/lift     |
 | Elbow/knee detectors  | the chosen index and value                            |
+| **Transformations**   | the **full transformed output matrix** (tolerance)    |
+
+Transformations are the special, and most stringent, case — see §9.
 
 **Protocol rule 2 — Compare decisions, not representations.** Compare the selected feature
 *set* (not column order), the partition *agreement* (not cluster id labels, which are
@@ -225,7 +228,64 @@ reviewer can re-run the full comparison.
 
 ---
 
-## 9. Results of applying this protocol to `daltoolbox` → `pydaltoolbox`
+## 9. Deterministic transformations: the matrix-equality case (and why it matters most)
+
+Data transformations (scaling, encoding, imputation, outlier handling, PCA, smoothing,
+feature generation) deserve special attention, for two reasons:
+
+1. **They are the most dangerous place for a silent defect.** A transformation sits
+   *upstream* of every model. A subtle scaling or encoding bug does not crash and does not
+   obviously degrade any single metric — it quietly shifts every downstream result, and is
+   correspondingly hard to detect by looking at model scores alone.
+2. **They are deterministic**, so — unlike stochastic learners — we can demand the
+   *strongest possible invariant*: the **entire transformed output matrix must be equal**,
+   element by element, up to floating-point tolerance (≈1e-9). There is no split variance,
+   no RNG, no CV to hide behind.
+
+### 9.1 Why "just check the rendered examples match" is not enough
+A tempting shortcut is to compare the two toolkits' rendered example documents. It is a
+useful *smoke test* but a weak *parity test*: the two renderers (R knitr vs. Python
+nbconvert) format numbers, precision, and tables differently, so a textual diff is noisy;
+and a rendered table gives no pass/fail and no tolerance. It catches gross breakage, not
+the sub-percent drift that transformation bugs produce. Prefer the matrix comparison.
+
+### 9.2 The transformation parity procedure
+1. Freeze one input table to CSV (and a second copy with a fixed NaN pattern for the
+   NA/imputation transforms, so both sides see identical missingness).
+2. On each side, `fit` then `transform`; **write the transformed output to CSV**.
+3. A small comparator loads each `out_py_<t>.csv` / `out_r_<t>.csv` pair, aligns columns
+   by name, and reports the **maximum absolute numeric difference** plus exact-match for
+   non-numeric columns. Pass = `max_abs_diff ≤ 1e-9` and non-numeric columns identical.
+
+(Scripts: `transforms.py`, `transforms_samesplit.R`, `transforms_compare.py`.)
+
+### 9.3 Transformation-specific pitfalls (each one bit us or could have)
+- **Arbitrary component sign (PCA).** Eigenvector signs are not identified; a whole
+  component may flip. Compare `|value|` per element (a per-column sign flip then cancels),
+  not the raw signed scores.
+- **Standardization convention (sample vs. population SD).** `prcomp(scale.=TRUE)` divides
+  by the **sample** SD (`ddof=1`); scikit-learn `StandardScaler` uses the **population** SD
+  (`ddof=0`). This scales PCA scores by `sqrt((n-1)/n)` — only ~0.011 on iris (n=150), far
+  too small to notice in any model metric, but a real infidelity. *Fix:* standardize with
+  `ddof=1`. This is the archetypal silent transform bug: tiny, invisible downstream,
+  trivially wrong.
+- **Output-set / naming conventions (one-hot).** The reference `categ_mapping` returned
+  *only* the dummy columns and named them `Speciessetosa`; the port kept the other columns
+  and named them `Species_setosa`. Here we deliberately aligned the *reference* to the
+  port's safer pipeline behavior (keep the other columns) and to the `<attr>_<level>`
+  naming. Lesson: when outputs differ in *structure*, decide which convention is correct,
+  make both match it, and document the decision — do not silently keep two behaviors.
+- **Identical missingness.** For NA/imputation, inject the *same* NaN pattern on both
+  sides (export it in the frozen CSV); otherwise you are comparing different problems.
+
+### 9.4 Result
+On iris (with a fixed NaN copy), **all eight transforms match element-for-element**
+(`max_abs_diff ≤ 7e-15`): min-max, z-score, one-hot (`categ_mapping`), PCA (`|scores|`),
+NA removal, median imputation, box-plot and Gaussian outlier handling. Two fixes were
+required to reach exact parity: the PCA `ddof=1` scaling (port) and the one-hot
+column-set/naming alignment (reference). Locked by `tests/test_quality_transforms.py`.
+
+## 10. Results of applying this protocol to `daltoolbox` → `pydaltoolbox`
 
 | Family            | Verdict                                   | Defects found & fixed                                  |
 |-------------------|-------------------------------------------|--------------------------------------------------------|
@@ -234,8 +294,12 @@ reviewer can re-run the full comparison.
 | Clustering        | parity; 3 defects                         | kmeans `nstart` (original); dbscan eps off-by-one + curvature detector (port) |
 | Feature selection | parity; no defects                        | lasso & binomial-stepwise benign (CV-λ / separation)   |
 | Pattern mining    | parity; no defects                        | itemsets identical; rules differ only by multi-item consequents (structural) |
+| Transformations   | exact parity; 2 fixes                     | PCA `ddof=1` scaling (port); one-hot column-set/naming aligned (reference) |
 
-Five families; six genuine defects localized and fixed (two of them in the *reference*
-implementation); the remainder of all disagreements explained as benign with evidence.
-Each result is reproducible from the scripts and frozen inputs in
+Six families; **seven fixes** — six genuine defects (RegDtree overfit, `cla_glm`
+inversion, k-means `nstart`, DBSCAN `eps` off-by-one, the curvature detector, and the PCA
+`ddof` scaling) plus one convention alignment (one-hot). **Three of the fixes landed on the
+*reference* side** (`cla_glm`, k-means `nstart`, one-hot), i.e. parity testing improved the
+original R package, not only the port. Every remaining disagreement is explained as benign
+with evidence. Each result is reproducible from the scripts and frozen inputs in
 `daltoolbox/develop/parity/` and locked by `tests/test_quality_*.py`.

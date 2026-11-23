@@ -211,6 +211,32 @@ nstart): RegDtree overfit, cla_glm inversão, kmeans nstart, dbscan eps off-by-o
 Reinsch df=2, (+ o ripple do smoothing bins como ganho). As demais divergências explicadas
 como benignas com evidência (estocástica/numérica/estrutural). **233 testes verdes.**
 
+### Testes pareados R↔Python — transformações (2026-11-22)
+Lote extra pedido pelo Eduardo (transformações são o lugar mais perigoso p/ bug silencioso —
+ficam a montante de todo modelo). Como são **determinísticas**, o invariante é o **mais forte
+possível: a MATRIZ de saída inteira igual** (tol ≤1e-9), não só "os exemplos saíram iguais"
+(comparar exemplos renderizados é smoke-test fraco: knitr vs nbconvert formatam diferente).
+Método: congelar input CSV (+ cópia com padrão fixo de NaN p/ imputação), `fit`→`transform` nos
+dois lados, exportar saída p/ CSV, comparar matrizes (`transforms.py`/`_samesplit.R`/`_compare.py`).
+**Resultado: 8/8 transforms batem elemento-a-elemento** (minmax, zscore, categ_mapping, dt_pca
+[|scores|], na_removal, imputation median, outliers boxplot/gaussian). **Dois fixes p/ chegar lá:**
+- **`dt_pca` (Python, bug real sutil):** `StandardScaler` usa SD populacional (ddof=0); R
+  `prcomp(scale.=TRUE)` usa SD amostral (ddof=1) → scores escalados por √((n−1)/n) (~0.011 no
+  iris; invisível em qualquer métrica de modelo, mas infiel). Trocado p/ padronização ddof=1 →
+  diff 7e-15. Fidelity `approximate → exact`.
+- **`categ_mapping` (R, alinhado ao Python a pedido do Eduardo):** R devolvia só as dummies e
+  nomeava `Speciessetosa`; agora mantém as outras colunas e nomeia `Species_setosa` (igual ao
+  Python, mais seguro em pipeline). Roxygen atualizado + `document()`. Python Porting → `exact`.
+- **Ressalvas documentadas:** sinal de PC é arbitrário (comparar `|valor|`); convenção de SD
+  (ddof); convenção de conjunto/nome do one-hot; mesma máscara de NaN nos dois lados.
+- Guarda `tests/test_quality_transforms.py` (4 testes). **237 testes verdes.**
+
+### Metadados do pacote (p/ a próxima publicação, 2026-11-22)
+A pedido do Eduardo: **Benjamin Sperl adicionado como contribuidor** em `pyproject.toml`
+(`[project].authors`; o análogo Python do `Authors@R` do DESCRIPTION do R) e maturidade elevada
+de `3 - Alpha` → **`4 - Beta`** (classifier). Entra na próxima release (bump pendente nos dois
+arquivos de versão + build/twine quando o Eduardo autorizar).
+
 ### Metodologia de paridade documentada — `develop/parity.md` (2026-11-22)
 A pedido do Eduardo, escrito `develop/parity.md`: metodologia reproduzível de verificação de
 paridade entre implementações em projetos de DS/IA, como base para um **artigo científico**.

@@ -34,9 +34,14 @@ do split engana). Scripts em `daltoolbox/develop/parity/`; guardas em `tests/`.
 - ✅ **Padrões:** apriori itemsets idênticos ao arules; regras single-consequente idênticas;
   multi-consequente é diferença estrutural (mlxtend), não-bug; prefixspan/DARA já validados.
   Guarda `test_quality_patterns.py`.
-- ✅ **CICLO DE PARIDADE COMPLETO.** Metodologia documentada em `develop/parity.md` (base p/ artigo).
-- Nota: as correções de clustering/classificação/regressão são **mudança de código** (Python + R)
-  ainda **sem bump de versão** — avaliar um release de qualidade (0.24.x) ao iniciar a auditoria.
+- ✅ **Transformações:** 8/8 batem elemento-a-elemento (matriz inteira, tol 1e-9). Fixes:
+  `dt_pca` ddof=1 (Python) e `categ_mapping` alinhado (R, a pedido). Guarda
+  `test_quality_transforms.py`. Análise no `parity.md` §9.
+- ✅ **CICLO DE PARIDADE COMPLETO** (6 famílias). Metodologia em `develop/parity.md` (base p/ artigo).
+- Nota: há **mudança de código** acumulada (Python: dbscan/curvatura/dt_pca; R: cla_glm/kmeans/
+  categ_mapping) **sem bump de versão** → a próxima release (0.24.x) deve: bump nos dois arquivos,
+  **já com `Benjamin Sperl` em authors e maturidade `4 - Beta`** (já editados no `pyproject.toml`),
+  build + twine + publish.
 
 ## 0.24.0 — Auditoria de documentação justa (crédito + inovação) — PRÓXIMO
 Objetivo: garantir documentação **justa com as obras originais** e que **apresenta a inovação**.

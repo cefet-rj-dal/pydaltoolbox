@@ -24,10 +24,10 @@ class CategMapping(DalTransform):
     ``fit`` so train and test produce the same columns.
 
     Porting:
-        Mirrors ``trans_categ_mapping.R``. Fidelity: adapted.
-        - Behavior change: R ``categ_mapping`` returns *only* the target's one-hot columns
-          and drops every other column (error-prone in a pipeline); here the other columns
-          are kept and the attribute is replaced by its one-hot dummies.
+        Mirrors ``trans_categ_mapping.R``. Fidelity: exact.
+        - The other columns are kept and the attribute is replaced in place by its one-hot
+          dummies named ``<attribute>_<level>`` (R was aligned to this behavior, which is
+          safer inside a pipeline than returning only the dummy columns).
 
     References:
         Kuhn, M., and Johnson, K. (2013). Applied Predictive Modeling. Springer.
