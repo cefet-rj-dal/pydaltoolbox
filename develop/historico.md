@@ -140,10 +140,47 @@ R `tree::tree` generalizava (**0.238**).
 - O "R parecia melhor em tudo" com splits diferentes era **variância do split** — na mesma
   partição a paridade é boa (menos o bug do dtree, agora corrigido).
 
+### Testes pareados R↔Python — classificação + clustering (2026-11-22)
+Dois lotes de paridade sobre as MESMAS linhas (scripts em `daltoolbox/develop/parity/`).
+
+**Classificação** (dataset `breast_cancer`, mais difícil que iris: binário, mas atributos em
+escalas muito heterogêneas — expõe fidelidade de escalonamento que iris mascara). Split
+idêntico exportado p/ CSV. Paridade boa em tudo **exceto `cla_glm`**: Python 0.947, R **0.044**
+(predições invertidas).
+- **Bug real no R `cla_glm.R`:** o `glm` binomial modela P(último nível do fator), mas o
+  `predict` atribuía `prob` à coluna de `positive` incondicionalmente → inversão quando
+  `positive` não é o último nível (o exemplo da roxygen escapava por sorte). **Fix (R, com OK):**
+  relevel da resposta em `fit.cla_glm` p/ `positive` ser o último nível → R 0.956 (≈ Python). O
+  Python já estava correto (sklearn mapeia rótulos por coluna). Guarda: `tests/test_quality_classification.py`.
+
+**Clustering** (iris, concordância da partição com `Species`: entropy/purity). Paridade boa em
+Pam/Cmeans/Gmm/Hclust; **dois descasamentos corrigidos**:
+1. **KMeans** — R `stats::kmeans` usava `nstart=1` (init único → ótimo local ruim, purity ~0.67
+   em ~3/8 execuções); Python já robusto (`n_init=10`). **Fix (R, com OK):** `cluster_kmeans(k,
+   nstart=10)`. Agora 0.893 nos dois.
+2. **DBSCAN** — Python 0.687 vs R 0.927. Duas causas no **Python**: (a) off-by-one na estimativa
+   de `eps` — `NearestNeighbors(n_neighbors=min_pts)` inclui o próprio ponto → `min_pts+1`
+   (= `kNNdist(k=min_pts)` do R); (b) **`FitCurvatureMax/Min`** usava spline GCV
+   (`make_smoothing_spline`), cuja 2ª derivada é ondulada e põe o máximo na cauda (cotovelo
+   errado, x=145/eps=0.60). Reescrito com a formulação de **Reinsch (df=2)**, replicando
+   `smooth.spline(x,y,df=2)` do R (penalidade resolvida p/ `trace(S)=2`; cap de 400 pts +
+   eigendecomposição p/ ser O(n) em n grande). Cotovelo volta ao joelho (x=97/eps=0.374 ≈ R
+   x=98/0.387) → DBSCAN 0.920 ≈ R 0.927. Fidelity da curvatura `approximate → exact`.
+- **Ripple verificado:** a curvatura é usada também em PCA (seleção de componentes), threshold de
+  padrões e tuning de smoothing. Testes de lá (frouxos) seguem verdes; a seleção de bins do
+  `SmoothingInter(n=1:20)` em iris mudou 2→**8**, agora **idêntica ao R `smoothing_inter`** (8) —
+  confirmando ganho de fidelidade, não regressão. Exemplos afetados regenerados pelo conversor
+  (dimensionality/density/smoothing/patterns).
+- Guarda: `tests/test_quality_clustering.py` (DBSCAN não-degenerado, partitional recupera
+  estrutura, cotovelo de `FitCurvatureMax` no joelho). **225 testes verdes**, ruff limpo.
+- Dev-only no Python quanto a exemplos; **mudança de código** Python (dbscan/curvatura) + R
+  (cla_glm, cluster_kmeans). Sem bump de versão até fechar o ciclo de paridade.
+
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.23.0** (PyPI) — fix de qualidade do `RegDtree`. daltoolbox
   sem `GGally`; API de padrões simplificada; exemplos 1:1 (107=107); dataset do R = Diabetes.
-- Cobertura: **todo o daltoolbox portado** (Pendências zeradas). **220 testes verdes** + ruff
-  limpos; notebooks renderizam. Testes pareados: regressão feita (parity ok).
+- Cobertura: **todo o daltoolbox portado** (Pendências zeradas). **225 testes verdes** + ruff
+  limpos; notebooks renderizam. Testes pareados: **regressão + classificação + clustering** feitos
+  (parity ok; bugs achados e corrigidos: RegDtree, cla_glm, kmeans nstart, dbscan eps/curvatura).
 - Extras opcionais: `[patterns]` (mlxtend), `[xgboost]`, `[viz]` (matplotlib). Núcleo:
   numpy/pandas/scikit-learn.

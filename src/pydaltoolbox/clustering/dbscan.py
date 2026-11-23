@@ -55,7 +55,10 @@ class ClusterDbscan(Clusterer):
         self.eval_external = [metric_entropy, metric_purity, metric_adjusted_rand_index]
 
     def _estimate_eps(self, x: np.ndarray) -> float:
-        nn = NearestNeighbors(n_neighbors=self.min_pts).fit(x)
+        # sklearn's kneighbors counts the point itself as the first neighbour (distance
+        # 0), so n_neighbors = min_pts + 1 gives the distance to the min_pts-th *other*
+        # point -- matching R's ``dbscan::kNNdist(data, k = min_pts)`` (self excluded).
+        nn = NearestNeighbors(n_neighbors=self.min_pts + 1).fit(x)
         dist, _ = nn.kneighbors(x)
         kdist = np.sort(dist[:, -1])
         return float(FitCurvatureMax().transform(kdist)["y"].iloc[0])

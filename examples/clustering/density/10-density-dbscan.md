@@ -62,10 +62,11 @@ pd.Series(clu).value_counts().sort_index()
 
 
 
-    -1     5
-     0    49
-     1    92
-     2     4
+    -1    27
+     0    47
+     1    38
+     2    35
+     3     3
     Name: count, dtype: int64
 
 
@@ -80,10 +81,10 @@ model.evaluate(clu, ref)["metrics"]
 
 
 
-             metric     value      goal      type
-    0  noise_points  5.000000  minimize  internal
-    1       entropy  0.637398  minimize  external
-    2        purity  0.686667  maximize  external
+             metric      value      goal      type
+    0  noise_points  27.000000  minimize  internal
+    1       entropy   0.318858  minimize  external
+    2        purity   0.920000  maximize  external
 
 
 

@@ -23,9 +23,16 @@ exportar o MESMO split para CSV e rodar os dois lados sobre as mesmas linhas (se
 do split engana). Scripts em `daltoolbox/develop/parity/`; guardas em `tests/`.
 - ✅ **Regressão (diabetes):** paridade ok em tudo; **bug achado e corrigido** — `RegDtree`
   overfit (R2 −0.003 vs R 0.238) → `mindev`/`min_impurity_decrease`; **0.23.0 publicado**.
-- **A fazer:** estender às demais famílias (classificação em dataset mais difícil que iris;
-  clustering; feature-selection; padrões). Em cada uma, se o linear/baseline bater o ML por
-  defaults fracos, corrigir o adaptador (quality-faithful) e adicionar guarda em `tests/`.
+- ✅ **Classificação (breast_cancer):** paridade ok; **bug no R `cla_glm`** (inversão quando
+  `positive` ≠ último nível) corrigido via relevel; guarda `test_quality_classification.py`.
+- ✅ **Clustering (iris):** paridade ok; corrigidos **KMeans** (R `nstart=10`) e **DBSCAN**
+  (Python: off-by-one do `eps` + `FitCurvatureMax/Min` reescrito em Reinsch df=2, replicando
+  `smooth.spline(df=2)`). Guarda `test_quality_clustering.py`. Exemplos afetados regenerados.
+- **A fazer:** estender a **feature-selection** e **padrões** (e transf, se fizer sentido). Em
+  cada uma, se o linear/baseline bater o ML por defaults fracos, corrigir o adaptador
+  (quality-faithful) e adicionar guarda em `tests/`.
+- Nota: as correções de clustering/classificação são **mudança de código** (Python + R) ainda
+  **sem bump de versão** — avaliar um release de qualidade ao fechar o ciclo de paridade.
 - Fechar cada lote com o checklist de release (só há release quando há mudança de código).
 
 ## 0.24.0 — Auditoria de documentação justa (crédito + inovação)
