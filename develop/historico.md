@@ -270,6 +270,15 @@ Varredura sistemática de todas as docstrings (Python) + conferência cruzada da
   (removida a menção a `arulesSequences::cspade`, que era alfinetada de dependência).
 - Todas as referências `Mirrors X.R` agora apontam p/ arquivos R existentes. 237 testes verdes,
   ruff limpo, import OK. (Dev-only de doc; sem mudança de comportamento.)
+- **Equivalente no R (daltoolbox 1d5f2d1):** espelhada a auditoria na roxygen. Zero frases
+  proibidas; as back-implementations canônicas já tinham atribuição correta. **Lacuna
+  sistemática corrigida:** faltava `@references` em 24 funções de algoritmo (cla_bagging/
+  boosting/glm/glmnet/multinom/rpart/xgboost, reg_lm, aggregation, categ_mapping,
+  feature_generation, fs info_gain/lasso/stepwise, hierarchy_cut, imputation_predictive,
+  na_removal, smoothing, sample random/strat/simple/groups, bal_subsampling, pat_apriori) +
+  19 `grf_*` — adicionadas as MESMAS referências dos counterparts Python (paper original;
+  gráficos = Wickham 2016 + fonte específica do método). `document()` limpo; `load_all` OK.
+  Bases/framework/privadas e utilitárias (threshold/cluutils, 0-ref dos dois lados) mantidas.
 
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.23.0** (PyPI) — fix de qualidade do `RegDtree`. daltoolbox
