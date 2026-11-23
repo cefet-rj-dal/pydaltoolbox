@@ -10,8 +10,11 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [
-  { name = "Eduardo Ogasawara", email = "eogasawara@ieee.org" },
+  { name = "Eduardo Ogasawara" },
   { name = "Benjamin Sperl" },
+]
+maintainers = [
+  { name = "Eduardo Ogasawara", email = "eogasawara@ieee.org" },
 ]
 keywords = ["data analytics", "machine learning", "experiment line", "scikit-learn", "pipeline"]
 classifiers = [
