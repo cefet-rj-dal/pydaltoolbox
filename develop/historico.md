@@ -248,6 +248,29 @@ guardas como contrato de regressão; ameaças à validade (dataset difícil, sor
 tolerância, "aproximado" como refúgio, referência não é verdade absoluta); protocolo condensado
 em 8 passos; tabela de resultados do port. (Escrito em inglês p/ alvo de publicação.)
 
+### 0.24.0 — Auditoria de documentação justa (crédito + inovação) (2026-11-22)
+Varredura sistemática de todas as docstrings (Python) + conferência cruzada da roxygen R.
+- **Frases proibidas: ZERO** ("native implementation"/"not a wrapper"/"no external
+  dependency"/alfinetadas) em toda `src/`.
+- **Cobertura:** todas as classes de **algoritmo** têm Teoria + `References:` (paper/autor
+  original) + `Porting:`. Classes-base/framework/privadas (DalBase, Clusterer, Regression
+  base, `_FitCurvature`, RuleFilter base, tune bases) e estratégias-heurísticas utilitárias
+  (`SupportThreshold`/`ConfidenceThreshold` — sqrt(n)/quantil/joelho; a "curvature" delega ao
+  `FitCurvatureMax` que já cita Satopää/Reinsch) legitimamente não citam paper.
+- **Atribuição canônica (Python é a referência) verificada OK** em PAM, c-means, corr,
+  fss, Relief, SMOTE, DARA, PrefixSpan — cada uma marca "Canonical; o R `X.R` é um backport
+  de this", cita o **paper original** e descreve a **inovação (++) com evidência** (ex.: PAM
+  FastPAM1; c-means nstart; SMOTE Borderline/ADASYN; Relief→ReliefF completo). A roxygen R
+  correspondente concorda (pat_prefix_span/pat_dara dizem "canonical ... Python ... backport").
+- **2 referências de arquivo desatualizadas CORRIGIDAS (Python):**
+  (1) `base.py` citava `dal_transform.R` → o R chama-se **`trans_transform.R`**.
+  (2) `prefixspan.py` dizia `Mirrors pat_cspade.R` (arquivo REMOVIDO) com `Fidelity:
+  approximate` → agora **"Canonical; R `pat_prefix_span.R` é backport"**, citando Pei et al.
+  2001 + o detalhe da pseudo-projeção de itemsets + validação idêntica ao exemplo de Zaki
+  (removida a menção a `arulesSequences::cspade`, que era alfinetada de dependência).
+- Todas as referências `Mirrors X.R` agora apontam p/ arquivos R existentes. 237 testes verdes,
+  ruff limpo, import OK. (Dev-only de doc; sem mudança de comportamento.)
+
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.23.0** (PyPI) — fix de qualidade do `RegDtree`. daltoolbox
   sem `GGally`; API de padrões simplificada; exemplos 1:1 (107=107); dataset do R = Diabetes.

@@ -43,8 +43,21 @@ do split engana). Scripts em `daltoolbox/develop/parity/`; guardas em `tests/`.
   **já com `Benjamin Sperl` em authors e maturidade `4 - Beta`** (já editados no `pyproject.toml`),
   build + twine + publish.
 
-## 0.24.0 — Auditoria de documentação justa (crédito + inovação) — PRÓXIMO
-Objetivo: garantir documentação **justa com as obras originais** e que **apresenta a inovação**.
+## 0.24.0 — Auditoria de documentação justa (crédito + inovação) — ✅ FEITA (falta publicar)
+Varredura concluída (ver `historico.md`): zero frases proibidas; cobertura completa nas classes
+de algoritmo; atribuição canônica verificada (PAM/cmeans/corr/fss/Relief/SMOTE/DARA/PrefixSpan);
+corrigidas 2 referências de arquivo (`dal_transform.R`→`trans_transform.R`; PrefixSpan
+`pat_cspade.R`→canônico `pat_prefix_span.R`). **Falta só o RELEASE** (ver abaixo).
+
+### Release 0.24.0 (pendente de autorização do Eduardo)
+Acumulado desde 0.23.0 (mudança de **código** Python → justifica release): dbscan eps/curvatura,
+dt_pca ddof=1; + metadados já editados (`Benjamin Sperl` em authors; `Development Status :: 4 -
+Beta`). Checklist: **bump nos dois arquivos** (`pyproject.toml` + `src/pydaltoolbox/__init__.py`)
+p/ `0.24.0`; `python -m build`; `twine check`; `twine upload`; verificar `pypi.org/pypi/
+pydaltoolbox/0.24.0/json`. (O R/daltoolbox acompanha com commits de código já pushados.)
+
+### (objetivo original da auditoria, cumprido)
+Garantir documentação **justa com as obras originais** e que **apresenta a inovação**.
 - Varrer todas as classes (Python + roxygen R): cada docstring com **Teoria + `References:` +
   `Porting:`**; referências ao **paper/autor original**; onde houve back-implementation com ganho,
   o `Porting:` descreve a **inovação (++)** com evidência.

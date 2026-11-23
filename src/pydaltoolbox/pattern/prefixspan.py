@@ -91,11 +91,14 @@ class PatPrefixSpan(PatternMiner):
     using ``support_strategy``.
 
     Porting:
-        Mirrors ``pat_cspade.R``. Fidelity: approximate.
-        - Native PrefixSpan (Pei et al., 2001) in place of ``arulesSequences::cspade``; both
-          enumerate the frequent sequential patterns for a support threshold, and agree on
-          the classic Zaki example.
+        Canonical implementation (PrefixSpan, Pei et al., 2001); the R
+        ``pat_prefix_span.R`` is a backport of this. Fidelity: adapted.
+        - The itemset pseudo-projection tracks, per sequence, the set of elements the
+          prefix's last element can map to; a naive first-occurrence projection would
+          undercount itemset patterns.
         - ``mingap``/``maxgap`` are applied on the event times during projection.
+        - Validated identical to the classic Zaki example (18/11/17/12 frequent patterns
+          for support=0.5 / maxgap=5 / maxgap=10 / mingap=10).
 
     References:
         Pei, J., Han, J., Mortazavi-Asl, B., Wang, J., Pinto, H., Chen, Q., Dayal, U., &

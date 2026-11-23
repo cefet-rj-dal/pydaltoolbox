@@ -1,6 +1,6 @@
 """Core Experiment Line base classes.
 
-Python counterpart of the R ``dal_base.R``, ``dal_transform.R``,
+Python counterpart of the R ``dal_base.R``, ``trans_transform.R``,
 ``dal_learner.R`` and ``dal_predictor.R`` files.
 
 The Experiment Line is a *rigid but extensible* contract. Every component is an
@@ -65,7 +65,7 @@ class DalTransform(DalBase):
     """Base class for data transformations with optional inverse support.
 
     Porting:
-        Mirrors ``dal_transform.R``. Fidelity: adapted.
+        Mirrors ``trans_transform.R``. Fidelity: adapted.
         - Same Experiment Line contract with the idiomatic-Python API (see
           :class:`DalBase`); ``action`` dispatches to :meth:`transform`.
     """
