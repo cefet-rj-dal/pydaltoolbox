@@ -176,6 +176,23 @@ Pam/Cmeans/Gmm/Hclust; **dois descasamentos corrigidos**:
 - Dev-only no Python quanto a exemplos; **mudança de código** Python (dbscan/curvatura) + R
   (cla_glm, cluster_kmeans). Sem bump de versão até fechar o ciclo de paridade.
 
+### Testes pareados R↔Python — feature-selection (2026-11-22)
+Lote de paridade dos seletores (comparando o CONJUNTO selecionado nas mesmas linhas;
+diabetes p/ regressão, breast_cancer p/ classificação; scripts `featsel*` em
+`daltoolbox/develop/parity/`). **Nenhum bug — port fiel.** Resultado:
+- **Paridade exata (idêntica ao R):** `corr(0.9)`, `fss`, `relief(top10)`, `info_gain(top10)`
+  e `stepwise(gaussian)` em diabetes. Os seletores nativos (numpy) e os de LinearRegression
+  são determinísticos e estáveis entre versões.
+- **Aproximados por natureza (não-bug):** `lasso` (penalidade `lambda` escolhida por CV —
+  `cv.glmnet` nfolds=10 aleatório vs `LassoCV` cv=5; grids diferentes → conjunto difere mas
+  ambos válidos) e `stepwise(binomial)` em breast_cancer (quase-separação logística → logLik→0,
+  AIC mal-condicionado + solver sklearn vs IRLS do glm). **Prova de que o stepwise é fiel:**
+  `stepwise(gaussian)` em diabetes dá idêntico nos dois (`bmi,bp,s1,s2,s5,sex`); a diferença no
+  binomial é só numérica/separação.
+- Guarda `tests/test_quality_feature_selection.py` (6 testes: conjuntos exatos dos
+  determinísticos vs R; lasso/stepwise-binomial checados frouxos). **231 testes verdes.**
+- Sem mudança de código (nos dois repos); só testes + scripts de paridade.
+
 ## Estado atual (base para o `planejamento.md`)
 - Última release: **pydaltoolbox 0.23.0** (PyPI) — fix de qualidade do `RegDtree`. daltoolbox
   sem `GGally`; API de padrões simplificada; exemplos 1:1 (107=107); dataset do R = Diabetes.

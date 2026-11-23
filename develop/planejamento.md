@@ -28,9 +28,12 @@ do split engana). Scripts em `daltoolbox/develop/parity/`; guardas em `tests/`.
 - ✅ **Clustering (iris):** paridade ok; corrigidos **KMeans** (R `nstart=10`) e **DBSCAN**
   (Python: off-by-one do `eps` + `FitCurvatureMax/Min` reescrito em Reinsch df=2, replicando
   `smooth.spline(df=2)`). Guarda `test_quality_clustering.py`. Exemplos afetados regenerados.
-- **A fazer:** estender a **feature-selection** e **padrões** (e transf, se fizer sentido). Em
-  cada uma, se o linear/baseline bater o ML por defaults fracos, corrigir o adaptador
-  (quality-faithful) e adicionar guarda em `tests/`.
+- ✅ **Feature-selection:** paridade **exata** em corr/fss/relief/info_gain/stepwise-gaussian;
+  lasso e stepwise-binomial aproximados por natureza (CV-lambda / quase-separação), sem bug.
+  Guarda `test_quality_feature_selection.py`. Nenhuma mudança de código.
+- **A fazer:** **padrões** — grande parte já validada historicamente (prefixspan 3-way idêntico
+  ao cSPADE; DARA idêntico ao paper+R); falta confirmar itemsets/regras do apriori
+  (mlxtend vs arules) nas mesmas transações. (E transf, se fizer sentido.)
 - Nota: as correções de clustering/classificação são **mudança de código** (Python + R) ainda
   **sem bump de versão** — avaliar um release de qualidade ao fechar o ciclo de paridade.
 - Fechar cada lote com o checklist de release (só há release quando há mudança de código).
