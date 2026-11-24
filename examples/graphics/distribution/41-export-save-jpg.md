@@ -23,9 +23,14 @@ import tempfile
 
 
 ```python
-x = np.arange(0, 10, 0.25)
-serie = pd.DataFrame({"x": x, "sin": np.sin(x), "cosine": np.cos(x) + 5})
-ax = dal.plot_series(serie)
+rng = np.random.default_rng(0)
+x = np.arange(30)
+long = pd.DataFrame({
+    "x": np.r_[x, x],
+    "value": np.r_[x + rng.normal(0, 1, 30), 0.5 * x + rng.normal(0, 1, 30)],
+    "variable": ["a"] * 30 + ["b"] * 30,
+})
+ax = dal.plot_scatter(long, label_x="x", label_y="value")
 ax.figure
 ```
 
@@ -54,8 +59,8 @@ for ext in ("jpg", "png"):
     print("saved", path)
 ```
 
-    saved C:/Users/eduar/AppData/Local/Temp/series.jpg
-    saved C:/Users/eduar/AppData/Local/Temp/series.png
+    saved C:\Users\eduar\AppData\Local\Temp\series.jpg
+    saved C:\Users\eduar\AppData\Local\Temp\series.png
     
 
 ## References

@@ -88,44 +88,6 @@ def test_plot_pixel(iris):
     assert [t.get_text() for t in ax.get_yticklabels()][:1] == ["sepal_length"]
 
 
-def test_plot_series():
-    x = np.arange(0, 10, 0.25)
-    frame = pd.DataFrame({"x": x, "sin": np.sin(x)})
-    ax = dal.plot_series(frame, colors=["red"])
-    assert isinstance(ax, Axes)
-    assert len(ax.lines) == 1
-
-
-def test_plot_ts():
-    x = np.arange(0, 10, 0.25)
-    ax = dal.plot_ts(x=x, y=np.sin(x), color="red")
-    assert isinstance(ax, Axes)
-    assert len(ax.lines) == 1
-
-
-def test_plot_ts_default_index():
-    ax = dal.plot_ts(y=[1.0, 2.0, 3.0, 2.0])
-    assert isinstance(ax, Axes)
-    assert list(ax.lines[0].get_xdata()) == [1, 2, 3, 4]
-
-
-def test_plot_ts_pred():
-    x = np.arange(0, 10, 0.25)
-    y = np.sin(x)
-    ax = dal.plot_ts_pred(y=y, yadj=np.sin(x[:35]), ypred=np.sin(x[35:]))
-    assert isinstance(ax, Axes)
-    # observed + adjusted + prediction
-    assert len(ax.lines) == 3
-
-
-def test_plot_ts_pred_no_prediction():
-    x = np.arange(0, 5, 0.25)
-    y = np.sin(x)
-    ax = dal.plot_ts_pred(y=y, yadj=np.sin(x))
-    assert isinstance(ax, Axes)
-    assert len(ax.lines) == 2  # observed + adjusted only
-
-
 def test_plot_dendrogram():
     pytest.importorskip("scipy")
     from scipy.cluster.hierarchy import linkage

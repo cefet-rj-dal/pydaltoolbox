@@ -128,9 +128,9 @@ Beta — the v1 foundation is complete and Cycle 1 is extending coverage toward 
   - distribution / comparison: `plot_hist`, `plot_density`, `plot_density_class`,
     `plot_boxplot`, `plot_boxplot_class`, `plot_bar`, `plot_groupedbar`, `plot_stackedbar`,
     `plot_lollipop`, `plot_pieplot`, `plot_radar` *(0.14.0)*
-  - relation / temporal / structure: `plot_scatter`, `plot_points`, `plot_correlation`,
-    `plot_parallel`, `plot_pixel`, `plot_series`, `plot_ts`, `plot_ts_pred`,
-    `plot_dendrogram` *(0.15.0)*
+  - relation / structure: `plot_scatter`, `plot_points`, `plot_correlation`,
+    `plot_parallel`, `plot_pixel`, `plot_dendrogram` *(0.15.0)*
+    (time-series plots `plot_series` / `plot_ts` / `plot_ts_pred` moved to `pytspredit`)
 
   (The advanced/basic scatter matrices `plot_pair` / `plot_pair_adv` live as course
   extensions in the [datamining](https://github.com/eogasawara/datamining) repo, since

@@ -27,7 +27,6 @@ from .relation import (
     plot_scatter,
 )
 from .structure import plot_dendrogram
-from .temporal import plot_series, plot_ts, plot_ts_pred
 
 __all__ = [
     "plot_bar",
@@ -46,8 +45,5 @@ __all__ = [
     "plot_points",
     "plot_radar",
     "plot_scatter",
-    "plot_series",
     "plot_stackedbar",
-    "plot_ts",
-    "plot_ts_pred",
 ]

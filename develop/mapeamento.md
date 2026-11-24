@@ -96,7 +96,7 @@ Correspondência entre a API pública do pacote R **daltoolbox** e o port Python
 | `grf_hist/density/density_class/boxplot/boxplot_class` | `plot_hist/density/density_class/boxplot/boxplot_class` | ✅ |
 | `grf_bar/groupedbar/stackedbar/lollipop/pieplot/radar` | `plot_bar/groupedbar/stackedbar/lollipop/pieplot/radar` | ✅ |
 | `grf_scatter/points/correlation/parallel/pixel` | `plot_scatter/points/correlation/parallel/pixel` | ✅ |
-| `grf_series/ts/ts_pred` | `plot_series/ts/ts_pred` | ✅ |
+| `grf_series/ts/ts_pred` | **movidos p/ `pytspredit`** (`plot_series/ts/ts_pred`) | ➡️ |
 | `grf_dendrogram` | `plot_dendrogram` | ✅ |
 
 > Fora do escopo da biblioteca: `grf_pair`/`grf_pair_adv` (GGally) foram removidos de ambos

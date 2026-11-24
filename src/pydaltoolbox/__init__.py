@@ -108,7 +108,7 @@ from .transform import (
 )
 from .tune import ClaTune, CluTune, DalTune, RegTune
 
-__version__ = "0.24.0"
+__version__ = "0.25.0"
 
 # Visualization helpers live in the optional ``[viz]`` extra (matplotlib). They
 # are resolved lazily (PEP 562) so importing pydaltoolbox never requires
@@ -130,10 +130,7 @@ _VIZ_EXPORTS = (
     "plot_points",
     "plot_radar",
     "plot_scatter",
-    "plot_series",
     "plot_stackedbar",
-    "plot_ts",
-    "plot_ts_pred",
 )
 
 
@@ -263,9 +260,6 @@ __all__ = [
     "plot_points",
     "plot_radar",
     "plot_scatter",
-    "plot_series",
     "plot_stackedbar",
-    "plot_ts",
-    "plot_ts_pred",
     "train_test_from_folds",
 ]
